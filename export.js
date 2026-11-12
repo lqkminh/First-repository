@@ -72,11 +72,13 @@ function registerEmbeddedPdfFont(){
 function pdfCell(item,lang){
  const label=exportText(item,lang,"label");
  const reference=exportText(item,lang,"reference");
+ const latinReference=exportText(item,"la","reference");
  const text=exportText(item,lang,"text");
+ const showReference=reference&&reference!=="—"&&!(lang==="vi"&&latinReference===reference);
  return {
   stack:[
    {text:label,bold:true,fontSize:10.5,margin:[0,0,0,2]},
-   ...(reference&&reference!=="—"?[{text:reference,fontSize:9,italics:true,margin:[0,0,0,4]}]:[]),
+   ...(showReference?[{text:reference,fontSize:9,italics:true,margin:[0,0,0,4]}]:[]),
    {text:text||"—",fontSize:11,alignment:"justify",lineHeight:1.32}
   ],
   margin:[8,7,8,9],
@@ -192,6 +194,8 @@ function makeWordCell(item,lang,cellWidth,style){
  const {Paragraph,TextRun,TableCell,AlignmentType,VerticalAlign,WidthType}=d;
  const label=exportText(item,lang,"label");
  const reference=exportText(item,lang,"reference");
+ const latinReference=exportText(item,"la","reference");
+ const showReference=reference&&reference!=="—"&&!(lang==="vi"&&latinReference===reference);
  const text=exportText(item,lang,"text");
  return new TableCell({
   width:{size:cellWidth,type:WidthType.DXA},
@@ -202,10 +206,10 @@ function makeWordCell(item,lang,cellWidth,style){
     keepNext:true,spacing:{before:style.before,after:55},
     children:[new TextRun({text:label,bold:true,color:"A32139",font:"Times New Roman",size:style.labelSize,smallCaps:true})]
    }),
-   new Paragraph({
+   ...(showReference?[new Paragraph({
     keepNext:true,spacing:{after:75},
     children:[new TextRun({text:reference,italics:true,color:"81745F",font:"Times New Roman",size:style.referenceSize})]
-   }),
+   })]:[]),
    new Paragraph({
     alignment:AlignmentType.JUSTIFIED,spacing:{after:style.after,line:style.line},
     children:[new TextRun({text:text||"—",font:"Times New Roman",size:style.bodySize,color:"302C27"})]
