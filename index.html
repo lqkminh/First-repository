@@ -104,8 +104,8 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
 </dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/pdfmake@0.2.20/build/pdfmake.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/pdfmake@0.2.20/build/vfs_fonts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfmake@0.3.13/build/pdfmake.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfmake@0.3.13/build/vfs_fonts.js"></script>
 <script>
 "use strict";
 
@@ -463,14 +463,10 @@ async function exportDayToPDF(dateKey){
   const parts=dateKey.split("-").map(Number);
   const date=new Date(parts[0],parts[1]-1,parts[2]);
   const definition=makePdfDefinition(entry,date);
+  // pdfmake 0.3.x dùng Promise; gọi download() trực tiếp để trình duyệt xử lý tải tệp.
   const pdf=window.pdfMake.createPdf(definition);
-  const blob=await pdf.getBlob();
-  const url=URL.createObjectURL(blob);
-  const anchor=document.createElement("a");
-  anchor.href=url;anchor.download="SachLe_"+dateKey+".pdf";
-  document.body.append(anchor);anchor.click();anchor.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),15000);
-  showToast("Đã tạo PDF và bắt đầu tải xuống.");
+  await pdf.download("SachLe_"+dateKey+".pdf");
+  showToast("Đã tạo PDF. Kiểm tra thư mục Tải xuống của trình duyệt.");
  }catch(error){
   console.error("PDF export error:",error);
   showToast("Không thể tạo PDF. Vui lòng thử lại.");
