@@ -41,7 +41,7 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
 .meta{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 18px}.pill{padding:6px 10px;border:1px solid #e2dccd;border-radius:30px;background:#faf8f1;color:#5a645a;font-size:10px}
 .note,.empty{margin:14px 0 18px;padding:12px 14px;border-left:3px solid var(--gold);border-radius:0 6px 6px 0;background:#f8f3e7;color:#6b604a;font-size:11px;line-height:1.65}.empty{border-color:#87998e;background:#f0f4f0;color:#53655a}
 .section{margin-top:21px}.section h3{display:flex;align-items:center;gap:9px;margin:0 0 10px;color:var(--green);font:500 22px "EB Garamond",Georgia,serif}.section h3:after{content:"";height:1px;flex:1;background:var(--line)}
-.reading{margin:9px 0;padding:13px 15px;border:1px solid #ebe6da;border-radius:8px;background:#fffefa}.reading-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px}.reading h4{margin:0;color:var(--green2);font-size:12px;font-weight:600}.ref{color:#93866d;font-size:10px;font-style:italic}.reading p{margin:8px 0 0;color:#55574f;font-size:11px;line-height:1.8;white-space:pre-line}
+.reading{margin:9px 0;padding:13px 15px;border:1px solid #ebe6da;border-radius:8px;background:#fffefa}.reading-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px}.reading h4{margin:0;color:var(--green2);font-size:12px;font-weight:600}.ref{color:#93866d;font-size:10px;font-style:italic}.reading p{margin:8px 0 0;color:#55574f;font-size:11px;line-height:1.8;white-space:pre-line}.reading-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:11px}.reading-col{min-width:0;padding:9px 10px;border:1px solid #eee9df;border-radius:6px;background:#fffefa}.reading-col strong{display:block;color:#7b6a49;font:600 8px Arial,sans-serif;letter-spacing:.08em}.reading-col .reading-ref{display:block;margin-top:5px;color:#93866d;font-size:9px;font-style:italic}.reading-col p{margin-top:6px}.reading-col p:only-child{color:#aaa}
 .modal-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 23px;border-top:1px solid var(--line);background:#fbfaf5;color:var(--muted);font-size:9px;letter-spacing:.06em;text-transform:uppercase}.done{padding:8px 17px;border-color:var(--green);background:var(--green);color:white;font-size:11px}.done:hover{background:var(--green2)}
 .modal-actions{display:flex;align-items:center;gap:8px}
 .export-pdf{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 13px;border:1px solid var(--gold);border-radius:7px;background:#f7f1e3;color:#6c5427;cursor:pointer;font-size:11px;transition:.18s}
@@ -61,7 +61,7 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
  .weekdays{padding:10px 5px 0}.weekdays span{padding:10px 0;font-size:9px}.days{padding:0 5px 12px}
  .day{min-height:64px;gap:4px;margin:1px;padding:5px 3px;border-radius:6px}.number{width:24px;height:24px;font-size:12px}.caption{display:none}.markers{margin-top:auto}
  .legend{gap:10px 13px;padding:11px 13px 14px;font-size:9px}.about{gap:12px;padding:17px 15px}.about-mark{width:34px;height:34px}
- dialog{width:calc(100% - 12px);max-height:calc(100dvh - 12px);border-radius:12px}.modal-shell{max-height:calc(100dvh - 12px)}.modal-head{padding:15px 16px 12px}.modal-body{padding:17px 16px}.modal-title{font-size:27px}.latin{font-size:13px}.modal-foot{padding:11px 16px}.modal-actions{gap:6px}.export-pdf{padding:8px 9px;font-size:10px}.toast{bottom:14px}
+ dialog{width:calc(100% - 12px);max-height:calc(100dvh - 12px);border-radius:12px}.modal-shell{max-height:calc(100dvh - 12px)}.modal-head{padding:15px 16px 12px}.modal-body{padding:17px 16px}.modal-title{font-size:27px}.latin{font-size:13px}.modal-foot{padding:11px 16px}.reading-cols{grid-template-columns:1fr;gap:8px}.modal-actions{gap:6px}.export-pdf{padding:8px 9px;font-size:10px}.toast{bottom:14px}
 }
 @media(max-width:360px){.page{width:calc(100% - 14px)}.toolbar{gap:8px}.actions{gap:5px}.today{padding:7px 8px}.day{min-height:57px}.weekdays span{font-size:8px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -266,10 +266,21 @@ function renderCalendar(){
 
 function textCard(item){
  const card=document.createElement("article");card.className="reading";
- const head=document.createElement("div");head.className="reading-head";
- const label=document.createElement("h4");label.textContent=[item.label_la||item.labelLatin||"",item.label_vi||item.labelVi||item.label||""].filter(Boolean).join(" / ")||"Bản văn phụng vụ";head.append(label);
- if(item.reference){const ref=document.createElement("span");ref.className="ref";ref.textContent=item.reference;head.append(ref);}
- card.append(head);const p=document.createElement("p");p.textContent=item.text||"Bản văn chưa được nhập.";card.append(p);return card;
+ const labelLa=item.label_la||item.labelLa||item.labelLatin||"Lectio";
+ const labelVi=item.label_vi||item.labelVi||item.label||"Mục sách lễ";
+ const heading=document.createElement("div");heading.className="reading-head";
+ const label=document.createElement("h4");label.textContent=labelLa+" / "+labelVi;heading.append(label);card.append(heading);
+ const cols=document.createElement("div");cols.className="reading-cols";
+ for(const lang of ["la","vi"]){
+  const col=document.createElement("div");col.className="reading-col";
+  const cap=document.createElement("strong");cap.textContent=lang==="la"?"LATINH":"TIẾNG VIỆT";col.append(cap);
+  const ref=lang==="la"?(item.reference_la||item.referenceLa||item.referenceLatin||item.reference):(item.reference_vi||item.referenceVi||item.referenceVietnamese||item.reference);
+  if(ref){const reference=document.createElement("span");reference.className="reading-ref";reference.textContent=ref;col.append(reference);}
+  const p=document.createElement("p");
+  const content=lang==="la"?(item.text_la||item.textLa||item.textLatin):(item.text_vi||item.textVi||item.textVietnamese||item.text);
+  p.textContent=content||"—";col.append(p);cols.append(col);
+ }
+ card.append(cols);return card;
 }
 function addSection(title,items){
  if(!Array.isArray(items)||!items.length)return;
@@ -413,7 +424,6 @@ function makePdfDefinition(entry,date){
      paddingTop:function(){return 6;},
      paddingBottom:function(){return 6;}
     },
-    dontBreakRows:true,
     keepWithHeaderRows:1
    },
    ...(entry.demo?[{text:"DỮ LIỆU MINH HỌA — Cần đối chiếu bản văn và lịch phụng vụ trước khi sử dụng chính thức.",style:"disclaimer"}]:[])
