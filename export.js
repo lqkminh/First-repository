@@ -240,7 +240,7 @@ function makeWordCell(item,lang,cellWidth,style){
   children:[
    new Paragraph({
     keepNext:true,spacing:{before:style.before,after:55},
-    children:[new TextRun({text:label,bold:true,color:"A32139",font:"Times New Roman",size:style.labelSize,smallCaps:true})]
+    children:[new TextRun({text:label,bold:true,color:"466454",font:"Times New Roman",size:style.labelSize})]
    }),
    ...(showReference?[new Paragraph({
     keepNext:true,spacing:{after:75},
@@ -289,23 +289,7 @@ async function createDocx(entry,date,page){
   insideHorizontal:noBorder,
   insideVertical:{style:BorderStyle.SINGLE,size:4,color:"C9C4B9"}
  };
- const rows=[
-  new TableRow({
-   tableHeader:true,
-   children:[
-    new TableCell({
-     width:{size:cellWidth,type:WidthType.DXA},
-     margins:{top:90,bottom:90,left:style.cellPad,right:style.cellPad},
-     children:[new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:"LATINH",bold:true,font:"Times New Roman",size:20})]})]
-    }),
-    new TableCell({
-     width:{size:cellWidth,type:WidthType.DXA},
-     margins:{top:90,bottom:90,left:style.cellPad,right:style.cellPad},
-     children:[new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:"TIẾNG VIỆT",bold:true,font:"Times New Roman",size:20})]})]
-    })
-   ]
-  })
- ];
+ const rows=[];
  exportItems(entry).forEach(item=>{
   rows.push(new TableRow({
    children:[
@@ -349,6 +333,7 @@ async function createDocx(entry,date,page){
    spacing:{before:120},
    children:[new TextRun({text:"Dữ liệu minh họa — cần đối chiếu bản văn trước khi sử dụng chính thức.",italics:true,font:"Times New Roman",size:16})]
   })]:[])
+ ];
 
  const header=new Header({children:[
   new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:"ORDO ROMANUS · MISSALE ROMANUM 1962",font:"Times New Roman",size:15})]})
