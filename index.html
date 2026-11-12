@@ -464,9 +464,7 @@ async function exportDayToPDF(dateKey){
   const date=new Date(parts[0],parts[1]-1,parts[2]);
   const definition=makePdfDefinition(entry,date);
   const pdf=window.pdfMake.createPdf(definition);
-  const blob=await new Promise((resolve,reject)=>{
-   try{pdf.getBlob(resolve);}catch(error){reject(error);}
-  });
+  const blob=await pdf.getBlob();
   const url=URL.createObjectURL(blob);
   const anchor=document.createElement("a");
   anchor.href=url;anchor.download="SachLe_"+dateKey+".pdf";
