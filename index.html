@@ -37,11 +37,11 @@ dialog{width:min(760px,calc(100% - 28px));max-width:760px;max-height:min(88vh,90
 dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#141f1a94;backdrop-filter:blur(3px)}
 .modal-shell{display:flex;max-height:min(88vh,900px);flex-direction:column}.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding:19px 23px 15px;border-bottom:1px solid var(--line);background:#fbfaf5}
 .modal-date{margin:4px 0 0;color:var(--muted);font-size:11px}.close{width:34px;height:34px;border-radius:50%;font:24px/1 Arial,sans-serif}
-.modal-body{overflow-y:auto;padding:22px 23px;overscroll-behavior:contain;scroll-behavior:smooth}.modal-title{margin:0 0 5px;color:var(--green);font:500 31px/1.12 "EB Garamond",Georgia,serif}.latin{margin:0 0 14px;color:#716c5e;font-size:15px;font-style:italic}
+.modal-body{overflow-y:auto;padding:22px 23px;overscroll-behavior:contain;scroll-behavior:smooth}.bilingual-column-head strong{font-weight:700}.modal-title{margin:0 0 5px;color:var(--green);font:500 31px/1.12 "EB Garamond",Georgia,serif}.latin{margin:0 0 14px;color:#716c5e;font-size:15px;font-style:italic}
 .meta{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 18px}.pill{padding:6px 10px;border:1px solid #e2dccd;border-radius:30px;background:#faf8f1;color:#5a645a;font-size:10px}
 .note,.empty{margin:14px 0 18px;padding:12px 14px;border-left:3px solid var(--gold);border-radius:0 6px 6px 0;background:#f8f3e7;color:#6b604a;font-size:11px;line-height:1.65}.empty{border-color:#87998e;background:#f0f4f0;color:#53655a}
 .section{margin-top:21px}.section h3{display:flex;align-items:center;gap:9px;margin:0 0 10px;color:var(--green);font:500 22px "EB Garamond",Georgia,serif}.section h3:after{content:"";height:1px;flex:1;background:var(--line)}
-.reading{margin:0;padding:16px 0 17px;border:0;border-bottom:1px solid #e8e3d9;border-radius:0;background:transparent}.reading:last-child{border-bottom:0}.reading-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px;margin-bottom:5px}.reading h4{margin:0;color:var(--green2);font-size:12px;font-weight:600}.ref{color:#93866d;font-size:10px;font-style:italic}.reading p{margin:8px 0 0;color:#55574f;font-size:11px;line-height:1.8;white-space:pre-line}.reading-cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:8px}.reading-col{min-width:0;padding:0;border:0;border-radius:0;background:transparent}.reading-col strong{display:block;color:#7b6a49;font:600 8px Arial,sans-serif;letter-spacing:.08em}.reading-col .reading-ref{display:block;margin-top:5px;color:#93866d;font-size:9px;font-style:italic}.reading-col p{margin-top:6px;text-align:justify;line-height:1.85}.reading-col p:only-child{color:#aaa}
+.reading{margin:0;padding:16px 0 17px;border:0;border-bottom:1px solid #e8e3d9;border-radius:0;background:transparent}.reading:last-child{border-bottom:0}.reading-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px;margin-bottom:5px}.reading h4{margin:0;color:var(--green2);font-size:12px;font-weight:600}.ref{color:#93866d;font-size:10px;font-style:italic}.reading p{margin:8px 0 0;color:#55574f;font-size:11px;line-height:1.8;white-space:pre-line}.bilingual-column-head{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:18px 0 0;padding:0 0 8px;border-bottom:1px solid #ddd7ca;color:#847351;font:700 9px Arial,sans-serif;letter-spacing:.1em}.reading-cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:8px}.reading-col{min-width:0;padding:0;border:0;border-radius:0;background:transparent}.reading-col strong{display:block;color:#7b6a49;font:600 8px Arial,sans-serif;letter-spacing:.08em}.reading-col .reading-ref{display:block;margin-top:5px;color:#93866d;font-size:9px;font-style:italic}.reading-col p{margin-top:6px;text-align:justify;line-height:1.85}.reading-col p:only-child{color:#aaa}
 .modal-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 23px;border-top:1px solid var(--line);background:#fbfaf5;color:var(--muted);font-size:9px;letter-spacing:.06em;text-transform:uppercase}.done{padding:8px 17px;border-color:var(--green);background:var(--green);color:white;font-size:11px}.done:hover{background:var(--green2)}
 .modal-actions{display:flex;align-items:center;gap:8px}
 .export-pdf{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 13px;border:1px solid var(--gold);border-radius:7px;background:#f7f1e3;color:#6c5427;cursor:pointer;font-size:11px;transition:.18s}
@@ -61,7 +61,7 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
  .weekdays{padding:10px 5px 0}.weekdays span{padding:10px 0;font-size:9px}.days{padding:0 5px 12px}
  .day{min-height:64px;gap:4px;margin:1px;padding:5px 3px;border-radius:6px}.number{width:24px;height:24px;font-size:12px}.caption{display:none}.markers{margin-top:auto}
  .legend{gap:10px 13px;padding:11px 13px 14px;font-size:9px}.about{gap:12px;padding:17px 15px}.about-mark{width:34px;height:34px}
- dialog{width:calc(100% - 12px);max-height:calc(100dvh - 12px);border-radius:12px}.modal-shell{max-height:calc(100dvh - 12px)}.modal-head{padding:15px 16px 12px}.modal-body{padding:17px 16px}.modal-title{font-size:27px}.latin{font-size:13px}.modal-foot{padding:11px 16px}.reading-cols{grid-template-columns:1fr;gap:8px}.modal-actions{gap:6px}.export-pdf{padding:8px 9px;font-size:10px}.toast{bottom:14px}
+ dialog{width:calc(100% - 12px);max-height:calc(100dvh - 12px);border-radius:12px}.modal-shell{max-height:calc(100dvh - 12px)}.modal-head{padding:15px 16px 12px}.modal-body{padding:17px 16px}.modal-title{font-size:27px}.latin{font-size:13px}.modal-foot{padding:11px 16px}.bilingual-column-head,.reading-cols{gap:12px}.reading-col p{font-size:10px;line-height:1.7}.modal-actions{gap:6px}.export-pdf{padding:8px 9px;font-size:10px}.toast{bottom:14px}
 }
 @media(max-width:360px){.page{width:calc(100% - 14px)}.toolbar{gap:8px}.actions{gap:5px}.today{padding:7px 8px}.day{min-height:57px}.weekdays span{font-size:8px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -390,11 +390,14 @@ function textCard(item){
  const cols=document.createElement("div");cols.className="reading-cols";
  for(const lang of ["la","vi"]){
   const col=document.createElement("div");col.className="reading-col";
-  const cap=document.createElement("strong");cap.textContent=lang==="la"?"LATINH":"TIẾNG VIỆT";col.append(cap);
   const ref=lang==="la"
    ?(item.reference_la||item.referenceLa||item.referenceLatin||item.reference)
    :(item.reference_vi||item.referenceVi||item.referenceVietnamese||item.reference);
-  if(ref){const reference=document.createElement("span");reference.className="reading-ref";reference.textContent=ref;col.append(reference);}
+  const latinRef=item.reference_la||item.referenceLa||item.referenceLatin||"";
+  // Không lặp tham chiếu Latinh ở cột Việt nếu hai bên đang dùng cùng một chuỗi.
+  if(ref&&!(lang==="vi"&&latinRef&&ref===latinRef)){
+   const reference=document.createElement("span");reference.className="reading-ref";reference.textContent=ref;col.append(reference);
+  }
   const p=document.createElement("p");
   const content=lang==="la"
    ?(item.text_la||item.textLa||item.textLatin)
@@ -416,6 +419,13 @@ function openModal(date){
   if(values.length){const meta=document.createElement("div");meta.className="meta";values.forEach(value=>{const pill=document.createElement("span");pill.className="pill";pill.textContent=value;meta.append(pill);});body.append(meta);}
   if(entry.demo){const note=document.createElement("p");note.className="note";note.textContent="Dữ liệu minh họa để kiểm tra chức năng. Các bản văn và chi tiết phụng vụ cần được đối chiếu với ấn bản Missale Romanum 1962 và lịch riêng thích hợp trước khi sử dụng chính thức.";body.append(note);}
   const orderedSections=getOrderedSections(entry);
+  if(orderedSections.length){
+   const languageHead=document.createElement("div");
+   languageHead.className="bilingual-column-head";
+   const left=document.createElement("strong");left.textContent="LATINH";
+   const right=document.createElement("strong");right.textContent="TIẾNG VIỆT";
+   languageHead.append(left,right);body.append(languageHead);
+  }
   orderedSections.forEach(item=>body.append(textCard(item)));
   if(!orderedSections.length){
    const msg=document.createElement("p");msg.className="empty";msg.textContent="Chưa có dữ liệu sách lễ cho ngày này.";body.append(msg);
