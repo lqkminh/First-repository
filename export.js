@@ -13,7 +13,8 @@ function exportHasData(entry){
 function exportTitle(entry){return entry.title_vi||entry.titleVi||entry.title||"Sách lễ";}
 function exportLatinTitle(entry){return entry.title_la||entry.titleLatin||"";}
 function exportParts(date){
- const month=new Intl.DateTimeFormat("vi-VN",{month:"long"}).format(date);
+ const monthNames=["MỘT","HAI","BA","TƯ","NĂM","SÁU","BẢY","TÁM","CHÍN","MƯỜI","MƯỜI MỘT","MƯỜI HAI"];
+ const month=monthNames[date.getMonth()];
  const day=date.getDate();
  const year=date.getFullYear();
  const weekday=dateFormatter.formatToParts(date).find(p=>p.type==="weekday")?.value||"";
