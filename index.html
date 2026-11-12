@@ -164,32 +164,42 @@ const ORDO_DATA = {
   color:"Trắng · Albus",
   season:"Tempus post Pentecosten",
   solemnity:true, demo:true,
-  readings:[
+  sections:[
    {
-    label_vi:"Bài đọc 1", label_la:"Lectio I",
-    reference_vi:"Kh 7, 2–12", reference_la:"Ap 7, 2–12",
+    order:0,label_vi:"Ca đầu lễ",label_la:"Introitus",
+    reference_vi:"Kh 7, 2–12",reference_la:"Ap 7, 2–12",
     text_vi:"[Bản văn tiếng Việt minh họa — thay bằng bản dịch đã được đối chiếu.]",
     text_la:"[Textus Latinus exemplaris — textum authenticum substitue.]"
    },
    {
-    label_vi:"Thánh Vịnh", label_la:"Psalmus",
-    reference_vi:"Tv 23", reference_la:"Ps 23",
-    text_vi:"[Bản văn Thánh Vịnh tiếng Việt minh họa.]",
-    text_la:"[Textus Psalmi Latinus exemplaris.]"
-   },
-   {
-    label_vi:"Tin Mừng", label_la:"Evangelium",
-    reference_vi:"Mt 5, 1–12", reference_la:"Matth 5, 1–12",
-    text_vi:"[Bản văn Tin Mừng tiếng Việt minh họa.]",
-    text_la:"[Textus Evangelii Latinus exemplaris.]"
-   }
-  ],
-  prayers:[
-   {
-    label_vi:"Lời nguyện", label_la:"Oratio",
-    reference_vi:"Lời nguyện riêng", reference_la:"Oratio propria",
+    order:1,label_vi:"Kinh tổng nguyện",label_la:"Oratio",
+    reference_vi:"Lời nguyện riêng",reference_la:"Oratio propria",
     text_vi:"[Bản văn lời nguyện tiếng Việt minh họa.]",
     text_la:"[Textus Orationis Latinus exemplaris.]"
+   },
+   {
+    order:2,label_vi:"Bài Thánh Thư",label_la:"Lectio Epistolæ",
+    reference_vi:"Bản văn bài đọc",reference_la:"Lectio",
+    text_vi:"[Bản văn Thánh Thư tiếng Việt minh họa.]",
+    text_la:"[Textus Epistolæ Latinus exemplaris.]"
+   },
+   {
+    order:3,label_vi:"Ca lên bậc",label_la:"Graduale",
+    reference_vi:"Tv 23",reference_la:"Ps 23",
+    text_vi:"[Bản văn ca lên bậc tiếng Việt minh họa.]",
+    text_la:"[Textus Gradualis Latinus exemplaris.]"
+   },
+   {
+    order:4,label_vi:"Allêluia",label_la:"Alleluia",
+    reference_vi:"Alleluia",reference_la:"Alleluia",
+    text_vi:"[Bản văn Allêluia tiếng Việt minh họa.]",
+    text_la:"[Textus Alleluiæ Latinus exemplaris.]"
+   },
+   {
+    order:5,label_vi:"Phúc-âm thư",label_la:"Evangelium",
+    reference_vi:"Mt 5, 1–12",reference_la:"Matth 5, 1–12",
+    text_vi:"[Bản văn Tin Mừng tiếng Việt minh họa.]",
+    text_la:"[Textus Evangelii Latinus exemplaris.]"
    }
   ]
  },
@@ -200,26 +210,42 @@ const ORDO_DATA = {
   color:"Đen / Tím · Niger / Violaceus",
   season:"Tempus post Pentecosten",
   solemnity:false, demo:true,
-  readings:[
+  sections:[
    {
-    label_vi:"Bài đọc 1", label_la:"Lectio I",
-    reference_vi:"G 19, 21–27", reference_la:"Iob 19, 21–27",
+    order:0,label_vi:"Ca đầu lễ",label_la:"Introitus",
+    reference_vi:"Missa pro Defunctis",reference_la:"Missa pro Defunctis",
+    text_vi:"[Bản văn ca đầu lễ cầu hồn minh họa.]",
+    text_la:"[Textus Introitus pro Defunctis exemplaris.]"
+   },
+   {
+    order:1,label_vi:"Kinh tổng nguyện",label_la:"Oratio",
+    reference_vi:"Pro Defunctis",reference_la:"Pro Defunctis",
+    text_vi:"[Bản văn lời nguyện cầu cho các tín hữu đã qua đời.]",
+    text_la:"[Textus Orationis pro fidelibus defunctis.]"
+   },
+   {
+    order:2,label_vi:"Bài Thánh Thư",label_la:"Lectio",
+    reference_vi:"G 19, 21–27",reference_la:"Iob 19, 21–27",
     text_vi:"[Bản văn tiếng Việt minh họa cho Thánh lễ cầu hồn.]",
     text_la:"[Textus Latinus exemplaris pro Missa defunctorum.]"
    },
    {
-    label_vi:"Tin Mừng", label_la:"Evangelium",
-    reference_vi:"Ga 11, 21–27", reference_la:"Io 11, 21–27",
+    order:5,label_vi:"Phúc-âm thư",label_la:"Evangelium",
+    reference_vi:"Ga 11, 21–27",reference_la:"Io 11, 21–27",
     text_vi:"[Bản văn Tin Mừng tiếng Việt minh họa.]",
     text_la:"[Textus Evangelii Latinus exemplaris.]"
-   }
-  ],
-  prayers:[
+   },
    {
-    label_vi:"Lời nguyện", label_la:"Oratio",
-    reference_vi:"Pro Defunctis", reference_la:"Pro Defunctis",
-    text_vi:"[Bản văn lời nguyện cầu cho các tín hữu đã qua đời.]",
-    text_la:"[Textus Orationis pro fidelibus defunctis.]"
+    order:6,label_vi:"Ca dâng lễ",label_la:"Offertorium",
+    reference_vi:"Offertorium",reference_la:"Offertorium",
+    text_vi:"[Bản văn ca dâng lễ minh họa.]",
+    text_la:"[Textus Offertorii exemplaris.]"
+   },
+   {
+    order:7,label_vi:"Kinh nguyện thầm",label_la:"Secreta",
+    reference_vi:"Secreta",reference_la:"Secreta",
+    text_vi:"[Bản văn Kinh nguyện thầm minh họa.]",
+    text_la:"[Textus Secretæ exemplaris.]"
    }
   ]
  },
@@ -230,26 +256,36 @@ const ORDO_DATA = {
   color:"Trắng · Albus",
   season:"Tempus post Pentecosten",
   solemnity:false, demo:true,
-  readings:[
+  sections:[
    {
-    label_vi:"Bài đọc 1", label_la:"Lectio",
-    reference_vi:"Hc 44, 16–27", reference_la:"Eccli 44, 16–27",
+    order:0,label_vi:"Ca đầu lễ",label_la:"Introitus",
+    reference_vi:"Proprium Sanctorum",reference_la:"Proprium Sanctorum",
+    text_vi:"[Bản văn ca đầu lễ minh họa.]",
+    text_la:"[Textus Introitus exemplaris.]"
+   },
+   {
+    order:1,label_vi:"Kinh tổng nguyện",label_la:"Oratio",
+    reference_vi:"Oratio propria",reference_la:"Oratio propria",
+    text_vi:"[Bản văn lời nguyện riêng tiếng Việt minh họa.]",
+    text_la:"[Textus Orationis propriae Latinus exemplaris.]"
+   },
+   {
+    order:2,label_vi:"Bài Thánh Thư",label_la:"Lectio",
+    reference_vi:"Hc 44, 16–27",reference_la:"Eccli 44, 16–27",
     text_vi:"[Bản văn tiếng Việt minh họa về vị thánh.]",
     text_la:"[Textus Latinus exemplaris de Sancto.]"
    },
    {
-    label_vi:"Tin Mừng", label_la:"Evangelium",
-    reference_vi:"Mt 25, 14–23", reference_la:"Matth 25, 14–23",
+    order:5,label_vi:"Phúc-âm thư",label_la:"Evangelium",
+    reference_vi:"Mt 25, 14–23",reference_la:"Matth 25, 14–23",
     text_vi:"[Bản văn Tin Mừng tiếng Việt minh họa.]",
     text_la:"[Textus Evangelii Latinus exemplaris.]"
-   }
-  ],
-  prayers:[
+   },
    {
-    label_vi:"Lời nguyện", label_la:"Oratio",
-    reference_vi:"Oratio propria", reference_la:"Oratio propria",
-    text_vi:"[Bản văn lời nguyện riêng tiếng Việt minh họa.]",
-    text_la:"[Textus Orationis propriae Latinus exemplaris.]"
+    order:10,label_vi:"Kinh tạ lễ",label_la:"Postcommunio",
+    reference_vi:"Postcommunio",reference_la:"Postcommunio",
+    text_vi:"[Bản văn Kinh tạ lễ minh họa.]",
+    text_la:"[Textus Postcommunionis exemplaris.]"
    }
   ]
  }
@@ -289,7 +325,7 @@ function renderCalendar(){
   if(sameDay(date,today))button.classList.add("today");
   if(entry&&entry.solemnity)button.classList.add("solemnity");
   if(selectedDate&&sameDay(date,selectedDate))button.classList.add("selected");
-  button.setAttribute("aria-label",dateFormatter.format(date)+(entry?" — "+(entry.titleVi||entry.titleLatin):""));
+  button.setAttribute("aria-label",dateFormatter.format(date)+(entry?" — "+(entry.title_vi||entry.titleVi||entry.title_la||entry.titleLatin):""));
 
   const number=document.createElement("span");number.className="number";number.textContent=date.getDate();button.append(number);
   if(entry&&inMonth){
@@ -306,29 +342,66 @@ function renderCalendar(){
  }
 }
 
+function getOrderedSections(entry){
+ if(!entry)return [];
+ let items=[];
+ if(Array.isArray(entry.sections)){
+  items=entry.sections.slice();
+ }else{
+  // Tương thích dữ liệu cũ: ghép readings và prayers thành một danh sách.
+  items=[
+   ...(Array.isArray(entry.readings)?entry.readings:[]),
+   ...(Array.isArray(entry.prayers)?entry.prayers:[])
+  ];
+ }
+ const orderOf=item=>{
+  if(Number.isFinite(Number(item.order)))return Number(item.order);
+  const raw=[
+   item.label_la,item.labelLa,item.labelLatin,
+   item.label_vi,item.labelVi,item.label
+  ].filter(Boolean).join(" ").toLowerCase();
+  const normalized=raw.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  if(/introitus|introit|ca dau le/.test(normalized))return 0;
+  if(/oratio|collect|tong nguyen|kinh tong nguyen/.test(normalized))return 1;
+  if(/lectio|epistola|bai doc|bai thanh thu|bai tho/.test(normalized))return 2;
+  if(/psalmus|thanh vinh|psalm/.test(normalized))return 2.5;
+  if(/graduale|ca len bac|gradual/.test(normalized))return 3;
+  if(/alleluia|allel[uú]ia/.test(normalized))return 4;
+  if(/evangelium|phuc am|phuc-am|gospel/.test(normalized))return 5;
+  if(/offertorium|ca dang le|offertory/.test(normalized))return 6;
+  if(/secreta|kinh nguyen tham|secret/.test(normalized))return 7;
+  if(/praefatio|preface|tien tung/.test(normalized))return 8;
+  if(/communio|ca chiu le|communion/.test(normalized))return 9;
+  if(/postcommunio|kinh ta le|postcommunion/.test(normalized))return 10;
+  return 100;
+ };
+ return items.map((item,index)=>({item,index,order:orderOf(item)}))
+  .sort((a,b)=>a.order-b.order||a.index-b.index)
+  .map(record=>record.item);
+}
 function textCard(item){
  const card=document.createElement("article");card.className="reading";
- const labelLa=item.label_la||item.labelLa||item.labelLatin||"Lectio";
+ const labelLa=item.label_la||item.labelLa||item.labelLatin||"";
  const labelVi=item.label_vi||item.labelVi||item.label||"Mục sách lễ";
  const heading=document.createElement("div");heading.className="reading-head";
- const label=document.createElement("h4");label.textContent=labelLa+" / "+labelVi;heading.append(label);card.append(heading);
+ const label=document.createElement("h4");
+ label.textContent=[labelLa,labelVi].filter(Boolean).join(" / ")||"Mục sách lễ";
+ heading.append(label);card.append(heading);
  const cols=document.createElement("div");cols.className="reading-cols";
  for(const lang of ["la","vi"]){
   const col=document.createElement("div");col.className="reading-col";
   const cap=document.createElement("strong");cap.textContent=lang==="la"?"LATINH":"TIẾNG VIỆT";col.append(cap);
-  const ref=lang==="la"?(item.reference_la||item.referenceLa||item.referenceLatin||item.reference):(item.reference_vi||item.referenceVi||item.referenceVietnamese||item.reference);
+  const ref=lang==="la"
+   ?(item.reference_la||item.referenceLa||item.referenceLatin||item.reference)
+   :(item.reference_vi||item.referenceVi||item.referenceVietnamese||item.reference);
   if(ref){const reference=document.createElement("span");reference.className="reading-ref";reference.textContent=ref;col.append(reference);}
   const p=document.createElement("p");
-  const content=lang==="la"?(item.text_la||item.textLa||item.textLatin):(item.text_vi||item.textVi||item.textVietnamese||item.text);
+  const content=lang==="la"
+   ?(item.text_la||item.textLa||item.textLatin)
+   :(item.text_vi||item.textVi||item.textVietnamese||item.text);
   p.textContent=content||"—";col.append(p);cols.append(col);
  }
  card.append(cols);return card;
-}
-function addSection(title,items){
- if(!Array.isArray(items)||!items.length)return;
- const section=document.createElement("section");section.className="section";
- const heading=document.createElement("h3");heading.textContent=title;section.append(heading);
- items.forEach(item=>section.append(textCard(item)));$("modal-body").append(section);
 }
 function openModal(date){
  const entry=ORDO_DATA[keyFor(date)];currentModalDateKey=keyFor(date);$("modal-date").textContent=dateFormatter.format(date);
