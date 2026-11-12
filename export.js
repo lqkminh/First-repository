@@ -75,28 +75,30 @@ function exportText(item,lang,kind){
  return kind==="label"?normalizeSectionLabel(value):value;
 }
 /*
- * Noto Serif có bộ ký tự Vietnamese và được phát hành theo SIL Open Font License.
+ * Tinos là phông serif có ký tự tiếng Việt, metric tương thích Times New Roman.
  * pdfmake tải TTF qua URL rồi nhúng font vào từng PDF được tạo.
  */
-const PDF_SERIF_URL="https://raw.githubusercontent.com/google/fonts/main/ofl/notoserif/NotoSerif%5Bwdth%2Cwght%5D.ttf";
-const PDF_SERIF_ITALIC_URL="https://raw.githubusercontent.com/google/fonts/main/ofl/notoserif/NotoSerif-Italic%5Bwdth%2Cwght%5D.ttf";
+const PDF_SERIF_URL="https://raw.githubusercontent.com/google/fonts/main/ofl/tinos/Tinos-Regular.ttf";
+const PDF_SERIF_BOLD_URL="https://raw.githubusercontent.com/google/fonts/main/ofl/tinos/Tinos-Bold.ttf";
+const PDF_SERIF_ITALIC_URL="https://raw.githubusercontent.com/google/fonts/main/ofl/tinos/Tinos-Italic.ttf";
+const PDF_SERIF_BOLD_ITALIC_URL="https://raw.githubusercontent.com/google/fonts/main/ofl/tinos/Tinos-BoldItalic.ttf";
 let pdfSerifRegistered=false;
 function registerEmbeddedPdfFont(){
  if(!window.pdfMake||typeof window.pdfMake.addFonts!=="function")throw new Error("Không tải được pdfmake.");
  if(!pdfSerifRegistered){
   if(typeof window.pdfMake.setUrlResourceCaching==="function")window.pdfMake.setUrlResourceCaching(true);
   window.pdfMake.addFonts({
-   NotoSerifEmbedded:{
+   TinosEmbedded:{
     normal:PDF_SERIF_URL,
-    bold:PDF_SERIF_URL,
+    bold:PDF_SERIF_BOLD_URL,
     italics:PDF_SERIF_ITALIC_URL,
-    bolditalics:PDF_SERIF_ITALIC_URL
+    bolditalics:PDF_SERIF_BOLD_ITALIC_URL
    }
   });
   pdfSerifRegistered=true;
  }
 }
-function pdfCell(item,lang){
+function pdfCell(item,lang,bodySize){
  const label=exportText(item,lang,"label");
  const reference=exportText(item,lang,"reference");
  const latinReference=exportText(item,"la","reference");
@@ -104,11 +106,11 @@ function pdfCell(item,lang){
  const showReference=reference&&reference!=="—"&&!(lang==="vi"&&latinReference===reference);
  return {
   stack:[
-   {text:label,bold:true,fontSize:11,color:"#466454",margin:[0,0,0,3]},
-   ...(showReference?[{text:reference,fontSize:9.5,italics:true,color:"#8b7958",margin:[0,0,0,5]}]:[]),
-   {text:pdfDropCapText(text,11),alignment:"justify",lineHeight:1.35}
+   {text:label,bold:true,fontSize:10,color:"#466454",margin:[0,0,0,2.75]},
+   ...(showReference?[{text:reference,fontSize:9,italics:true,color:"#8b7958",margin:[0,0,0,3.75]}]:[]),
+   {text:pdfDropCapText(text,bodySize),alignment:"justify",lineHeight:1.35}
   ],
-  margin:[8,9,8,11],
+  margin:[0,11,0,15.25],
   verticalAlignment:"top"
  };
 }
@@ -116,13 +118,16 @@ function pdfDefinition(entry,date,pageSize){
  const dateInfo=exportParts(date);
  const title=exportTitle(entry);
  const latinTitle=exportLatinTitle(entry);
- const items=exportItems(entry);
- const rows=[];
- items.forEach(item=>rows.push([pdfCell(item,"la"),pdfCell(item,"vi")]));
- const margins=pageSize==="A5"?[30,47,30,42]:[42,55,42,48];
- const contentSize=pageSize==="A5"?10.5:11;
  const meta=exportLiturgicalMeta(entry);
  const massFrom=exportMassTakenFrom(entry);
+ const isA5=pageSize==="A5";
+ const contentSize=isA5?10.5:11;
+ const margins=isA5?[34,34,34,34]:[45,45,45,45];
+ const rows=[];
+ exportItems(entry).forEach(item=>rows.push([
+  pdfCell(item,"la",contentSize),
+  pdfCell(item,"vi",contentSize)
+ ]));
  return {
   pageSize,
   pageOrientation:"portrait",
@@ -131,8 +136,8 @@ function pdfDefinition(entry,date,pageSize){
   footer:function(pageNumber,pageCount){
    return {
     columns:[
-     {text:"Ordo Romanus · "+new Intl.DateTimeFormat("vi-VN").format(new Date()),font:"NotoSerifEmbedded",fontSize:8,color:"#555555"},
-     {text:String(pageNumber)+" / "+String(pageCount),alignment:"right",font:"NotoSerifEmbedded",fontSize:8,color:"#555555"}
+     {text:"Ordo Romanus · "+new Intl.DateTimeFormat("vi-VN").format(new Date()),font:"TinosEmbedded",fontSize:8,color:"#555555"},
+     {text:String(pageNumber)+" / "+String(pageCount),alignment:"right",font:"TinosEmbedded",fontSize:8,color:"#555555"}
     ],
     margin:[margins[0],0,margins[2],17]
    };
@@ -144,37 +149,42 @@ function pdfDefinition(entry,date,pageSize){
    ...(meta?[{text:meta,style:"metadata"}]:[]),
    ...(massFrom?[{text:"Mass taken from: "+massFrom,style:"massFrom"}]:[]),
    {
+    // Dùng SVG vector thay ký tự ✠ để không phụ thuộc glyph của font PDF.
     columns:[
-     {canvas:[{type:"line",x1:0,y1:5,x2:100,y2:5,lineWidth:1.1,lineColor:"#A32139"}]},
-     {text:"✠",font:"NotoSerifEmbedded",fontSize:19,color:"#A32139",alignment:"center",margin:[0,-5,0,0],width:32},
-     {canvas:[{type:"line",x1:0,y1:5,x2:100,y2:5,lineWidth:1.1,lineColor:"#A32139"}]}
+     {canvas:[{type:"line",x1:0,y1:13,x2:100,y2:13,lineWidth:1.1,lineColor:"#A32139"}]},
+     {
+      svg:'<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><path fill="#A32139" d="M10 1 L18 1 L19 8 L26 4 L28 11 L21 14 L28 17 L26 24 L19 20 L18 27 L10 27 L9 20 L2 24 L0 17 L7 14 L0 11 L2 4 L9 8 Z"/></svg>',
+      width:22,
+      alignment:"center"
+     },
+     {canvas:[{type:"line",x1:0,y1:13,x2:100,y2:13,lineWidth:1.1,lineColor:"#A32139"}]}
     ],
     columnGap:14,
-    margin:[0,13,0,14]
+    margin:[0,0,0,10.5]
    },
    {
     table:{widths:["*","*"],body:rows.length?rows:[[{text:"—"},{text:"—"}]]},
     layout:{
-     hLineWidth:function(){return .3;},
+     hLineWidth:function(){return 0;},
      vLineWidth:function(i){return i===1?.45:0;},
      hLineColor:function(){return "#ded9cf";},
      vLineColor:function(){return "#d7d1c6";},
-     paddingLeft:function(){return 7;},
-     paddingRight:function(){return 7;},
-     paddingTop:function(){return 6;},
-     paddingBottom:function(){return 6;}
+     paddingLeft:function(){return 7.25;},
+     paddingRight:function(){return 7.25;},
+     paddingTop:function(){return 0;},
+     paddingBottom:function(){return 0;}
     },
     dontBreakRows:true
    },
-   ...(entry.demo?[{text:"Dữ liệu minh họa — cần đối chiếu bản văn trước khi sử dụng chính thức.",font:"NotoSerifEmbedded",fontSize:8,italics:true,color:"#666666",margin:[0,10,0,0]}]:[])
+   ...(entry.demo?[{text:"Dữ liệu minh họa — cần đối chiếu bản văn trước khi sử dụng chính thức.",font:"TinosEmbedded",fontSize:8,italics:true,color:"#666666",margin:[0,10,0,0]}]:[])
   ],
-  defaultStyle:{font:"NotoSerifEmbedded",fontSize:contentSize,color:"#222222",lineHeight:1.3},
+  defaultStyle:{font:"TinosEmbedded",fontSize:contentSize,color:"#222222",lineHeight:1.3},
   styles:{
-   dateHeading:{font:"NotoSerifEmbedded",fontSize:pageSize==="A5"?8:9,bold:false,characterSpacing:1.5,alignment:"center",color:"#776b5c",margin:[0,0,0,14]},
-   title:{font:"NotoSerifEmbedded",fontSize:pageSize==="A5"?21:26,bold:true,alignment:"center",color:"#A32139",lineHeight:1.12,margin:[0,0,0,6]},
-   latinTitle:{font:"NotoSerifEmbedded",fontSize:12,italics:true,alignment:"center",color:"#292929",margin:[0,0,0,7]},
-   metadata:{font:"NotoSerifEmbedded",fontSize:11,italics:true,alignment:"center",color:"#343434",margin:[0,0,0,7]},
-   massFrom:{font:"NotoSerifEmbedded",fontSize:11,italics:true,alignment:"center",color:"#8b7958",margin:[0,0,0,1]}
+   dateHeading:{font:"TinosEmbedded",fontSize:isA5?8:9,bold:false,characterSpacing:1.5,alignment:"center",color:"#776b5c",margin:[0,0,0,9.5]},
+   title:{font:"TinosEmbedded",fontSize:isA5?21:25,bold:true,alignment:"center",color:"#A32139",lineHeight:1.12,margin:[0,0,0,5]},
+   latinTitle:{font:"TinosEmbedded",fontSize:isA5?11:12,italics:true,alignment:"center",color:"#292929",margin:[0,0,0,4.25]},
+   metadata:{font:"TinosEmbedded",fontSize:isA5?9:10,italics:true,alignment:"center",color:"#343434",margin:[0,0,0,4.75]},
+   massFrom:{font:"TinosEmbedded",fontSize:isA5?8.5:9.5,italics:true,alignment:"center",color:"#8b7958",margin:[0,0,0,5.5]}
   }
  };
 }
