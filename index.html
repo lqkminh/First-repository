@@ -66,6 +66,7 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
 @media(max-width:360px){.page{width:calc(100% - 14px)}.toolbar{gap:8px}.actions{gap:5px}.today{padding:7px 8px}.day{min-height:57px}.weekdays span{font-size:8px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
+<link rel="stylesheet" href="export.css">
 </head>
 <body>
 <header class="header" id="top">
@@ -99,13 +100,54 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
  <div class="modal-shell">
   <div class="modal-head"><div><p class="kicker">Proprium Missae</p><p class="modal-date" id="modal-date"></p></div><button class="close" id="close" type="button" aria-label="Đóng">×</button></div>
   <div class="modal-body" id="modal-body"></div>
-  <div class="modal-foot"><span>Missale Romanum · 1962</span><div class="modal-actions"><button class="export-pdf" id="export-pdf" type="button" hidden>⇩ Xuất PDF</button><button class="done" id="done" type="button">Đóng</button></div></div>
+  <div class="modal-foot"><span>Missale Romanum · 1962</span><div class="modal-actions"><button class="export-pdf" id="export-pdf" type="button" hidden>⇩ Xuất file</button><button class="done" id="done" type="button">Đóng</button></div></div>
+ </div>
+</dialog>
+
+<dialog id="export-modal" class="export-dialog" aria-labelledby="export-title">
+ <div class="export-shell">
+  <div class="export-header">
+   <div>
+    <p class="kicker">Export the Mass</p>
+    <h2 id="export-title">Xuất File</h2>
+    <p class="export-subtitle">File PDF hoặc Word của Sách lễ, để in hoặc chỉnh sửa.</p>
+   </div>
+   <button class="export-close" id="export-close" type="button" aria-label="Đóng">×</button>
+  </div>
+  <div class="export-content">
+   <section class="export-section">
+    <div class="export-section-head"><span>ĐỊNH DẠNG</span><small>FORMAT</small></div>
+    <div class="export-options format-options" role="group" aria-label="Chọn định dạng file">
+     <button class="export-option active" type="button" data-format="pdf" aria-pressed="true"><span class="option-icon">PDF</span><span class="option-caption">Để in</span></button>
+     <button class="export-option" type="button" data-format="docx" aria-pressed="false"><span class="option-icon">W</span><span class="option-caption">Word (DOCX)</span></button>
+    </div>
+   </section>
+   <section class="export-section">
+    <div class="export-section-head"><span>KHỔ GIẤY</span><small>PAGE</small></div>
+    <div class="export-options page-options" role="group" aria-label="Chọn khổ giấy">
+     <button class="export-option active" type="button" data-page="A4" aria-pressed="true"><span class="option-icon">A4</span><span class="option-caption">Tiêu chuẩn</span></button>
+     <button class="export-option" type="button" data-page="A5" aria-pressed="false"><span class="option-icon">A5</span><span class="option-caption">Nhỏ gọn</span></button>
+     <button class="export-option booklet-option" type="button" data-page="booklet" aria-pressed="false"><span class="option-icon">A5</span><span class="option-caption">Booklet</span></button>
+    </div>
+    <p class="booklet-note" id="booklet-note" hidden>Các trang được dàn trên khổ A4: in hai mặt (lật cạnh ngắn), gấp, đóng ghim.</p>
+   </section>
+   <div class="export-summary-card">
+    <p class="export-summary-label">VỚI CÀI ĐẶT CỦA TRANG</p>
+    <p class="export-summary-text" id="export-summary">Latinh và Tiếng Việt song song · Lễ riêng · A4 · PDF</p>
+   </div>
+   <div class="export-footer">
+    <span class="export-date" id="export-date"></span>
+    <button class="export-run" id="export-run" type="button"><span id="export-run-label">Xuất file</span><span class="export-spinner" id="export-spinner" hidden></span></button>
+   </div>
+  </div>
  </div>
 </dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/pdfmake@0.3.13/build/pdfmake.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/pdfmake@0.3.13/build/vfs_fonts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfmake@0.3.14/build/pdfmake.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfmake@0.3.14/build/vfs_fonts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@9.15.3/dist/index.iife.js"></script>
 <script>
 "use strict";
 
@@ -481,10 +523,11 @@ $("prev").addEventListener("click",()=>{viewMonth=new Date(viewMonth.getFullYear
 $("next").addEventListener("click",()=>{viewMonth=new Date(viewMonth.getFullYear(),viewMonth.getMonth()+1,1);renderCalendar();});
 $("today").addEventListener("click",()=>{selectedDate=new Date(today);viewMonth=new Date(today.getFullYear(),today.getMonth(),1);renderCalendar();});
 $("close").addEventListener("click",closeModal);$("done").addEventListener("click",closeModal);
-$("export-pdf").addEventListener("click",()=>{if(currentModalDateKey)exportDayToPDF(currentModalDateKey);});
+$("export-pdf").addEventListener("click",()=>{if(currentModalDateKey&&window.openExportModal)window.openExportModal(currentModalDateKey);});
 $("day-modal").addEventListener("click",event=>{if(event.target===$("day-modal"))closeModal();});
 // Phím Esc được phần tử dialog của trình duyệt hỗ trợ mặc định.
 renderCalendar();
 </script>
+<script src="export.js"></script>
 </body>
 </html>
