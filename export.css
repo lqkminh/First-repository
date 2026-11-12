@@ -1,0 +1,48 @@
+
+/* Modal "Xuất File" */
+.export-dialog{width:min(510px,calc(100% - 26px));max-width:510px;max-height:min(92vh,780px);padding:0;overflow:hidden;border:1px solid #e3ddcf;border-radius:16px;background:#fffefa;color:var(--ink);box-shadow:0 28px 90px #101c1640}
+.export-dialog[open]{animation:export-enter .2s ease-out both}
+.export-dialog::backdrop{background:#15221c91;backdrop-filter:blur(4px)}
+.export-shell{display:flex;max-height:min(92vh,780px);flex-direction:column}
+.export-header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:23px 25px 19px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#fbfaf4,#f6f2e8)}
+.export-header h2{margin:4px 0 5px;color:var(--green);font:500 31px/1.05 "EB Garamond",Georgia,serif}
+.export-subtitle{max-width:360px;margin:0;color:var(--muted);font-size:11px;line-height:1.65}
+.export-close{display:grid;width:34px;height:34px;flex:0 0 auto;place-items:center;border:1px solid #ded8ca;border-radius:50%;background:#fffefa;color:var(--green);cursor:pointer;font:25px/1 Arial,sans-serif}
+.export-close:hover{border-color:var(--gold);background:#f8f3e7}
+.export-content{overflow-y:auto;padding:20px 25px 23px}
+.export-section{margin-bottom:22px}
+.export-section-head{display:flex;align-items:baseline;gap:9px;margin:0 0 10px;color:#756a56;font:700 10px Arial,sans-serif;letter-spacing:.13em}
+.export-section-head small{color:#aaa18f;font-size:9px;letter-spacing:.1em}
+.export-options{display:grid;gap:9px}
+.format-options{grid-template-columns:repeat(2,minmax(0,1fr))}
+.page-options{grid-template-columns:repeat(3,minmax(0,1fr))}
+.export-option{display:flex;min-width:0;min-height:65px;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:10px 7px;border:1px solid #e2ded3;border-radius:9px;background:#fffefa;color:var(--ink);cursor:pointer;transition:background .16s,border-color .16s,box-shadow .16s}
+.export-option:hover:not(:disabled){border-color:#b9a879;background:#fbf8ef}
+.export-option.active{border-color:var(--green);background:#edf2ed;box-shadow:inset 0 0 0 1px var(--green);color:var(--green)}
+.option-icon{font:600 17px/1 "EB Garamond",Georgia,serif;letter-spacing:.03em}
+.option-caption{font-size:10px;color:var(--muted);text-align:center}
+.export-option.active .option-caption{color:#506558}
+.export-option:disabled{cursor:not-allowed;opacity:.38;background:#f5f3ee;border-style:dashed}
+.booklet-note{margin:9px 1px 0;padding:9px 11px;border-left:2px solid var(--gold);border-radius:0 6px 6px 0;background:#f8f3e7;color:#76664d;font-size:10px;line-height:1.6}
+.booklet-note[hidden]{display:none}
+.export-summary-card{margin-top:3px;padding:13px 15px;border:1px solid #e6dfcf;border-radius:9px;background:#f8f5ec}
+.export-summary-label{margin:0 0 6px;color:#93856a;font:700 9px Arial,sans-serif;letter-spacing:.13em}
+.export-summary-text{margin:0;color:#3f5448;font-size:11px;line-height:1.55}
+.export-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:17px}
+.export-date{color:#999184;font-size:9px}
+.export-run{display:inline-flex;min-width:120px;align-items:center;justify-content:center;gap:9px;padding:11px 19px;border:1px solid var(--green);border-radius:8px;background:var(--green);color:white;cursor:pointer;font:600 11px "Noto Serif",Georgia,serif;transition:background .16s}
+.export-run:hover:not(:disabled){background:var(--green2)}
+.export-run:disabled{cursor:wait;opacity:.8}
+.export-spinner{width:13px;height:13px;border:2px solid #ffffff5c;border-top-color:#fff;border-radius:50%;animation:pdf-spin .7s linear infinite}
+.export-spinner[hidden]{display:none}
+@keyframes export-enter{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:none}}
+@media(max-width:520px){
+ .export-dialog{width:calc(100% - 14px);max-height:calc(100dvh - 14px);border-radius:13px}
+ .export-shell{max-height:calc(100dvh - 14px)}
+ .export-header{padding:18px 17px 15px}.export-header h2{font-size:28px}
+ .export-content{padding:17px 17px 18px}
+ .export-section{margin-bottom:18px}
+ .export-option{min-height:61px;padding:8px 4px}.option-caption{font-size:9px}
+ .export-footer{align-items:flex-end}.export-date{max-width:130px;line-height:1.5}
+ .export-run{min-width:108px;padding:10px 13px}
+}
