@@ -13,13 +13,37 @@ function exportHasData(entry){
 function exportTitle(entry){return entry.title_vi||entry.titleVi||entry.title||"Sách lễ";}
 function exportLatinTitle(entry){return entry.title_la||entry.titleLatin||"";}
 function exportParts(date){
- const parts=dateFormatter.formatToParts(date);
- const weekday=parts.find(p=>p.type==="weekday")?.value||"";
+ const month=new Intl.DateTimeFormat("vi-VN",{month:"long"}).format(date);
+ const day=date.getDate();
+ const year=date.getFullYear();
+ const weekday=dateFormatter.formatToParts(date).find(p=>p.type==="weekday")?.value||"";
  return {
   weekday,
   weekdayTitle:weekday.charAt(0).toUpperCase()+weekday.slice(1),
-  dateText:String(date.getDate()).padStart(2,"0")+"/"+String(date.getMonth()+1).padStart(2,"0")+"/"+date.getFullYear()
+  dateText:String(day).padStart(2,"0")+"/"+String(date.getMonth()+1).padStart(2,"0")+"/"+year,
+  dateHeading:("NGÀY "+day+" THÁNG "+month+", "+year).toLocaleUpperCase("vi-VN")
  };
+}
+function exportLiturgicalMeta(entry){
+ const direct=entry.meta_line_vi||entry.metaLineVi||entry.meta_line||entry.metaLine;
+ if(direct)return String(direct);
+ return [entry.color,entry.rank,entry.day_type_vi||entry.dayTypeVi||entry.day_type||entry.dayType]
+  .filter(Boolean).join(" · ");
+}
+function exportMassTakenFrom(entry){
+ return entry.mass_taken_from_vi||entry.massTakenFromVi||entry.mass_taken_from||entry.massTakenFrom||"";
+}
+function normalizeSectionLabel(label){
+ return String(label||"").replace(/Bài\\s+Thánh\\s+Thơ/gi,"Bài thơ");
+}
+function pdfDropCapText(value,size){
+ const chars=Array.from(String(value||"—"));
+ if(!chars.length)return "—";
+ const first=chars.shift();
+ return [
+  {text:first,fontSize:size+3,bold:true},
+  {text:chars.join(""),fontSize:size}
+ ];
 }
 function exportItems(entry){
  return typeof getOrderedSections==="function"?getOrderedSections(entry):[
@@ -45,7 +69,8 @@ function exportDownload(blob,fileName){
  setTimeout(()=>URL.revokeObjectURL(url),60000);
 }
 function exportText(item,lang,kind){
- return getBilingualField(item,lang,kind)||"—";
+ const value=getBilingualField(item,lang,kind)||"—";
+ return kind==="label"?normalizeSectionLabel(value):value;
 }
 /*
  * Noto Serif có bộ ký tự Vietnamese và được phát hành theo SIL Open Font License.
@@ -77,11 +102,11 @@ function pdfCell(item,lang){
  const showReference=reference&&reference!=="—"&&!(lang==="vi"&&latinReference===reference);
  return {
   stack:[
-   {text:label,bold:true,fontSize:10.5,margin:[0,0,0,2]},
-   ...(showReference?[{text:reference,fontSize:9,italics:true,margin:[0,0,0,4]}]:[]),
-   {text:text||"—",fontSize:11,alignment:"justify",lineHeight:1.32}
+   {text:label,bold:true,fontSize:11,color:"#466454",margin:[0,0,0,3]},
+   ...(showReference?[{text:reference,fontSize:9.5,italics:true,color:"#8b7958",margin:[0,0,0,5]}]:[]),
+   {text:pdfDropCapText(text,11),alignment:"justify",lineHeight:1.35}
   ],
-  margin:[8,7,8,9],
+  margin:[8,9,8,11],
   verticalAlignment:"top"
  };
 }
@@ -89,14 +114,13 @@ function pdfDefinition(entry,date,pageSize){
  const dateInfo=exportParts(date);
  const title=exportTitle(entry);
  const latinTitle=exportLatinTitle(entry);
- const rows=[[
-  {text:"LATINH",style:"columnHeader"},
-  {text:"TIẾNG VIỆT",style:"columnHeader"}
- ]];
- exportItems(entry).forEach(item=>rows.push([pdfCell(item,"la"),pdfCell(item,"vi")]));
- const margins=pageSize==="A5"?[30,42,30,42]:[42,48,42,44];
+ const items=exportItems(entry);
+ const rows=[];
+ items.forEach(item=>rows.push([pdfCell(item,"la"),pdfCell(item,"vi")]));
+ const margins=pageSize==="A5"?[30,47,30,42]:[42,55,42,48];
  const contentSize=pageSize==="A5"?10.5:11;
- const meta=[entry.rank,entry.color,entry.season].filter(Boolean).join(" · ");
+ const meta=exportLiturgicalMeta(entry);
+ const massFrom=exportMassTakenFrom(entry);
  return {
   pageSize,
   pageOrientation:"portrait",
@@ -115,31 +139,43 @@ function pdfDefinition(entry,date,pageSize){
    };
   },
   content:[
-   {text:title+" — "+dateInfo.dateText+", "+dateInfo.weekdayTitle,style:"title"},
+   {text:dateInfo.dateHeading,style:"dateHeading"},
+   {text:title,style:"title"},
    ...(latinTitle?[{text:latinTitle,style:"latinTitle"}]:[]),
    ...(meta?[{text:meta,style:"metadata"}]:[]),
+   ...(massFrom?[{text:"Mass taken from: "+massFrom,style:"massFrom"}]:[]),
    {
-    table:{headerRows:1,widths:["*","*"],body:rows},
+    columns:[
+     {canvas:[{type:"line",x1:0,y1:5,x2:100,y2:5,lineWidth:1.1,lineColor:"#A32139"}]},
+     {text:"✠",font:"NotoSerifEmbedded",fontSize:19,color:"#A32139",alignment:"center",margin:[0,-5,0,0],width:32},
+     {canvas:[{type:"line",x1:0,y1:5,x2:100,y2:5,lineWidth:1.1,lineColor:"#A32139"}]}
+    ],
+    columnGap:14,
+    margin:[0,13,0,14]
+   },
+   {
+    table:{widths:["*","*"],body:rows.length?rows:[[{text:"—"},{text:"—"}]]},
     layout:{
-     hLineWidth:function(i){return i===1?.55:.25;},
+     hLineWidth:function(){return .3;},
      vLineWidth:function(i){return i===1?.45:0;},
-     hLineColor:function(){return "#c9c4b9";},
-     vLineColor:function(){return "#c9c4b9";},
-     paddingLeft:function(){return 6;},
-     paddingRight:function(){return 6;},
-     paddingTop:function(){return 5;},
-     paddingBottom:function(){return 5;}
+     hLineColor:function(){return "#ded9cf";},
+     vLineColor:function(){return "#d7d1c6";},
+     paddingLeft:function(){return 7;},
+     paddingRight:function(){return 7;},
+     paddingTop:function(){return 6;},
+     paddingBottom:function(){return 6;}
     },
-    keepWithHeaderRows:1
+    dontBreakRows:true
    },
    ...(entry.demo?[{text:"Dữ liệu minh họa — cần đối chiếu bản văn trước khi sử dụng chính thức.",font:"NotoSerifEmbedded",fontSize:8,italics:true,color:"#666666",margin:[0,10,0,0]}]:[])
   ],
   defaultStyle:{font:"NotoSerifEmbedded",fontSize:contentSize,color:"#222222",lineHeight:1.3},
   styles:{
-   title:{font:"NotoSerifEmbedded",fontSize:pageSize==="A5"?14:16,bold:true,alignment:"center",color:"#222222",margin:[0,0,0,5]},
-   latinTitle:{font:"NotoSerifEmbedded",fontSize:11,italics:true,alignment:"center",color:"#333333",margin:[0,0,0,7]},
-   metadata:{font:"NotoSerifEmbedded",fontSize:9,alignment:"center",color:"#555555",margin:[0,0,0,11]},
-   columnHeader:{font:"NotoSerifEmbedded",fontSize:11,bold:true,alignment:"center",color:"#222222",margin:[0,4,0,4]}
+   dateHeading:{font:"NotoSerifEmbedded",fontSize:pageSize==="A5"?8:9,bold:false,characterSpacing:1.5,alignment:"center",color:"#776b5c",margin:[0,0,0,14]},
+   title:{font:"NotoSerifEmbedded",fontSize:pageSize==="A5"?21:26,bold:true,alignment:"center",color:"#A32139",lineHeight:1.12,margin:[0,0,0,6]},
+   latinTitle:{font:"NotoSerifEmbedded",fontSize:12,italics:true,alignment:"center",color:"#292929",margin:[0,0,0,7]},
+   metadata:{font:"NotoSerifEmbedded",fontSize:11,italics:true,alignment:"center",color:"#343434",margin:[0,0,0,7]},
+   massFrom:{font:"NotoSerifEmbedded",fontSize:11,italics:true,alignment:"center",color:"#8b7958",margin:[0,0,0,1]}
   }
  };
 }
@@ -212,7 +248,14 @@ function makeWordCell(item,lang,cellWidth,style){
    })]:[]),
    new Paragraph({
     alignment:AlignmentType.JUSTIFIED,spacing:{after:style.after,line:style.line},
-    children:[new TextRun({text:text||"—",font:"Times New Roman",size:style.bodySize,color:"302C27"})]
+    children:(()=>{
+     const chars=Array.from(text||"—");
+     const first=chars.shift()||"—";
+     return [
+      new TextRun({text:first,font:"Times New Roman",size:style.bodySize+5,bold:true,color:"466454"}),
+      new TextRun({text:chars.join(""),font:"Times New Roman",size:style.bodySize,color:"302C27"})
+     ];
+    })()
    })
   ]
  });
@@ -238,7 +281,8 @@ async function createDocx(entry,date,page){
  const dateInfo=exportParts(date);
  const title=exportTitle(entry);
  const latinTitle=exportLatinTitle(entry);
- const meta=[entry.rank,entry.color,entry.season].filter(Boolean).join(" · ");
+ const meta=exportLiturgicalMeta(entry);
+ const massFrom=exportMassTakenFrom(entry);
  const noBorder={style:BorderStyle.NIL,size:0,color:"FFFFFF"};
  const tableBorders={
   top:noBorder,bottom:noBorder,left:noBorder,right:noBorder,
@@ -272,17 +316,29 @@ async function createDocx(entry,date,page){
  });
  const children=[
   new Paragraph({
-   alignment:AlignmentType.CENTER,spacing:{after:90},
-   children:[new TextRun({text:title+" — "+dateInfo.dateText+", "+dateInfo.weekdayTitle,bold:true,font:"Times New Roman",size:isA5?28:32})]
+   alignment:AlignmentType.CENTER,spacing:{after:190},
+   children:[new TextRun({text:dateInfo.dateHeading,bold:false,font:"Times New Roman",size:isA5?16:18,color:"776B5C",characterSpacing:28})]
+  }),
+  new Paragraph({
+   alignment:AlignmentType.CENTER,spacing:{after:100},
+   children:[new TextRun({text:title,bold:true,color:"A32139",font:"Times New Roman",size:isA5?42:50})]
   }),
   ...(latinTitle?[new Paragraph({
-   alignment:AlignmentType.CENTER,spacing:{after:75},
-   children:[new TextRun({text:latinTitle,italics:true,font:"Times New Roman",size:22})]
+   alignment:AlignmentType.CENTER,spacing:{after:85},
+   children:[new TextRun({text:latinTitle,italics:true,font:"Times New Roman",size:isA5?22:24,color:"292929"})]
   })]:[]),
   ...(meta?[new Paragraph({
-   alignment:AlignmentType.CENTER,spacing:{after:130},
-   children:[new TextRun({text:meta,font:"Times New Roman",size:18})]
+   alignment:AlignmentType.CENTER,spacing:{after:95},
+   children:[new TextRun({text:meta,italics:true,font:"Times New Roman",size:isA5?18:20,color:"343434"})]
   })]:[]),
+  ...(massFrom?[new Paragraph({
+   alignment:AlignmentType.CENTER,spacing:{after:110},
+   children:[new TextRun({text:"Mass taken from: "+massFrom,italics:true,font:"Times New Roman",size:isA5?17:19,color:"8B7958"})]
+  })]:[]),
+  new Paragraph({
+   alignment:AlignmentType.CENTER,spacing:{after:210},
+   children:[new TextRun({text:"————————————   ✠   ————————————",color:"A32139",font:"Times New Roman",size:20})]
+  }),
   new Table({
    width:{size:100,type:WidthType.PERCENTAGE},
    columnWidths:[cellWidth,cellWidth],
@@ -293,7 +349,7 @@ async function createDocx(entry,date,page){
    spacing:{before:120},
    children:[new TextRun({text:"Dữ liệu minh họa — cần đối chiếu bản văn trước khi sử dụng chính thức.",italics:true,font:"Times New Roman",size:16})]
   })]:[])
- ];
+
  const header=new Header({children:[
   new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:"ORDO ROMANUS · MISSALE ROMANUM 1962",font:"Times New Roman",size:15})]})
  ]});
