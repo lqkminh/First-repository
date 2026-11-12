@@ -8,10 +8,7 @@ let exportBusy=false;
 
 function exportEntry(dateKey){return ORDO_DATA[dateKey]||null;}
 function exportHasData(entry){
- return !!entry&&(
-  (Array.isArray(entry.readings)&&entry.readings.length>0)||
-  (Array.isArray(entry.prayers)&&entry.prayers.length>0)
- );
+ return !!entry&&exportItems(entry).length>0;
 }
 function exportTitle(entry){return entry.title_vi||entry.titleVi||entry.title||"Sách lễ";}
 function exportLatinTitle(entry){return entry.title_la||entry.titleLatin||"";}
