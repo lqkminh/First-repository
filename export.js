@@ -35,16 +35,17 @@ function exportMassTakenFrom(entry){
  return entry.mass_taken_from_vi||entry.massTakenFromVi||entry.mass_taken_from||entry.massTakenFrom||"";
 }
 function normalizeSectionLabel(label){
- return String(label||"").replace(/Bài\\s+Thánh\\s+Thơ/gi,"Bài thơ");
+ return String(label||"").replace(/Bài\s+Thánh\s+Thơ/gi,"Bài thơ");
 }
 function pdfDropCapText(value,size){
  const chars=Array.from(String(value||"—"));
- if(!chars.length)return "—";
- const first=chars.shift();
- return [
-  {text:first,fontSize:size+3,bold:true},
-  {text:chars.join(""),fontSize:size}
- ];
+ const index=chars.findIndex(char=>/[\p{L}\p{N}]/u.test(char));
+ if(index<0)return [{text:chars.join("")||"—",fontSize:size}];
+ const runs=[];
+ if(index)runs.push({text:chars.slice(0,index).join(""),fontSize:size});
+ runs.push({text:chars[index],fontSize:size+3,bold:true,color:"#8F1D38"});
+ if(index+1<chars.length)runs.push({text:chars.slice(index+1).join(""),fontSize:size});
+ return runs;
 }
 function exportItems(entry){
  return typeof getOrderedSections==="function"?getOrderedSections(entry):[
@@ -127,9 +128,6 @@ function pdfDefinition(entry,date,pageSize){
   pageOrientation:"portrait",
   pageMargins:margins,
   info:{title:title+" — "+dateInfo.dateText,author:"Ordo Romanus",subject:"Sách lễ song ngữ Latinh — Việt"},
-  header:function(){
-   return {text:"ORDO ROMANUS · MISSALE ROMANUM 1962",alignment:"center",font:"NotoSerifEmbedded",fontSize:8,color:"#555555",margin:[margins[0],16,margins[2],0]};
-  },
   footer:function(pageNumber,pageCount){
    return {
     columns:[
@@ -249,14 +247,10 @@ function makeWordCell(item,lang,cellWidth,style){
    })]:[]),
    new Paragraph({
     alignment:AlignmentType.JUSTIFIED,spacing:{after:style.after,line:style.line},
-    children:(()=>{
-     const chars=Array.from(text||"—");
-     const first=chars.shift()||"—";
-     return [
-      new TextRun({text:first,font:"Times New Roman",size:style.bodySize+5,bold:true,color:"466454"}),
-      new TextRun({text:chars.join(""),font:"Times New Roman",size:style.bodySize,color:"302C27"})
-     ];
-    })()
+    children:pdfDropCapText(text,style.bodySize/2).map(run=>new TextRun({
+     text:run.text,font:"Times New Roman",size:Math.round((run.fontSize||style.bodySize/2)*2),
+     bold:!!run.bold,color:run.color||"302C27"
+    }))
    })
   ]
  });
@@ -336,9 +330,6 @@ async function createDocx(entry,date,page){
   })]:[])
  ];
 
- const header=new Header({children:[
-  new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:"ORDO ROMANUS · MISSALE ROMANUM 1962",font:"Times New Roman",size:15})]})
- ]});
  const footer=new Footer({children:[
   new Paragraph({
    alignment:AlignmentType.CENTER,
@@ -354,7 +345,6 @@ async function createDocx(entry,date,page){
   description:"Sách lễ song ngữ Latinh — Việt",
   sections:[{
    properties:{page:{size:{width:pageWidth,height:pageHeight},margin:{top:margin,bottom:margin,left:margin,right:margin,header:360,footer:360}}},
-   headers:{default:header},
    footers:{default:footer},
    children
   }]
