@@ -223,7 +223,7 @@ async function createDocx(entry,date,page){
  const contentWidth=pageWidth-2*margin;
  const cellWidth=Math.floor(contentWidth/2);
  const style={
-  cellPad:isA5?100:145,
+  cellPad:isA5?100:145,before:70,
   after:isA5?105:145,
   line:isA5?275:300,
   labelSize:20,
