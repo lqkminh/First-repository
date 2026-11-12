@@ -371,8 +371,8 @@ function getOrderedSections(entry){
   if(/offertorium|ca dang le|offertory/.test(normalized))return 6;
   if(/secreta|kinh nguyen tham|secret/.test(normalized))return 7;
   if(/praefatio|preface|tien tung/.test(normalized))return 8;
-  if(/communio|ca chiu le|communion/.test(normalized))return 9;
   if(/postcommunio|kinh ta le|postcommunion/.test(normalized))return 10;
+  if(/communio|ca chiu le|communion/.test(normalized))return 9;
   return 100;
  };
  return items.map((item,index)=>({item,index,order:orderOf(item)}))
