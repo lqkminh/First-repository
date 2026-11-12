@@ -1,1 +1,235 @@
-PLACEHOLDER
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#263c35">
+<meta name="description" content="Lịch phụng vụ Rôma truyền thống 1962 — song ngữ Latin và Việt.">
+<title>Ordo Romanus — Calendarium Liturgicum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#263c35;--green2:#3b594b;--paper:#f6f3eb;--white:#fffefa;--ink:#292b27;--muted:#77796f;--gold:#b59659;--line:#e5e0d4;--red:#813b3c}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Serif",Georgia,serif;-webkit-font-smoothing:antialiased}
+button{font:inherit}.header{background:linear-gradient(135deg,#243a33,#30483e);color:#f8f4e9;border-bottom:3px solid var(--gold);text-align:center}
+.header-inner{max-width:1120px;margin:auto;padding:22px 20px 15px}.eyebrow,.kicker{margin:0;color:var(--gold);font:600 10px/1.5 "Noto Serif",serif;letter-spacing:.22em;text-transform:uppercase}
+.brand{display:inline-block;margin:2px 0 0;color:#fbf6e9;font:500 clamp(42px,7vw,66px)/1.05 "EB Garamond",Georgia,serif;letter-spacing:.075em;text-decoration:none;text-transform:uppercase}
+.tagline{margin:7px 0 0;color:#e7e0d0;font-size:13px;font-style:italic}
+.ornament{display:flex;align-items:center;gap:12px;width:min(280px,70%);margin:17px auto 0;color:var(--gold)}.ornament:before,.ornament:after{content:"";height:1px;flex:1;background:#d5be896b}
+.nav{display:flex;justify-content:center;gap:32px;padding:12px 16px;border-top:1px solid #ffffff1c}.nav a{color:#f0eadb;font-size:12px;text-decoration:none}.nav a:hover{color:#e5c987}
+.page{width:min(1040px,calc(100% - 36px));margin:34px auto 55px}
+.intro{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:20px}.intro h1{margin:5px 0 7px;color:var(--green);font:500 38px/1 "EB Garamond",Georgia,serif}.intro-copy{max-width:650px;margin:0;color:var(--muted);font-size:13px;line-height:1.75}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid #ded4bd;border-radius:30px;background:#fbf8f0;color:var(--green2);font-size:11px;white-space:nowrap}.chip b{color:var(--gold);font-size:15px}
+.calendar,.about{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:var(--white);box-shadow:0 14px 40px #28342c0d}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:20px 24px 17px;border-bottom:1px solid var(--line)}.month-title{margin:4px 0 0;color:var(--green);font:500 29px/1.1 "EB Garamond",Georgia,serif}
+.actions{display:flex;align-items:center;gap:9px}.today,.arrow,.close,.done{border:1px solid #d9d6ca;border-radius:7px;background:#fffefa;color:var(--green);cursor:pointer;transition:.18s}.today{padding:9px 13px;font-size:11px}.today:hover,.arrow:hover,.close:hover{border-color:var(--gold);background:#f8f3e7}.arrows{display:flex;gap:6px}.arrow{width:36px;height:36px;padding:0 0 3px;font:27px/1 Arial,sans-serif}
+.weekdays,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}.weekdays{padding:11px 17px 0}.weekdays span{padding:9px 0 11px;color:var(--muted);font:700 10px Arial,sans-serif;letter-spacing:.06em;text-align:center}.weekdays span:last-child{color:var(--red)}
+.days{padding:0 17px 13px}.day{display:flex;min-width:0;min-height:82px;flex-direction:column;align-items:flex-start;gap:6px;margin:2px;padding:9px 8px 7px;border:1px solid transparent;border-radius:8px;background:#fbfaf6;color:var(--ink);cursor:pointer;text-align:left;transition:background .16s,border-color .16s,box-shadow .16s}
+.day:hover{border-color:#d9cfb8;background:#f7f4eb}.day:focus-visible{outline:3px solid #b5965960;outline-offset:1px}.day.outside{background:transparent;color:#b3b0a7}.day.outside .number{opacity:.5}
+.number{display:inline-flex;width:27px;height:27px;align-items:center;justify-content:center;border-radius:50%;font:600 13px Arial,sans-serif}.day.sunday .number{color:var(--red)}.day.today{border-color:#c4a66a;background:#fbf7eb}.day.today .number{background:var(--green);color:white}.day.solemnity{background:#f6f0e2}.day.solemnity .number{color:#76571f}.day.selected{border-color:var(--green2);box-shadow:inset 0 0 0 1px var(--green2)}
+.caption{max-width:100%;overflow:hidden;color:var(--muted);font-size:9px;line-height:1.35;text-overflow:ellipsis;white-space:nowrap}.markers{display:flex;gap:4px;margin-top:auto;align-self:center}.dot{width:6px;height:6px;border-radius:50%;background:var(--gold)}.dot.red{background:var(--red)}
+.legend{display:flex;flex-wrap:wrap;gap:10px 17px;padding:12px 24px 17px;border-top:1px solid var(--line);color:var(--muted);font-size:10px}.legend span{display:inline-flex;align-items:center;gap:7px}.legend i{width:8px;height:8px;border-radius:50%;background:var(--gold)}.legend .today-dot{background:var(--green)}.legend .solemnity-dot{background:var(--red)}
+.hint{display:flex;align-items:center;gap:12px;margin:16px 3px 30px;color:var(--muted)}.hint b{color:var(--gold);font-size:20px}.hint p{margin:0;font-size:11px;line-height:1.6}
+.about{display:flex;align-items:flex-start;gap:17px;padding:22px 25px;box-shadow:none}.about-mark{display:grid;width:40px;height:40px;flex:0 0 auto;place-items:center;border-radius:50%;background:#e8eee9;color:var(--green);font-size:20px}.about h2{margin:3px 0 6px;color:var(--green);font:500 25px "EB Garamond",Georgia,serif}.about p:last-child{max-width:750px;margin:0;color:var(--muted);font-size:11px;line-height:1.8}
+.footer{padding:20px 16px 24px;border-top:1px solid #ded8c9;color:var(--muted);text-align:center}.footer p{margin:0 0 5px;color:var(--green);font:italic 18px "EB Garamond",Georgia,serif}.footer small{font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+dialog{width:min(760px,calc(100% - 28px));max-width:760px;max-height:min(88vh,900px);padding:0;overflow:hidden;border:1px solid #d9d1c1;border-radius:14px;background:var(--white);color:var(--ink);box-shadow:0 25px 90px #111d1747}
+dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#141f1a94;backdrop-filter:blur(3px)}
+.modal-shell{display:flex;max-height:min(88vh,900px);flex-direction:column}.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding:19px 23px 15px;border-bottom:1px solid var(--line);background:#fbfaf5}
+.modal-date{margin:4px 0 0;color:var(--muted);font-size:11px}.close{width:34px;height:34px;border-radius:50%;font:24px/1 Arial,sans-serif}
+.modal-body{overflow-y:auto;padding:22px 23px;overscroll-behavior:contain}.modal-title{margin:0 0 5px;color:var(--green);font:500 31px/1.12 "EB Garamond",Georgia,serif}.latin{margin:0 0 14px;color:#716c5e;font-size:15px;font-style:italic}
+.meta{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 18px}.pill{padding:6px 10px;border:1px solid #e2dccd;border-radius:30px;background:#faf8f1;color:#5a645a;font-size:10px}
+.note,.empty{margin:14px 0 18px;padding:12px 14px;border-left:3px solid var(--gold);border-radius:0 6px 6px 0;background:#f8f3e7;color:#6b604a;font-size:11px;line-height:1.65}.empty{border-color:#87998e;background:#f0f4f0;color:#53655a}
+.section{margin-top:21px}.section h3{display:flex;align-items:center;gap:9px;margin:0 0 10px;color:var(--green);font:500 22px "EB Garamond",Georgia,serif}.section h3:after{content:"";height:1px;flex:1;background:var(--line)}
+.reading{margin:9px 0;padding:13px 15px;border:1px solid #ebe6da;border-radius:8px;background:#fffefa}.reading-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px}.reading h4{margin:0;color:var(--green2);font-size:12px;font-weight:600}.ref{color:#93866d;font-size:10px;font-style:italic}.reading p{margin:8px 0 0;color:#55574f;font-size:11px;line-height:1.8;white-space:pre-line}
+.modal-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 23px;border-top:1px solid var(--line);background:#fbfaf5;color:var(--muted);font-size:9px;letter-spacing:.06em;text-transform:uppercase}.done{padding:8px 17px;border-color:var(--green);background:var(--green);color:white;font-size:11px}.done:hover{background:var(--green2)}
+@keyframes modal-in{from{opacity:0;transform:translateY(12px) scale(.99)}to{opacity:1;transform:none}}
+@media(max-width:700px){
+ .header-inner{padding:20px 14px 13px}.brand{font-size:clamp(37px,11vw,54px);letter-spacing:.045em}.tagline{font-size:11px;line-height:1.6}.nav{gap:24px}
+ .page{width:min(calc(100% - 22px),600px);margin:24px auto 38px}.intro{align-items:flex-start;flex-direction:column;gap:12px}.intro h1{font-size:33px}.chip{align-self:flex-start}
+ .toolbar{align-items:flex-end;padding:16px 14px 13px}.month-title{font-size:25px}.today{padding:8px 10px;font-size:10px}.arrow{width:32px;height:32px}
+ .weekdays{padding:10px 5px 0}.weekdays span{padding:10px 0;font-size:9px}.days{padding:0 5px 12px}
+ .day{min-height:64px;gap:4px;margin:1px;padding:5px 3px;border-radius:6px}.number{width:24px;height:24px;font-size:12px}.caption{display:none}.markers{margin-top:auto}
+ .legend{gap:10px 13px;padding:11px 13px 14px;font-size:9px}.about{gap:12px;padding:17px 15px}.about-mark{width:34px;height:34px}
+ dialog{width:calc(100% - 12px);max-height:calc(100dvh - 12px);border-radius:12px}.modal-shell{max-height:calc(100dvh - 12px)}.modal-head{padding:15px 16px 12px}.modal-body{padding:17px 16px}.modal-title{font-size:27px}.latin{font-size:13px}.modal-foot{padding:11px 16px}
+}
+@media(max-width:360px){.page{width:calc(100% - 14px)}.toolbar{gap:8px}.actions{gap:5px}.today{padding:7px 8px}.day{min-height:57px}.weekdays span{font-size:8px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header class="header" id="top">
+ <div class="header-inner">
+  <p class="eyebrow">Missale Romanum · Anno Domini</p>
+  <a class="brand" href="#top">Ordo Romanus</a>
+  <p class="tagline">Lịch Phụng Vụ Rôma · Nghi lễ truyền thống năm 1962</p>
+  <div class="ornament" aria-hidden="true">✠</div>
+ </div>
+ <nav class="nav" aria-label="Điều hướng chính"><a href="#calendar">Lịch phụng vụ</a><a href="#about">Giới thiệu</a></nav>
+</header>
+<main class="page">
+ <section class="intro">
+  <div><p class="kicker">Calendarium liturgicum</p><h1>Lịch phụng vụ</h1><p class="intro-copy">Chọn một ngày để xem Phần Riêng Thánh lễ — <i>Proprium de tempore</i> — cùng các bản văn phụng vụ tương ứng.</p></div>
+  <div class="chip"><b>✠</b> Romanum 1962</div>
+ </section>
+ <section class="calendar" id="calendar" aria-label="Lịch phụng vụ theo tháng">
+  <div class="toolbar"><div><p class="kicker">Mensis et annus</p><h2 class="month-title" id="month-title" aria-live="polite"></h2></div>
+   <div class="actions"><button class="today" id="today" type="button">Hôm nay</button><div class="arrows"><button class="arrow" id="prev" type="button" aria-label="Tháng trước">‹</button><button class="arrow" id="next" type="button" aria-label="Tháng sau">›</button></div></div>
+  </div>
+  <div class="weekdays" aria-hidden="true"><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span></div>
+  <div class="days" id="days" role="grid" aria-labelledby="month-title"></div>
+  <div class="legend"><span><i class="today-dot"></i>Hôm nay</span><span><i></i>Có dữ liệu sách lễ</span><span><i class="solemnity-dot"></i>Lễ trọng / ngày nổi bật</span></div>
+ </section>
+ <div class="hint"><b>✧</b><p>Chọn ngày trên lịch để mở bản văn phụng vụ. Những ngày có dấu chấm đã được nhập dữ liệu.</p></div>
+ <section class="about" id="about"><div class="about-mark">✠</div><div><p class="kicker">De hoc opere</p><h2>Về Ordo Romanus</h2><p>Ordo Romanus là dự án tra cứu lịch phụng vụ theo nghi lễ Rôma truyền thống. Nội dung hướng đến cách trình bày song ngữ Latin — Việt, trang nghiêm và thuận tiện trên máy tính lẫn thiết bị di động.</p></div></section>
+</main>
+<footer class="footer"><p>Ad maiorem Dei gloriam</p><small>Ordo Romanus · Missale Romanum 1962</small></footer>
+
+<dialog id="day-modal" aria-labelledby="modal-title">
+ <div class="modal-shell">
+  <div class="modal-head"><div><p class="kicker">Proprium Missae</p><p class="modal-date" id="modal-date"></p></div><button class="close" id="close" type="button" aria-label="Đóng">×</button></div>
+  <div class="modal-body" id="modal-body"></div>
+  <div class="modal-foot"><span>Missale Romanum · 1962</span><button class="done" id="done" type="button">Đóng</button></div>
+ </div>
+</dialog>
+
+<script>
+"use strict";
+
+/*
+ * DỮ LIỆU MẪU — chỉ dùng để thử chức năng.
+ * Chưa phải bản văn chính thức đã được đối chiếu với Missale Romanum 1962.
+ * Thêm ngày mới bằng khóa YYYY-MM-DD và giữ nguyên cấu trúc này.
+ */
+const ORDO_DATA = {
+ "2026-11-01": {
+  titleVi:"Lễ kính Các Thánh Nam Nữ", titleLatin:"In Festo Omnium Sanctorum",
+  rank:"I classis · Dữ liệu mẫu", color:"Trắng · Albus", season:"Tempus post Pentecosten",
+  solemnity:true, demo:true,
+  readings:[
+   {label:"Epistola · Bài Thánh Thư",reference:"Ap 7, 2–12",text:"Vị trí dành cho bản văn Latin và bản dịch Việt của bài Thánh Thư."},
+   {label:"Graduale · Ca tiếp liên",reference:"Proprium Missae",text:"Vị trí dành cho bản văn ca nhập lễ, đáp ca và các bản văn riêng tương ứng."},
+   {label:"Evangelium · Phúc Âm",reference:"Mt 5, 1–12",text:"Vị trí dành cho bản văn Latin và bản dịch Việt của bài Phúc Âm."}
+  ],
+  prayers:[{label:"Oratio · Lời nguyện",reference:"Collecta",text:"Vị trí dành cho bản văn lời nguyện riêng của ngày lễ."}]
+ },
+ "2026-11-02": {
+  titleVi:"Lễ cầu cho các tín hữu đã qua đời",titleLatin:"In Commemoratione Omnium Fidelium Defunctorum",
+  rank:"Commemoratio · Dữ liệu mẫu",color:"Đen / Tím · Niger / Violaceus",season:"Tempus post Pentecosten",
+  solemnity:false,demo:true,
+  readings:[
+   {label:"Epistola · Bài Thánh Thư",reference:"Missa pro Defunctis",text:"Vị trí dành cho bài Thánh Thư của Thánh lễ cầu hồn được chọn."},
+   {label:"Evangelium · Phúc Âm",reference:"Missa pro Defunctis",text:"Vị trí dành cho bài Phúc Âm của Thánh lễ cầu hồn được chọn."}
+  ],
+  prayers:[
+   {label:"Oratio · Lời nguyện",reference:"Pro Defunctis",text:"Vị trí dành cho lời nguyện cầu cho các tín hữu đã qua đời."},
+   {label:"Secreta · Lời nguyện tiến lễ",reference:"Pro Defunctis",text:"Vị trí dành cho lời nguyện tiến lễ."},
+   {label:"Postcommunio · Lời nguyện hiệp lễ",reference:"Pro Defunctis",text:"Vị trí dành cho lời nguyện hiệp lễ."}
+  ]
+ },
+ "2026-11-11": {
+  titleVi:"Thánh Martinô, Giám mục và Hiển tu",titleLatin:"S. Martini, Episcopi et Confessoris",
+  rank:"III classis · Dữ liệu mẫu",color:"Trắng · Albus",season:"Tempus post Pentecosten",
+  solemnity:false,demo:true,
+  readings:[
+   {label:"Epistola · Bài Thánh Thư",reference:"Proprium Sanctorum",text:"Vị trí dành cho bài Thánh Thư riêng hoặc bài đọc chung thích hợp."},
+   {label:"Evangelium · Phúc Âm",reference:"Proprium Sanctorum",text:"Vị trí dành cho bài Phúc Âm của ngày lễ."}
+  ],
+  prayers:[{label:"Oratio · Lời nguyện",reference:"Oratio propria",text:"Vị trí dành cho bản văn lời nguyện riêng."}]
+ }
+};
+
+const $ = id => document.getElementById(id);
+const monthFormatter = new Intl.DateTimeFormat("vi-VN",{month:"long",year:"numeric"});
+const dateFormatter = new Intl.DateTimeFormat("vi-VN",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+const today = new Date(); today.setHours(0,0,0,0);
+let viewMonth = new Date(today.getFullYear(),today.getMonth(),1);
+let selectedDate = null;
+
+function keyFor(date){
+ const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,"0"),d=String(date.getDate()).padStart(2,"0");
+ return y+"-"+m+"-"+d;
+}
+function sameDay(a,b){return keyFor(a)===keyFor(b);}
+
+function renderCalendar(){
+ $("month-title").textContent=monthFormatter.format(viewMonth);
+ $("days").replaceChildren();
+ const year=viewMonth.getFullYear(),month=viewMonth.getMonth();
+ const first=new Date(year,month,1);
+ const offset=(first.getDay()+6)%7; // Tuần bắt đầu từ Thứ Hai.
+ const count=new Date(year,month+1,0).getDate();
+ const cells=Math.ceil((offset+count)/7)*7;
+
+ for(let i=0;i<cells;i++){
+  const date=new Date(year,month,i-offset+1),entry=ORDO_DATA[keyFor(date)];
+  const inMonth=date.getMonth()===month;
+  const button=document.createElement("button");
+  button.type="button";button.className="day";button.setAttribute("role","gridcell");
+  if(!inMonth)button.classList.add("outside");
+  if(date.getDay()===0)button.classList.add("sunday");
+  if(sameDay(date,today))button.classList.add("today");
+  if(entry&&entry.solemnity)button.classList.add("solemnity");
+  if(selectedDate&&sameDay(date,selectedDate))button.classList.add("selected");
+  button.setAttribute("aria-label",dateFormatter.format(date)+(entry?" — "+(entry.titleVi||entry.titleLatin):""));
+
+  const number=document.createElement("span");number.className="number";number.textContent=date.getDate();button.append(number);
+  if(entry&&inMonth){
+   const caption=document.createElement("span");caption.className="caption";caption.textContent=entry.titleVi||entry.titleLatin||"Có dữ liệu";button.append(caption);
+   const markers=document.createElement("span");markers.className="markers";markers.setAttribute("aria-hidden","true");
+   const dot=document.createElement("i");dot.className=entry.solemnity?"dot red":"dot";markers.append(dot);button.append(markers);
+  }
+  button.addEventListener("click",()=>{
+   selectedDate=new Date(date);
+   if(!inMonth)viewMonth=new Date(date.getFullYear(),date.getMonth(),1);
+   renderCalendar();openModal(date);
+  });
+  $("days").append(button);
+ }
+}
+
+function textCard(item){
+ const card=document.createElement("article");card.className="reading";
+ const head=document.createElement("div");head.className="reading-head";
+ const label=document.createElement("h4");label.textContent=item.label||"Bản văn phụng vụ";head.append(label);
+ if(item.reference){const ref=document.createElement("span");ref.className="ref";ref.textContent=item.reference;head.append(ref);}
+ card.append(head);const p=document.createElement("p");p.textContent=item.text||"Bản văn chưa được nhập.";card.append(p);return card;
+}
+function addSection(title,items){
+ if(!Array.isArray(items)||!items.length)return;
+ const section=document.createElement("section");section.className="section";
+ const heading=document.createElement("h3");heading.textContent=title;section.append(heading);
+ items.forEach(item=>section.append(textCard(item)));$("modal-body").append(section);
+}
+function openModal(date){
+ const entry=ORDO_DATA[keyFor(date)];$("modal-date").textContent=dateFormatter.format(date);
+ const body=$("modal-body");body.replaceChildren();
+ if(!entry){
+  const title=document.createElement("h2");title.id="modal-title";title.className="modal-title";title.textContent="Chưa có dữ liệu phụng vụ";body.append(title);
+  const msg=document.createElement("p");msg.className="empty";msg.textContent="Chưa có dữ liệu sách lễ cho ngày này.";body.append(msg);
+ }else{
+  const title=document.createElement("h2");title.id="modal-title";title.className="modal-title";title.textContent=entry.titleVi||"Ngày phụng vụ";body.append(title);
+  if(entry.titleLatin){const latin=document.createElement("p");latin.className="latin";latin.textContent=entry.titleLatin;body.append(latin);}
+  const values=[entry.rank,entry.color,entry.season].filter(Boolean);
+  if(values.length){const meta=document.createElement("div");meta.className="meta";values.forEach(value=>{const pill=document.createElement("span");pill.className="pill";pill.textContent=value;meta.append(pill);});body.append(meta);}
+  if(entry.demo){const note=document.createElement("p");note.className="note";note.textContent="Dữ liệu minh họa để kiểm tra chức năng. Các bản văn và chi tiết phụng vụ cần được đối chiếu với ấn bản Missale Romanum 1962 và lịch riêng thích hợp trước khi sử dụng chính thức.";body.append(note);}
+  addSection("Proprium Missae · Phần riêng Thánh lễ",entry.readings);
+  addSection("Orationes · Các lời nguyện",entry.prayers);
+  if((!entry.readings||!entry.readings.length)&&(!entry.prayers||!entry.prayers.length)){
+   const msg=document.createElement("p");msg.className="empty";msg.textContent="Chưa có dữ liệu sách lễ cho ngày này.";body.append(msg);
+  }
+ }
+ $("day-modal").showModal();
+}
+function closeModal(){$("day-modal").close();}
+
+$("prev").addEventListener("click",()=>{viewMonth=new Date(viewMonth.getFullYear(),viewMonth.getMonth()-1,1);renderCalendar();});
+$("next").addEventListener("click",()=>{viewMonth=new Date(viewMonth.getFullYear(),viewMonth.getMonth()+1,1);renderCalendar();});
+$("today").addEventListener("click",()=>{selectedDate=new Date(today);viewMonth=new Date(today.getFullYear(),today.getMonth(),1);renderCalendar();});
+$("close").addEventListener("click",closeModal);$("done").addEventListener("click",closeModal);
+$("day-modal").addEventListener("click",event=>{if(event.target===$("day-modal"))closeModal();});
+// Phím Esc được phần tử dialog của trình duyệt hỗ trợ mặc định.
+renderCalendar();
+</script>
+</body>
+</html>
