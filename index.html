@@ -37,11 +37,11 @@ dialog{width:min(760px,calc(100% - 28px));max-width:760px;max-height:min(88vh,90
 dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#141f1a94;backdrop-filter:blur(3px)}
 .modal-shell{display:flex;max-height:min(88vh,900px);flex-direction:column}.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding:19px 23px 15px;border-bottom:1px solid var(--line);background:#fbfaf5}
 .modal-date{margin:4px 0 0;color:var(--muted);font-size:11px}.close{width:34px;height:34px;border-radius:50%;font:24px/1 Arial,sans-serif}
-.modal-body{overflow-y:auto;padding:22px 23px;overscroll-behavior:contain}.modal-title{margin:0 0 5px;color:var(--green);font:500 31px/1.12 "EB Garamond",Georgia,serif}.latin{margin:0 0 14px;color:#716c5e;font-size:15px;font-style:italic}
+.modal-body{overflow-y:auto;padding:22px 23px;overscroll-behavior:contain;scroll-behavior:smooth}.modal-title{margin:0 0 5px;color:var(--green);font:500 31px/1.12 "EB Garamond",Georgia,serif}.latin{margin:0 0 14px;color:#716c5e;font-size:15px;font-style:italic}
 .meta{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 18px}.pill{padding:6px 10px;border:1px solid #e2dccd;border-radius:30px;background:#faf8f1;color:#5a645a;font-size:10px}
 .note,.empty{margin:14px 0 18px;padding:12px 14px;border-left:3px solid var(--gold);border-radius:0 6px 6px 0;background:#f8f3e7;color:#6b604a;font-size:11px;line-height:1.65}.empty{border-color:#87998e;background:#f0f4f0;color:#53655a}
 .section{margin-top:21px}.section h3{display:flex;align-items:center;gap:9px;margin:0 0 10px;color:var(--green);font:500 22px "EB Garamond",Georgia,serif}.section h3:after{content:"";height:1px;flex:1;background:var(--line)}
-.reading{margin:9px 0;padding:13px 15px;border:1px solid #ebe6da;border-radius:8px;background:#fffefa}.reading-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px}.reading h4{margin:0;color:var(--green2);font-size:12px;font-weight:600}.ref{color:#93866d;font-size:10px;font-style:italic}.reading p{margin:8px 0 0;color:#55574f;font-size:11px;line-height:1.8;white-space:pre-line}.reading-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:11px}.reading-col{min-width:0;padding:9px 10px;border:1px solid #eee9df;border-radius:6px;background:#fffefa}.reading-col strong{display:block;color:#7b6a49;font:600 8px Arial,sans-serif;letter-spacing:.08em}.reading-col .reading-ref{display:block;margin-top:5px;color:#93866d;font-size:9px;font-style:italic}.reading-col p{margin-top:6px}.reading-col p:only-child{color:#aaa}
+.reading{margin:0;padding:16px 0 17px;border:0;border-bottom:1px solid #e8e3d9;border-radius:0;background:transparent}.reading:last-child{border-bottom:0}.reading-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px;margin-bottom:5px}.reading h4{margin:0;color:var(--green2);font-size:12px;font-weight:600}.ref{color:#93866d;font-size:10px;font-style:italic}.reading p{margin:8px 0 0;color:#55574f;font-size:11px;line-height:1.8;white-space:pre-line}.reading-cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:8px}.reading-col{min-width:0;padding:0;border:0;border-radius:0;background:transparent}.reading-col strong{display:block;color:#7b6a49;font:600 8px Arial,sans-serif;letter-spacing:.08em}.reading-col .reading-ref{display:block;margin-top:5px;color:#93866d;font-size:9px;font-style:italic}.reading-col p{margin-top:6px;text-align:justify;line-height:1.85}.reading-col p:only-child{color:#aaa}
 .modal-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 23px;border-top:1px solid var(--line);background:#fbfaf5;color:var(--muted);font-size:9px;letter-spacing:.06em;text-transform:uppercase}.done{padding:8px 17px;border-color:var(--green);background:var(--green);color:white;font-size:11px}.done:hover{background:var(--green2)}
 .modal-actions{display:flex;align-items:center;gap:8px}
 .export-pdf{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 13px;border:1px solid var(--gold);border-radius:7px;background:#f7f1e3;color:#6c5427;cursor:pointer;font-size:11px;transition:.18s}
@@ -415,9 +415,9 @@ function openModal(date){
   const values=[entry.rank,entry.color,entry.season].filter(Boolean);
   if(values.length){const meta=document.createElement("div");meta.className="meta";values.forEach(value=>{const pill=document.createElement("span");pill.className="pill";pill.textContent=value;meta.append(pill);});body.append(meta);}
   if(entry.demo){const note=document.createElement("p");note.className="note";note.textContent="Dữ liệu minh họa để kiểm tra chức năng. Các bản văn và chi tiết phụng vụ cần được đối chiếu với ấn bản Missale Romanum 1962 và lịch riêng thích hợp trước khi sử dụng chính thức.";body.append(note);}
-  addSection("Proprium Missae · Phần riêng Thánh lễ",entry.readings);
-  addSection("Orationes · Các lời nguyện",entry.prayers);
-  if((!entry.readings||!entry.readings.length)&&(!entry.prayers||!entry.prayers.length)){
+  const orderedSections=getOrderedSections(entry);
+  orderedSections.forEach(item=>body.append(textCard(item)));
+  if(!orderedSections.length){
    const msg=document.createElement("p");msg.className="empty";msg.textContent="Chưa có dữ liệu sách lễ cho ngày này.";body.append(msg);
   }
  }
@@ -427,10 +427,7 @@ function openModal(date){
 
 /* Kiểm tra một ngày có nội dung đủ để xuất sách lễ hay không. */
 function hasLiturgicalData(entry){
- return !!entry && (
-  (Array.isArray(entry.readings)&&entry.readings.length>0) ||
-  (Array.isArray(entry.prayers)&&entry.prayers.length>0)
- );
+ return !!entry && getOrderedSections(entry).length>0;
 }
 
 function showToast(message){
