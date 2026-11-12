@@ -54,9 +54,10 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
 @keyframes pdf-spin{to{transform:rotate(360deg)}}
 
 @keyframes modal-in{from{opacity:0;transform:translateY(12px) scale(.99)}to{opacity:1;transform:none}}
+.calendar-version{display:flex;flex-direction:column;align-items:flex-end;gap:7px;min-width:190px}.version-label{color:var(--muted);font:700 9px Arial,sans-serif;letter-spacing:.13em}.version-toggle{display:inline-flex;padding:3px;border:1px solid #d9d2c2;border-radius:9px;background:#f7f4eb;gap:3px}.version-button{min-width:82px;padding:8px 12px;border:1px solid transparent;border-radius:6px;background:transparent;color:#647066;font:600 11px "Noto Serif",Georgia,serif;cursor:pointer;transition:background .16s,border-color .16s,color .16s}.version-button.active{border-color:var(--green);background:var(--green);color:#fff;box-shadow:0 1px 3px #172b2030}.version-button:not(.active):hover{background:#fffefa;color:var(--green)}
 @media(max-width:700px){
  .header-inner{padding:20px 14px 13px}.brand{font-size:clamp(37px,11vw,54px);letter-spacing:.045em}.tagline{font-size:11px;line-height:1.6}.nav{gap:24px}
- .page{width:min(calc(100% - 22px),600px);margin:24px auto 38px}.intro{align-items:flex-start;flex-direction:column;gap:12px}.intro h1{font-size:33px}.chip{align-self:flex-start}
+ .page{width:min(calc(100% - 22px),600px);margin:24px auto 38px}.intro{align-items:flex-start;flex-direction:column;gap:12px}.intro h1{font-size:33px}.chip{align-self:flex-start}.calendar-version{align-items:flex-start}
  .toolbar{align-items:flex-end;padding:16px 14px 13px}.month-title{font-size:25px}.today{padding:8px 10px;font-size:10px}.arrow{width:32px;height:32px}
  .weekdays{padding:10px 5px 0}.weekdays span{padding:10px 0;font-size:9px}.days{padding:0 5px 12px}
  .day{min-height:64px;gap:4px;margin:1px;padding:5px 3px;border-radius:6px}.number{width:24px;height:24px;font-size:12px}.caption{display:none}.markers{margin-top:auto}
@@ -81,7 +82,13 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
 <main class="page">
  <section class="intro">
   <div><p class="kicker">Calendarium liturgicum</p><h1>Lịch phụng vụ</h1><p class="intro-copy">Chọn một ngày để xem Phần Riêng Thánh lễ — <i>Proprium de tempore</i> — cùng các bản văn phụng vụ tương ứng.</p></div>
-  <div class="chip"><b>✠</b> Romanum 1962</div>
+  <div class="calendar-version">
+   <span class="version-label">NIÊN LỊCH PHỤNG VỤ</span>
+   <div class="version-toggle" role="group" aria-label="Chọn niên lịch phụng vụ">
+    <button type="button" class="version-button active" data-calendar-version="1962" aria-pressed="true">1962</button>
+    <button type="button" class="version-button" data-calendar-version="pre55" aria-pressed="false">Trước 1955</button>
+   </div>
+  </div>
  </section>
  <section class="calendar" id="calendar" aria-label="Lịch phụng vụ theo tháng">
   <div class="toolbar"><div><p class="kicker">Mensis et annus</p><h2 class="month-title" id="month-title" aria-live="polite"></h2></div>
@@ -94,13 +101,13 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
  <div class="hint"><b>✧</b><p>Chọn ngày trên lịch để mở bản văn phụng vụ. Những ngày có dấu chấm đã được nhập dữ liệu.</p></div>
  <section class="about" id="about"><div class="about-mark">✠</div><div><p class="kicker">De hoc opere</p><h2>Về Ordo Romanus</h2><p>Ordo Romanus là dự án tra cứu lịch phụng vụ theo nghi lễ Rôma truyền thống. Nội dung hướng đến cách trình bày song ngữ Latin — Việt, trang nghiêm và thuận tiện trên máy tính lẫn thiết bị di động.</p></div></section>
 </main>
-<footer class="footer"><p>Ad maiorem Dei gloriam</p><small>Ordo Romanus · Missale Romanum 1962</small></footer>
+<footer class="footer"><p>Ad maiorem Dei gloriam</p><small id="footer-version">Ordo Romanus · Missale Romanum 1962</small></footer>
 
 <dialog id="day-modal" aria-labelledby="modal-title">
  <div class="modal-shell">
   <div class="modal-head"><div><p class="kicker">Missale Romanum</p><p class="modal-date" id="modal-date"></p></div><button class="close" id="close" type="button" aria-label="Đóng">×</button></div>
   <div class="modal-body" id="modal-body"></div>
-  <div class="modal-foot"><span>Missale Romanum · 1962</span><div class="modal-actions"><button class="export-pdf" id="export-pdf" type="button" hidden>⇩ Xuất file</button><button class="done" id="done" type="button">Đóng</button></div></div>
+  <div class="modal-foot"><span id="modal-version">Missale Romanum · 1962</span><div class="modal-actions"><button class="export-pdf" id="export-pdf" type="button" hidden>⇩ Xuất file</button><button class="done" id="done" type="button">Đóng</button></div></div>
  </div>
 </dialog>
 
@@ -156,7 +163,7 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
  * Chưa phải bản văn chính thức đã được đối chiếu với Missale Romanum 1962.
  * Thêm ngày mới bằng khóa YYYY-MM-DD và giữ nguyên cấu trúc này.
  */
-const ORDO_DATA = {
+const ORDO_DATA_1962 = {
  "2026-11-01": {
   title_vi:"Lễ kính Các Thánh Nam Nữ",
   title_la:"In Festo Omnium Sanctorum",
@@ -290,6 +297,11 @@ const ORDO_DATA = {
   ]
  }
 };
+
+// Dữ liệu trước năm 1955 được tách riêng; chưa tự động dùng dữ liệu 1962 thay thế.
+const ORDO_DATA_PRE55 = {};
+let currentCalendarVersion = "1962";
+let ORDO_DATA = ORDO_DATA_1962;
 
 const $ = id => document.getElementById(id);
 const monthFormatter = new Intl.DateTimeFormat("vi-VN",{month:"long",year:"numeric"});
@@ -606,6 +618,35 @@ $("close").addEventListener("click",closeModal);$("done").addEventListener("clic
 $("export-pdf").addEventListener("click",()=>{if(currentModalDateKey&&window.openExportModal)window.openExportModal(currentModalDateKey);});
 $("day-modal").addEventListener("click",event=>{if(event.target===$("day-modal"))closeModal();});
 // Phím Esc được phần tử dialog của trình duyệt hỗ trợ mặc định.
+function setCalendarVersion(version){
+ if(version!=="1962"&&version!=="pre55")return;
+ if(version===currentCalendarVersion)return;
+ currentCalendarVersion=version;
+ ORDO_DATA=version==="1962"?ORDO_DATA_1962:ORDO_DATA_PRE55;
+
+ document.querySelectorAll("[data-calendar-version]").forEach(button=>{
+  const active=button.dataset.calendarVersion===version;
+  button.classList.toggle("active",active);
+  button.setAttribute("aria-pressed",String(active));
+ });
+
+ const label=version==="1962"?"Missale Romanum 1962":"Calendarium ante annum 1955";
+ const modalLabel=$("modal-version");if(modalLabel)modalLabel.textContent=label;
+ const footerLabel=$("footer-version");if(footerLabel)footerLabel.textContent="Ordo Romanus · "+label;
+ const subtitle=document.querySelector(".intro-copy");
+ if(subtitle)subtitle.innerHTML=version==="1962"
+  ?"Chọn một ngày để xem Phần Riêng Thánh lễ — <i>Proprium de tempore</i> — theo lịch Rôma 1962."
+  :"Chọn một ngày để tra cứu lịch phụng vụ Rôma trước năm 1955.";
+
+ // Không để nội dung của niên lịch trước tiếp tục mở khi người dùng đổi chế độ.
+ if($("day-modal").open)$("day-modal").close();
+ if($("export-modal").open)$("export-modal").close();
+ renderCalendar();
+ if(version==="pre55")showToast("Đã chọn lịch trước 1955. Bộ dữ liệu này chưa được nạp; các ngày sẽ báo chưa có dữ liệu.");
+}
+document.querySelectorAll("[data-calendar-version]").forEach(button=>{
+ button.addEventListener("click",()=>setCalendarVersion(button.dataset.calendarVersion));
+});
 renderCalendar();
 </script>
 <script src="export.js"></script>
