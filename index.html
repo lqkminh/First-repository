@@ -43,6 +43,16 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
 .section{margin-top:21px}.section h3{display:flex;align-items:center;gap:9px;margin:0 0 10px;color:var(--green);font:500 22px "EB Garamond",Georgia,serif}.section h3:after{content:"";height:1px;flex:1;background:var(--line)}
 .reading{margin:9px 0;padding:13px 15px;border:1px solid #ebe6da;border-radius:8px;background:#fffefa}.reading-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px}.reading h4{margin:0;color:var(--green2);font-size:12px;font-weight:600}.ref{color:#93866d;font-size:10px;font-style:italic}.reading p{margin:8px 0 0;color:#55574f;font-size:11px;line-height:1.8;white-space:pre-line}
 .modal-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 23px;border-top:1px solid var(--line);background:#fbfaf5;color:var(--muted);font-size:9px;letter-spacing:.06em;text-transform:uppercase}.done{padding:8px 17px;border-color:var(--green);background:var(--green);color:white;font-size:11px}.done:hover{background:var(--green2)}
+.modal-actions{display:flex;align-items:center;gap:8px}
+.export-pdf{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 13px;border:1px solid var(--gold);border-radius:7px;background:#f7f1e3;color:#6c5427;cursor:pointer;font-size:11px;transition:.18s}
+.export-pdf:hover{background:#eee3cc}
+.export-pdf:disabled{opacity:.7;cursor:wait}
+.export-pdf[hidden]{display:none}
+.export-pdf.loading:before{content:"";width:12px;height:12px;border:2px solid #b5965960;border-top-color:#6c5427;border-radius:50%;animation:pdf-spin .7s linear infinite}
+.toast{position:fixed;z-index:1000;left:50%;bottom:24px;max-width:calc(100% - 32px);padding:11px 17px;border:1px solid #d8cfbb;border-radius:8px;background:#263c35;color:#fff;font:12px/1.5 "Noto Serif",Georgia,serif;box-shadow:0 8px 30px #14251d38;opacity:0;pointer-events:none;transform:translate(-50%,12px);transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@keyframes pdf-spin{to{transform:rotate(360deg)}}
+
 @keyframes modal-in{from{opacity:0;transform:translateY(12px) scale(.99)}to{opacity:1;transform:none}}
 @media(max-width:700px){
  .header-inner{padding:20px 14px 13px}.brand{font-size:clamp(37px,11vw,54px);letter-spacing:.045em}.tagline{font-size:11px;line-height:1.6}.nav{gap:24px}
@@ -51,7 +61,7 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
  .weekdays{padding:10px 5px 0}.weekdays span{padding:10px 0;font-size:9px}.days{padding:0 5px 12px}
  .day{min-height:64px;gap:4px;margin:1px;padding:5px 3px;border-radius:6px}.number{width:24px;height:24px;font-size:12px}.caption{display:none}.markers{margin-top:auto}
  .legend{gap:10px 13px;padding:11px 13px 14px;font-size:9px}.about{gap:12px;padding:17px 15px}.about-mark{width:34px;height:34px}
- dialog{width:calc(100% - 12px);max-height:calc(100dvh - 12px);border-radius:12px}.modal-shell{max-height:calc(100dvh - 12px)}.modal-head{padding:15px 16px 12px}.modal-body{padding:17px 16px}.modal-title{font-size:27px}.latin{font-size:13px}.modal-foot{padding:11px 16px}
+ dialog{width:calc(100% - 12px);max-height:calc(100dvh - 12px);border-radius:12px}.modal-shell{max-height:calc(100dvh - 12px)}.modal-head{padding:15px 16px 12px}.modal-body{padding:17px 16px}.modal-title{font-size:27px}.latin{font-size:13px}.modal-foot{padding:11px 16px}.modal-actions{gap:6px}.export-pdf{padding:8px 9px;font-size:10px}.toast{bottom:14px}
 }
 @media(max-width:360px){.page{width:calc(100% - 14px)}.toolbar{gap:8px}.actions{gap:5px}.today{padding:7px 8px}.day{min-height:57px}.weekdays span{font-size:8px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -89,10 +99,13 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
  <div class="modal-shell">
   <div class="modal-head"><div><p class="kicker">Proprium Missae</p><p class="modal-date" id="modal-date"></p></div><button class="close" id="close" type="button" aria-label="Đóng">×</button></div>
   <div class="modal-body" id="modal-body"></div>
-  <div class="modal-foot"><span>Missale Romanum · 1962</span><button class="done" id="done" type="button">Đóng</button></div>
+  <div class="modal-foot"><span>Missale Romanum · 1962</span><div class="modal-actions"><button class="export-pdf" id="export-pdf" type="button" hidden>⇩ Xuất PDF</button><button class="done" id="done" type="button">Đóng</button></div></div>
  </div>
 </dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/pdfmake@0.2.20/build/pdfmake.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfmake@0.2.20/build/vfs_fonts.js"></script>
 <script>
 "use strict";
 
@@ -103,39 +116,100 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
  */
 const ORDO_DATA = {
  "2026-11-01": {
-  titleVi:"Lễ kính Các Thánh Nam Nữ", titleLatin:"In Festo Omnium Sanctorum",
-  rank:"I classis · Dữ liệu mẫu", color:"Trắng · Albus", season:"Tempus post Pentecosten",
+  title_vi:"Lễ kính Các Thánh Nam Nữ",
+  title_la:"In Festo Omnium Sanctorum",
+  rank:"I classis · Dữ liệu minh họa",
+  color:"Trắng · Albus",
+  season:"Tempus post Pentecosten",
   solemnity:true, demo:true,
   readings:[
-   {label:"Epistola · Bài Thánh Thư",reference:"Ap 7, 2–12",text:"Vị trí dành cho bản văn Latin và bản dịch Việt của bài Thánh Thư."},
-   {label:"Graduale · Ca tiếp liên",reference:"Proprium Missae",text:"Vị trí dành cho bản văn ca nhập lễ, đáp ca và các bản văn riêng tương ứng."},
-   {label:"Evangelium · Phúc Âm",reference:"Mt 5, 1–12",text:"Vị trí dành cho bản văn Latin và bản dịch Việt của bài Phúc Âm."}
-  ],
-  prayers:[{label:"Oratio · Lời nguyện",reference:"Collecta",text:"Vị trí dành cho bản văn lời nguyện riêng của ngày lễ."}]
- },
- "2026-11-02": {
-  titleVi:"Lễ cầu cho các tín hữu đã qua đời",titleLatin:"In Commemoratione Omnium Fidelium Defunctorum",
-  rank:"Commemoratio · Dữ liệu mẫu",color:"Đen / Tím · Niger / Violaceus",season:"Tempus post Pentecosten",
-  solemnity:false,demo:true,
-  readings:[
-   {label:"Epistola · Bài Thánh Thư",reference:"Missa pro Defunctis",text:"Vị trí dành cho bài Thánh Thư của Thánh lễ cầu hồn được chọn."},
-   {label:"Evangelium · Phúc Âm",reference:"Missa pro Defunctis",text:"Vị trí dành cho bài Phúc Âm của Thánh lễ cầu hồn được chọn."}
+   {
+    label_vi:"Bài đọc 1", label_la:"Lectio I",
+    reference_vi:"Kh 7, 2–12", reference_la:"Ap 7, 2–12",
+    text_vi:"[Bản văn tiếng Việt minh họa — thay bằng bản dịch đã được đối chiếu.]",
+    text_la:"[Textus Latinus exemplaris — textum authenticum substitue.]"
+   },
+   {
+    label_vi:"Thánh Vịnh", label_la:"Psalmus",
+    reference_vi:"Tv 23", reference_la:"Ps 23",
+    text_vi:"[Bản văn Thánh Vịnh tiếng Việt minh họa.]",
+    text_la:"[Textus Psalmi Latinus exemplaris.]"
+   },
+   {
+    label_vi:"Tin Mừng", label_la:"Evangelium",
+    reference_vi:"Mt 5, 1–12", reference_la:"Matth 5, 1–12",
+    text_vi:"[Bản văn Tin Mừng tiếng Việt minh họa.]",
+    text_la:"[Textus Evangelii Latinus exemplaris.]"
+   }
   ],
   prayers:[
-   {label:"Oratio · Lời nguyện",reference:"Pro Defunctis",text:"Vị trí dành cho lời nguyện cầu cho các tín hữu đã qua đời."},
-   {label:"Secreta · Lời nguyện tiến lễ",reference:"Pro Defunctis",text:"Vị trí dành cho lời nguyện tiến lễ."},
-   {label:"Postcommunio · Lời nguyện hiệp lễ",reference:"Pro Defunctis",text:"Vị trí dành cho lời nguyện hiệp lễ."}
+   {
+    label_vi:"Lời nguyện", label_la:"Oratio",
+    reference_vi:"Lời nguyện riêng", reference_la:"Oratio propria",
+    text_vi:"[Bản văn lời nguyện tiếng Việt minh họa.]",
+    text_la:"[Textus Orationis Latinus exemplaris.]"
+   }
+  ]
+ },
+ "2026-11-02": {
+  title_vi:"Lễ cầu cho các tín hữu đã qua đời",
+  title_la:"In Commemoratione Omnium Fidelium Defunctorum",
+  rank:"Commemoratio · Dữ liệu minh họa",
+  color:"Đen / Tím · Niger / Violaceus",
+  season:"Tempus post Pentecosten",
+  solemnity:false, demo:true,
+  readings:[
+   {
+    label_vi:"Bài đọc 1", label_la:"Lectio I",
+    reference_vi:"G 19, 21–27", reference_la:"Iob 19, 21–27",
+    text_vi:"[Bản văn tiếng Việt minh họa cho Thánh lễ cầu hồn.]",
+    text_la:"[Textus Latinus exemplaris pro Missa defunctorum.]"
+   },
+   {
+    label_vi:"Tin Mừng", label_la:"Evangelium",
+    reference_vi:"Ga 11, 21–27", reference_la:"Io 11, 21–27",
+    text_vi:"[Bản văn Tin Mừng tiếng Việt minh họa.]",
+    text_la:"[Textus Evangelii Latinus exemplaris.]"
+   }
+  ],
+  prayers:[
+   {
+    label_vi:"Lời nguyện", label_la:"Oratio",
+    reference_vi:"Pro Defunctis", reference_la:"Pro Defunctis",
+    text_vi:"[Bản văn lời nguyện cầu cho các tín hữu đã qua đời.]",
+    text_la:"[Textus Orationis pro fidelibus defunctis.]"
+   }
   ]
  },
  "2026-11-11": {
-  titleVi:"Thánh Martinô, Giám mục và Hiển tu",titleLatin:"S. Martini, Episcopi et Confessoris",
-  rank:"III classis · Dữ liệu mẫu",color:"Trắng · Albus",season:"Tempus post Pentecosten",
-  solemnity:false,demo:true,
+  title_vi:"Thánh Martinô, Giám mục và Hiển tu",
+  title_la:"S. Martini, Episcopi et Confessoris",
+  rank:"III classis · Dữ liệu minh họa",
+  color:"Trắng · Albus",
+  season:"Tempus post Pentecosten",
+  solemnity:false, demo:true,
   readings:[
-   {label:"Epistola · Bài Thánh Thư",reference:"Proprium Sanctorum",text:"Vị trí dành cho bài Thánh Thư riêng hoặc bài đọc chung thích hợp."},
-   {label:"Evangelium · Phúc Âm",reference:"Proprium Sanctorum",text:"Vị trí dành cho bài Phúc Âm của ngày lễ."}
+   {
+    label_vi:"Bài đọc 1", label_la:"Lectio",
+    reference_vi:"Hc 44, 16–27", reference_la:"Eccli 44, 16–27",
+    text_vi:"[Bản văn tiếng Việt minh họa về vị thánh.]",
+    text_la:"[Textus Latinus exemplaris de Sancto.]"
+   },
+   {
+    label_vi:"Tin Mừng", label_la:"Evangelium",
+    reference_vi:"Mt 25, 14–23", reference_la:"Matth 25, 14–23",
+    text_vi:"[Bản văn Tin Mừng tiếng Việt minh họa.]",
+    text_la:"[Textus Evangelii Latinus exemplaris.]"
+   }
   ],
-  prayers:[{label:"Oratio · Lời nguyện",reference:"Oratio propria",text:"Vị trí dành cho bản văn lời nguyện riêng."}]
+  prayers:[
+   {
+    label_vi:"Lời nguyện", label_la:"Oratio",
+    reference_vi:"Oratio propria", reference_la:"Oratio propria",
+    text_vi:"[Bản văn lời nguyện riêng tiếng Việt minh họa.]",
+    text_la:"[Textus Orationis propriae Latinus exemplaris.]"
+   }
+  ]
  }
 };
 
@@ -145,6 +219,8 @@ const dateFormatter = new Intl.DateTimeFormat("vi-VN",{weekday:"long",day:"numer
 const today = new Date(); today.setHours(0,0,0,0);
 let viewMonth = new Date(today.getFullYear(),today.getMonth(),1);
 let selectedDate = null;
+let currentModalDateKey = null;
+let toastTimer = null;
 
 function keyFor(date){
  const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,"0"),d=String(date.getDate()).padStart(2,"0");
@@ -175,7 +251,7 @@ function renderCalendar(){
 
   const number=document.createElement("span");number.className="number";number.textContent=date.getDate();button.append(number);
   if(entry&&inMonth){
-   const caption=document.createElement("span");caption.className="caption";caption.textContent=entry.titleVi||entry.titleLatin||"Có dữ liệu";button.append(caption);
+   const caption=document.createElement("span");caption.className="caption";caption.textContent=entry.title_vi||entry.titleVi||entry.title_la||entry.titleLatin||"Có dữ liệu";button.append(caption);
    const markers=document.createElement("span");markers.className="markers";markers.setAttribute("aria-hidden","true");
    const dot=document.createElement("i");dot.className=entry.solemnity?"dot red":"dot";markers.append(dot);button.append(markers);
   }
@@ -191,7 +267,7 @@ function renderCalendar(){
 function textCard(item){
  const card=document.createElement("article");card.className="reading";
  const head=document.createElement("div");head.className="reading-head";
- const label=document.createElement("h4");label.textContent=item.label||"Bản văn phụng vụ";head.append(label);
+ const label=document.createElement("h4");label.textContent=[item.label_la||item.labelLatin||"",item.label_vi||item.labelVi||item.label||""].filter(Boolean).join(" / ")||"Bản văn phụng vụ";head.append(label);
  if(item.reference){const ref=document.createElement("span");ref.className="ref";ref.textContent=item.reference;head.append(ref);}
  card.append(head);const p=document.createElement("p");p.textContent=item.text||"Bản văn chưa được nhập.";card.append(p);return card;
 }
@@ -202,14 +278,14 @@ function addSection(title,items){
  items.forEach(item=>section.append(textCard(item)));$("modal-body").append(section);
 }
 function openModal(date){
- const entry=ORDO_DATA[keyFor(date)];$("modal-date").textContent=dateFormatter.format(date);
+ const entry=ORDO_DATA[keyFor(date)];currentModalDateKey=keyFor(date);$("modal-date").textContent=dateFormatter.format(date);
  const body=$("modal-body");body.replaceChildren();
  if(!entry){
   const title=document.createElement("h2");title.id="modal-title";title.className="modal-title";title.textContent="Chưa có dữ liệu phụng vụ";body.append(title);
   const msg=document.createElement("p");msg.className="empty";msg.textContent="Chưa có dữ liệu sách lễ cho ngày này.";body.append(msg);
  }else{
-  const title=document.createElement("h2");title.id="modal-title";title.className="modal-title";title.textContent=entry.titleVi||"Ngày phụng vụ";body.append(title);
-  if(entry.titleLatin){const latin=document.createElement("p");latin.className="latin";latin.textContent=entry.titleLatin;body.append(latin);}
+  const title=document.createElement("h2");title.id="modal-title";title.className="modal-title";title.textContent=entry.title_vi||entry.titleVi||entry.title||"Ngày phụng vụ";body.append(title);
+  const latinTitle=entry.title_la||entry.titleLatin;if(latinTitle){const latin=document.createElement("p");latin.className="latin";latin.textContent=latinTitle;body.append(latin);}
   const values=[entry.rank,entry.color,entry.season].filter(Boolean);
   if(values.length){const meta=document.createElement("div");meta.className="meta";values.forEach(value=>{const pill=document.createElement("span");pill.className="pill";pill.textContent=value;meta.append(pill);});body.append(meta);}
   if(entry.demo){const note=document.createElement("p");note.className="note";note.textContent="Dữ liệu minh họa để kiểm tra chức năng. Các bản văn và chi tiết phụng vụ cần được đối chiếu với ấn bản Missale Romanum 1962 và lịch riêng thích hợp trước khi sử dụng chính thức.";body.append(note);}
@@ -219,14 +295,189 @@ function openModal(date){
    const msg=document.createElement("p");msg.className="empty";msg.textContent="Chưa có dữ liệu sách lễ cho ngày này.";body.append(msg);
   }
  }
+ $("export-pdf").hidden=!hasLiturgicalData(entry);
  $("day-modal").showModal();
 }
+
+/* Kiểm tra một ngày có nội dung đủ để xuất sách lễ hay không. */
+function hasLiturgicalData(entry){
+ return !!entry && (
+  (Array.isArray(entry.readings)&&entry.readings.length>0) ||
+  (Array.isArray(entry.prayers)&&entry.prayers.length>0)
+ );
+}
+
+function showToast(message){
+ const toast=$("toast");
+ toast.textContent=message;
+ toast.classList.add("show");
+ if(toastTimer)clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>toast.classList.remove("show"),2600);
+}
+
+function getBilingualField(item,lang,kind){
+ const suffix=lang==="la"?"la":"vi";
+ const candidates={
+  label:lang==="la"?["label_la","labelLa","labelLatin"]:["label_vi","labelVi","labelVietnamese"],
+  reference:lang==="la"?["reference_la","referenceLa","referenceLatin"]:["reference_vi","referenceVi","referenceVietnamese"],
+  text:lang==="la"?["text_la","textLa","textLatin"]:["text_vi","textVi","textVietnamese"]
+ };
+ for(const key of candidates[kind]||[]){
+  if(item[key]!==undefined&&item[key]!==null&&String(item[key]).trim()!=="")return String(item[key]);
+ }
+ // Hỗ trợ dữ liệu cũ: trường text/label chung được xem là phần tiếng Việt.
+ if(lang==="vi"){
+  if(kind==="text"&&item.text)return String(item.text);
+  if(kind==="reference"&&item.reference)return String(item.reference);
+  if(kind==="label"&&item.label){
+   const parts=String(item.label).split("·").map(x=>x.trim());
+   return parts.length>1?parts.slice(1).join(" · "):parts[0];
+  }
+ }
+ if(lang==="la"&&kind==="label"&&item.label){
+  return String(item.label).split("·")[0].trim();
+ }
+ // Một tham chiếu Kinh Thánh có thể dùng chung ở cả hai cột nếu chỉ nhập một lần.
+ if(kind==="reference"&&item.reference)return String(item.reference);
+ return "—";
+}
+
+function makePdfCell(item,lang){
+ const label=getBilingualField(item,lang,"label");
+ const reference=getBilingualField(item,lang,"reference");
+ const text=getBilingualField(item,lang,"text");
+ const stack=[
+  {text:label,bold:true,fontSize:9.5,color:"#263c35",margin:[0,0,0,3]},
+  {text:reference,fontSize:8,color:"#8b7958",italics:true,margin:[0,0,0,5]},
+  {text:text,fontSize:9,lineHeight:1.35,color:"#30312d"}
+ ];
+ return {stack,margin:[7,8,7,9],fillColor:"#fffefa",verticalAlignment:"top"};
+}
+
+function makePdfDefinition(entry,date){
+ const dateKey=keyFor(date);
+ const dayNumber=String(date.getDate()).padStart(2,"0");
+ const monthNumber=String(date.getMonth()+1).padStart(2,"0");
+ const displayDate=dayNumber+"/"+monthNumber+"/"+date.getFullYear();
+ const weekday=dateFormatter.formatToParts(date).find(part=>part.type==="weekday")?.value||"";
+ const weekdayTitle=weekday.charAt(0).toUpperCase()+weekday.slice(1);
+ const titleVi=entry.title_vi||entry.titleVi||entry.title||"Sách lễ";
+ const titleLa=entry.title_la||entry.titleLatin||"";
+ const body=[
+  [{text:"LATINH",style:"columnHeader"},{text:"TIẾNG VIỆT",style:"columnHeader"}]
+ ];
+ const groups=[
+  {heading:"PROPRIUM DE TEMPORE · PHẦN RIÊNG",items:Array.isArray(entry.readings)?entry.readings:[]},
+  {heading:"ORATIONES · CÁC LỜI NGUYỆN",items:Array.isArray(entry.prayers)?entry.prayers:[]}
+ ];
+ groups.forEach(group=>{
+  if(!group.items.length)return;
+  body.push([{text:group.heading,colSpan:2,style:"groupHeader"},{}]);
+  group.items.forEach(item=>body.push([makePdfCell(item,"la"),makePdfCell(item,"vi")]));
+ });
+ if(body.length===1){
+  body.push([{text:"—",alignment:"center",color:"#777777"},{text:"—",alignment:"center",color:"#777777"}]);
+ }
+ const meta=[entry.rank,entry.color,entry.season].filter(Boolean).join("   ·   ");
+ return {
+  pageSize:"A4",
+  pageMargins:[38,48,38,48],
+  info:{title:"SachLe_"+dateKey,author:"Ordo Romanus",subject:"Proprium Missae · Latinum — Vietnamese"},
+  header:function(currentPage,pageCount){
+   return {text:"ORDO ROMANUS  ·  MISSALE ROMANUM 1962",alignment:"center",fontSize:8,color:"#667269",margin:[38,17,38,0],characterSpacing:0.5};
+  },
+  footer:function(currentPage,pageCount){
+   return {
+    columns:[
+     {text:"Ordo Romanus  ·  Xuất ngày "+new Intl.DateTimeFormat("vi-VN").format(new Date()),fontSize:8,color:"#77796f"},
+     {text:"Trang "+currentPage+" / "+pageCount,alignment:"right",fontSize:8,color:"#77796f"}
+    ],
+    margin:[38,0,38,18]
+   };
+  },
+  content:[
+   {text:"PROPRIUM MISSÆ",style:"overline"},
+   {text:titleVi+" — "+displayDate+", "+weekdayTitle,style:"title"},
+   ...(titleLa?[{text:titleLa,style:"latinTitle"}]:[]),
+   ...(meta?[{text:meta,style:"metadata"}]:[]),
+   {text:"TEXTUS LATINUS  ·  TEXTUS VERNACULUS",style:"sectionIntro"},
+   {
+    table:{headerRows:1,widths:["*","*"],body},
+    layout:{
+     hLineWidth:function(i,node){return i===1?1:0.45;},
+     vLineWidth:function(){return 0.45;},
+     hLineColor:function(i){return i===1?"#b59659":"#e5e0d4";},
+     vLineColor:function(){return "#e5e0d4";},
+     paddingLeft:function(){return 7;},
+     paddingRight:function(){return 7;},
+     paddingTop:function(){return 6;},
+     paddingBottom:function(){return 6;}
+    },
+    dontBreakRows:true,
+    keepWithHeaderRows:1
+   },
+   ...(entry.demo?[{text:"DỮ LIỆU MINH HỌA — Cần đối chiếu bản văn và lịch phụng vụ trước khi sử dụng chính thức.",style:"disclaimer"}]:[])
+  ],
+  defaultStyle:{font:"Roboto",fontSize:9,color:"#292b27"},
+  styles:{
+   overline:{fontSize:8,bold:true,color:"#b59659",characterSpacing:1.2,alignment:"center",margin:[0,0,0,7]},
+   title:{fontSize:17,bold:true,color:"#263c35",alignment:"center",lineHeight:1.2,margin:[0,0,0,5]},
+   latinTitle:{fontSize:11,italics:true,color:"#6d695e",alignment:"center",margin:[0,0,0,8]},
+   metadata:{fontSize:8,color:"#69756b",alignment:"center",margin:[0,0,0,12]},
+   sectionIntro:{fontSize:8,bold:true,color:"#6f745f",characterSpacing:0.7,margin:[0,4,0,7]},
+   columnHeader:{fontSize:9,bold:true,color:"#fffefa",fillColor:"#263c35",alignment:"center",margin:[0,5,0,5]},
+   groupHeader:{fontSize:8,bold:true,color:"#6b552c",fillColor:"#f4efdf",margin:[0,5,0,5],characterSpacing:0.4},
+   disclaimer:{fontSize:8,italics:true,color:"#8a6b3b",margin:[0,12,0,0]}
+  }
+ };
+}
+
+/*
+ * Xuất PDF ngay trên trình duyệt.
+ * pdfmake kèm VFS Roboto để nhúng font Unicode, bao gồm dấu tiếng Việt.
+ */
+async function exportDayToPDF(dateKey){
+ const entry=ORDO_DATA[dateKey];
+ if(!hasLiturgicalData(entry)){
+  showToast("Chưa có dữ liệu sách lễ cho ngày này.");
+  return;
+ }
+ if(!window.pdfMake||typeof window.pdfMake.createPdf!=="function"){
+  showToast("Không tải được thư viện PDF. Hãy kiểm tra kết nối Internet rồi thử lại.");
+  return;
+ }
+ const button=$("export-pdf");
+ const originalText="⇩ Xuất PDF";
+ button.disabled=true;button.classList.add("loading");button.textContent="Đang tạo PDF…";
+ try{
+  const parts=dateKey.split("-").map(Number);
+  const date=new Date(parts[0],parts[1]-1,parts[2]);
+  const definition=makePdfDefinition(entry,date);
+  const pdf=window.pdfMake.createPdf(definition);
+  const blob=await new Promise((resolve,reject)=>{
+   try{pdf.getBlob(resolve);}catch(error){reject(error);}
+  });
+  const url=URL.createObjectURL(blob);
+  const anchor=document.createElement("a");
+  anchor.href=url;anchor.download="SachLe_"+dateKey+".pdf";
+  document.body.append(anchor);anchor.click();anchor.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),15000);
+  showToast("Đã tạo PDF và bắt đầu tải xuống.");
+ }catch(error){
+  console.error("PDF export error:",error);
+  showToast("Không thể tạo PDF. Vui lòng thử lại.");
+ }finally{
+  button.disabled=false;button.classList.remove("loading");button.textContent=originalText;
+ }
+}
+
 function closeModal(){$("day-modal").close();}
 
 $("prev").addEventListener("click",()=>{viewMonth=new Date(viewMonth.getFullYear(),viewMonth.getMonth()-1,1);renderCalendar();});
 $("next").addEventListener("click",()=>{viewMonth=new Date(viewMonth.getFullYear(),viewMonth.getMonth()+1,1);renderCalendar();});
 $("today").addEventListener("click",()=>{selectedDate=new Date(today);viewMonth=new Date(today.getFullYear(),today.getMonth(),1);renderCalendar();});
 $("close").addEventListener("click",closeModal);$("done").addEventListener("click",closeModal);
+$("export-pdf").addEventListener("click",()=>{if(currentModalDateKey)exportDayToPDF(currentModalDateKey);});
 $("day-modal").addEventListener("click",event=>{if(event.target===$("day-modal"))closeModal();});
 // Phím Esc được phần tử dialog của trình duyệt hỗ trợ mặc định.
 renderCalendar();
