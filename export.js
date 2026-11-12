@@ -57,6 +57,7 @@ let pdfSerifRegistered=false;
 function registerEmbeddedPdfFont(){
  if(!window.pdfMake||typeof window.pdfMake.addFonts!=="function")throw new Error("Không tải được pdfmake.");
  if(!pdfSerifRegistered){
+  if(typeof window.pdfMake.setUrlResourceCaching==="function")window.pdfMake.setUrlResourceCaching(true);
   window.pdfMake.addFonts({
    NotoSerifEmbedded:{
     normal:PDF_SERIF_URL,
