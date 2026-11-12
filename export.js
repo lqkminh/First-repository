@@ -106,7 +106,7 @@ function pdfCell(item,lang,bodySize){
  const showReference=reference&&reference!=="—"&&!(lang==="vi"&&latinReference===reference);
  return {
   stack:[
-   {text:label,bold:true,fontSize:10,color:"#466454",margin:[0,0,0,2.75]},
+   {text:label,bold:true,fontSize:12,color:"#A32139",margin:[0,0,0,3.25]},
    ...(showReference?[{text:reference,fontSize:9,italics:true,color:"#8b7958",margin:[0,0,0,3.75]}]:[]),
    {text:pdfDropCapText(text,bodySize),alignment:"justify",lineHeight:1.35}
   ],
@@ -149,26 +149,24 @@ function pdfDefinition(entry,date,pageSize){
    ...(meta?[{text:meta,style:"metadata"}]:[]),
    ...(massFrom?[{text:"Mass taken from: "+massFrom,style:"massFrom"}]:[]),
    {
-    // Dùng SVG vector thay ký tự ✠ để không phụ thuộc glyph của font PDF.
-    columns:[
-     {canvas:[{type:"line",x1:0,y1:13,x2:100,y2:13,lineWidth:1.1,lineColor:"#A32139"}]},
-     {
-      svg:'<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><path fill="#A32139" d="M10 1 L18 1 L19 8 L26 4 L28 11 L21 14 L28 17 L26 24 L19 20 L18 27 L10 27 L9 20 L2 24 L0 17 L7 14 L0 11 L2 4 L9 8 Z"/></svg>',
-      width:22,
-      alignment:"center"
-     },
-     {canvas:[{type:"line",x1:0,y1:13,x2:100,y2:13,lineWidth:1.1,lineColor:"#A32139"}]}
-    ],
-    columnGap:14,
-    margin:[0,0,0,10.5]
+    // Đường ngang đỏ đô đơn giản, không dùng ký hiệu đặc biệt hay font glyph.
+    canvas:[{
+     type:"line",
+     x1:0,y1:1,
+     x2:pageSize==="A5"?351:505,y2:1,
+     lineWidth:1.15,
+     lineColor:"#A32139"
+    }],
+    alignment:"center",
+    margin:[0,7,0,12]
    },
    {
     table:{widths:["*","*"],body:rows.length?rows:[[{text:"—"},{text:"—"}]]},
     layout:{
      hLineWidth:function(){return 0;},
-     vLineWidth:function(i){return i===1?.45:0;},
+     vLineWidth:function(i){return i===1?1.0:0;},
      hLineColor:function(){return "#ded9cf";},
-     vLineColor:function(){return "#d7d1c6";},
+     vLineColor:function(){return "#333333";},
      paddingLeft:function(){return 7.25;},
      paddingRight:function(){return 7.25;},
      paddingTop:function(){return 0;},
