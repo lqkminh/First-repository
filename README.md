@@ -1,37 +1,37 @@
-## Welcome to GitHub Pages
+# Ordo Romanus — Calendarium Liturgicum
 
-You can use the [editor on GitHub](https://github.com/lqkminh/First-repository/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+Lịch phụng vụ Rôma truyền thống 1962, trình bày song ngữ Latin – Việt.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Chạy website
+Mở trực tiếp `index.html` bằng trình duyệt hiện đại. Website sử dụng HTML, CSS và JavaScript thuần; không cần backend hoặc bước build.
 
-### Markdown
+## Chức năng
+- Lịch tháng, tuần bắt đầu từ Thứ Hai.
+- Chuyển tháng trước/sau và trở về hôm nay.
+- Đánh dấu ngày hiện tại và ngày đã có dữ liệu.
+- Bấm ngày để mở hộp thoại Proprium Missae.
+- Đóng hộp thoại bằng nút, bấm nền ngoài hoặc phím Esc.
+- Giao diện responsive cho máy tính và điện thoại.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Dữ liệu
+Dữ liệu mẫu hiện được khai báo trong đối tượng `ORDO_DATA` ở cuối `index.html`. Thêm ngày bằng khóa `YYYY-MM-DD`, ví dụ:
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```js
+"2026-12-25": {
+  titleVi: "Đại lễ Giáng Sinh",
+  titleLatin: "In Nativitate Domini",
+  rank: "I classis",
+  color: "Trắng · Albus",
+  season: "Tempus Nativitatis",
+  solemnity: true,
+  readings: [
+    { label: "Epistola · Bài Thánh Thư", reference: "tham chiếu", text: "Bản văn Latin / Việt..." },
+    { label: "Evangelium · Phúc Âm", reference: "tham chiếu", text: "Bản văn Latin / Việt..." }
+  ],
+  prayers: [
+    { label: "Oratio · Lời nguyện", reference: "Collecta", text: "Bản văn..." }
+  ]
+}
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/lqkminh/First-repository/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+Các mục hiện tại là **dữ liệu minh họa để thử giao diện**, chưa phải bản văn đã kiểm chứng theo Missale Romanum 1962. Hãy đối chiếu sách lễ và lịch riêng có thẩm quyền trước khi đưa vào sử dụng phụng vụ.
