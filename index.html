@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#34251f">
+<title>Ordo Romanus — Lịch Phụng Vụ</title>
+<style>
+:root{--ink:#30241f;--muted:#76665b;--paper:#f5efe3;--paper2:#fffaf0;--wine:#702d32;--gold:#b18a4b;--line:#d8c9ad;--green:#52634c}
+*{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,"Times New Roman",serif}
+header{background:linear-gradient(135deg,#2b211d,#49332c);color:#f8f0df;border-bottom:4px solid var(--gold)}
+.top{max-width:1100px;margin:auto;padding:24px 22px 20px;text-align:center}
+.kicker{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#d7bd8a}
+h1{font-weight:normal;font-size:clamp(27px,5vw,42px);letter-spacing:.06em;margin:9px 0 4px}
+.subtitle{font-size:14px;color:#e5d8c1;font-style:italic}
+nav{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;padding:12px;border-top:1px solid #735c4b;font-size:13px}
+nav a{color:#f3e8d4;text-decoration:none}nav a:hover{color:#e2c27e}
+main{max-width:1100px;margin:28px auto;padding:0 18px 50px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.monthnav{display:flex;align-items:center;gap:10px}
+button,select,input{font:inherit;color:var(--ink);background:var(--paper2);border:1px solid var(--line);border-radius:4px;padding:9px 12px}
+button{cursor:pointer}button:hover{border-color:var(--wine);color:var(--wine)}
+#monthTitle{font-size:21px;min-width:170px;text-align:center}
+.layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.85fr);gap:18px}
+.panel{background:var(--paper2);border:1px solid var(--line);box-shadow:0 4px 16px #4c35200c}
+.panelhead{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.panelhead h2{font-size:17px;font-weight:normal;margin:0;color:var(--wine)}
+.calendar{padding:12px}
+.weekdays,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.weekdays div{text-align:center;color:var(--muted);font-size:12px;padding:8px 0}
+.day{min-height:68px;border:1px solid transparent;background:#f8f2e7;padding:7px 5px;text-align:left;position:relative}
+.day .num{font-size:15px}.day small{display:block;color:var(--muted);font-size:10px;margin-top:7px}
+.day.muted{opacity:.35}.day.today{border-color:var(--gold);background:#f3e8d3}.day.selected{background:#eadcc3;border-color:var(--wine)}
+.day.sunday .num{color:var(--wine)}.day:hover{border-color:var(--gold)}
+.legend{display:flex;gap:15px;flex-wrap:wrap;padding:0 16px 15px;color:var(--muted);font-size:11px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold);margin-right:5px}
+.detail{padding:20px}.date-line{color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.feast{font-size:25px;font-weight:normal;color:var(--wine);line-height:1.2;margin:10px 0 4px}
+.latin{font-style:italic;color:#665347;font-size:17px;margin:0 0 14px}
+.meta{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:17px 0}
+.meta div{border-top:1px solid var(--line);padding-top:8px}.meta label{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.meta strong{font-size:13px;font-weight:normal}
+.section{border-top:1px solid var(--line);padding:12px 0}.section h3{font-size:13px;color:var(--wine);font-weight:normal;margin:0 0 5px}.section p{font-size:13px;line-height:1.5;margin:0;color:#594b42}
+.notice{margin-top:14px;padding:11px 12px;background:#f3ead9;border-left:3px solid var(--gold);font:12px/1.5 Arial,sans-serif;color:#625345}
+.tools{display:flex;gap:8px;flex-wrap:wrap}.tools input{min-width:0;flex:1}
+footer{text-align:center;padding:22px;color:var(--muted);font-size:12px;border-top:1px solid var(--line)}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.day{min-height:56px;padding:5px 3px}.day small{font-size:9px}.weekdays div{font-size:10px}main{margin-top:18px}.panelhead{padding:13px}.detail{padding:16px}}
+@media(max-width:390px){.day{min-height:48px}.day .num{font-size:13px}.day small{display:none}.calendar{padding:6px}.weekdays,.days{gap:2px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="top">
+  <div class="kicker">Missale Romanum · Anno Domini</div>
+  <h1>ORDO ROMANUS</h1>
+  <div class="subtitle">Lịch Phụng Vụ Rôma · Nghi lễ truyền thống năm 1962</div>
+ </div>
+ <nav><a href="#calendar">Lịch phụng vụ</a><a href="#daily">Ngày trong tuần</a><a href="#about">Giới thiệu</a></nav>
+</header>
+<main>
+ <div class="toolbar" id="calendar">
+  <div class="monthnav">
+   <button id="prev" aria-label="Tháng trước">‹</button>
+   <div id="monthTitle">Tháng</div>
+   <button id="next" aria-label="Tháng sau">›</button>
+  </div>
+  <div class="tools">
+   <button id="today">Hôm nay</button>
+   <input id="jump" type="date" aria-label="Chọn ngày"/>
+  </div>
+ </div>
+ <div class="layout">
+  <section class="panel">
+   <div class="panelhead"><h2>Calendarium</h2><span style="font-size:11px;color:var(--muted)">Lịch Rôma</span></div>
+   <div class="calendar">
+    <div class="weekdays"><div>CN</div><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div></div>
+    <div class="days" id="days"></div>
+   </div>
+   <div class="legend"><span><i class="dot"></i>Ngày đang chọn</span><span style="color:var(--wine)">● Chúa Nhật</span></div>
+  </section>
+  <section class="panel" id="daily">
+   <div class="panelhead"><h2>Proprium de Tempore</h2><span style="font-size:11px;color:var(--muted)">Ngày được chọn</span></div>
+   <div class="detail">
+    <div class="date-line" id="dateLine"></div>
+    <h2 class="feast">Chưa có dữ liệu phụng vụ</h2>
+    <p class="latin">Proprium Missae — đang chờ bổ sung</p>
+    <div class="meta">
+     <div><label>Bậc lễ · Classis</label><strong>Chưa xác định</strong></div>
+     <div><label>Màu phụng vụ · Color</label><strong>Chưa xác định</strong></div>
+     <div><label>Mùa phụng vụ · Tempus</label><strong>Chưa xác định</strong></div>
+     <div><label>Lịch · Calendarium</label><strong>Romanum 1962</strong></div>
+    </div>
+    <div class="section"><h3>Introitus · Ca nhập lễ</h3><p>Chưa nhập bản văn Latin và bản dịch Việt.</p></div>
+    <div class="section"><h3>Epistola · Thư</h3><p>Chưa nhập bài đọc.</p></div>
+    <div class="section"><h3>Evangelium · Phúc Âm</h3><p>Chưa nhập bài đọc.</p></div>
+    <div class="section"><h3>Orationes · Lời nguyện</h3><p>Chưa nhập các lời nguyện phụng vụ.</p></div>
+    <div class="notice"><strong>Lưu ý về dữ liệu:</strong> Đây là bản khung giao diện ban đầu. Chưa tích hợp lịch lễ, thứ bậc, màu phụng vụ và bản văn chính thức của Missale Romanum 1962. Những mục này cần được đối chiếu với lịch và sách phụng vụ chuẩn trước khi công bố sử dụng.</div>
+   </div>
+  </section>
+ </div>
+ <section class="panel" id="about" style="margin-top:18px">
+  <div class="panelhead"><h2>De hoc opere · Về website</h2></div>
+  <div style="padding:16px 18px;font-size:13px;line-height:1.65;color:#594b42">
+   Ordo Romanus là dự án tra cứu lịch phụng vụ theo nghi lễ Rôma truyền thống. Website hướng đến cách trình bày song ngữ Latin – Việt, trang nghiêm, rõ ràng và thuận tiện trên cả máy tính lẫn điện thoại.
+  </div>
+ </section>
+</main>
+<footer>AD MAIOREM DEI GLORIAM · ORDO ROMANUS · BẢN THỬ NGHIỆM GIAO DIỆN</footer>
+<script>
+const today=new Date(); let shown=new Date(today.getFullYear(),today.getMonth(),1); let selected=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+const months=["Tháng Giêng","Tháng Hai","Tháng Ba","Tháng Tư","Tháng Năm","Tháng Sáu","Tháng Bảy","Tháng Tám","Tháng Chín","Tháng Mười","Tháng Mười Một","Tháng Chạp"];
+const fmt=d=>d.toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const iso=d=>\`\${d.getFullYear()}-\${String(d.getMonth()+1).padStart(2,'0')}-\${String(d.getDate()).padStart(2,'0')}\`;
+function render(){
+ document.getElementById('monthTitle').textContent=months[shown.getMonth()]+" "+shown.getFullYear();
+ const first=new Date(shown.getFullYear(),shown.getMonth(),1), start=new Date(first); start.setDate(1-first.getDay());
+ const days=document.getElementById('days'); days.innerHTML='';
+ for(let i=0;i<42;i++){const d=new Date(start);d.setDate(start.getDate()+i);
+  const b=document.createElement('button');b.className='day'+(d.getMonth()!==shown.getMonth()?' muted':'')+(d.getDay()===0?' sunday':'')+(iso(d)===iso(today)?' today':'')+(iso(d)===iso(selected)?' selected':'');
+  b.innerHTML=\`<span class="num">\${d.getDate()}</span>\${d.getDay()===0?'<small>Dominica</small>':''}\`;
+  b.addEventListener('click',()=>{selected=new Date(d);shown=new Date(d.getFullYear(),d.getMonth(),1);render()});days.appendChild(b);
+ }
+ document.getElementById('dateLine').textContent=fmt(selected);
+ document.getElementById('jump').value=iso(selected);
+}
+document.getElementById('prev').onclick=()=>{shown.setMonth(shown.getMonth()-1);render()};
+document.getElementById('next').onclick=()=>{shown.setMonth(shown.getMonth()+1);render()};
+document.getElementById('today').onclick=()=>{selected=new Date(today);shown=new Date(today.getFullYear(),today.getMonth(),1);render()};
+document.getElementById('jump').onchange=e=>{if(e.target.value){selected=new Date(e.target.value+'T12:00:00');shown=new Date(selected.getFullYear(),selected.getMonth(),1);render()}};
+render();
+</script>
+</body></html>
