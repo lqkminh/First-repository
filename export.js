@@ -114,7 +114,8 @@ function pdfDefinition(entry,date,pageSize){
      paddingTop:function(){return 5;},
      paddingBottom:function(){return 5;}
     },
-    keepWithHeaderRows:1
+    keepWithHeaderRows:1,
+    dontBreakRows:true
    },
    ...(entry.demo?[{text:"DỮ LIỆU MINH HỌA — Cần đối chiếu bản văn và lịch phụng vụ trước khi sử dụng chính thức.",style:"disclaimer"}]:[])
   ],
