@@ -266,7 +266,7 @@ async function createDocx(entry,date,page){
    ]
   }));
   group.items.forEach(item=>{
-   rows.push(new TableRow({children:[makeWordCell(item,"la",cellWidth,style),makeWordCell(item,"vi",cellWidth,style)]}));
+   rows.push(new TableRow({cantSplit:true,children:[makeWordCell(item,"la",cellWidth,style),makeWordCell(item,"vi",cellWidth,style)]}));
   });
  });
  const children=[
