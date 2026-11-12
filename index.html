@@ -381,11 +381,11 @@ function getOrderedSections(entry){
 }
 function appendDropCap(paragraph,content){
  const chars=Array.from(String(content||"—"));
- if(!chars.length){paragraph.textContent="—";return;}
- const first=chars.shift();
- if(!/[\p{L}\p{N}]/u.test(first)){paragraph.textContent=first+chars.join("");return;}
- const cap=document.createElement("span");cap.className="reading-dropcap";cap.textContent=first;
- paragraph.append(cap,document.createTextNode(chars.join("")));
+ const index=chars.findIndex(char=>/[\p{L}\p{N}]/u.test(char));
+ if(index<0){paragraph.textContent=chars.join("")||"—";return;}
+ if(index)paragraph.append(document.createTextNode(chars.slice(0,index).join("")));
+ const cap=document.createElement("span");cap.className="reading-dropcap";cap.textContent=chars[index];
+ paragraph.append(cap,document.createTextNode(chars.slice(index+1).join("")));
 }
 function textCard(item){
  const card=document.createElement("article");card.className="reading";
@@ -394,7 +394,7 @@ function textCard(item){
   const col=document.createElement("div");col.className="reading-col";
   const labelText=lang==="la"
    ?(item.label_la||item.labelLa||item.labelLatin||"")
-   :(item.label_vi||item.labelVi||item.label||"Mục sách lễ").replace(/Bài Thánh Thơ/gi,"Bài thơ");
+   :(item.label_vi||item.labelVi||item.label||"Mục sách lễ").replace(/Bài\s+Thánh\s+Thơ/gi,"Bài thơ");
   const heading=document.createElement("h4");heading.className="reading-column-label";
   heading.textContent=labelText||"—";col.append(heading);
   const ref=lang==="la"
