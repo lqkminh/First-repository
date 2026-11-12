@@ -324,7 +324,7 @@ async function createDocx(entry,date,page){
   })]:[]),
   new Paragraph({
    alignment:AlignmentType.CENTER,spacing:{after:210},
-   children:[new TextRun({text:"————————————   ✠   ————————————",color:"A32139",font:"Times New Roman",size:20})]
+   children:[new TextRun({text:"————————————————————————————",color:"A32139",font:"Times New Roman",size:20})]
   }),
   new Table({
    width:{size:100,type:WidthType.PERCENTAGE},
