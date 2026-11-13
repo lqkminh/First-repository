@@ -54,11 +54,13 @@ create table if not exists public.plan_prices (
   unique(plan_code,interval_unit)
 );
 
--- Giá đã được chốt cho ORDO 1962. Không tự đặt giá cho gói tiền 1955.
+-- Giá đã chốt cho cả hai thư viện. Gói năm bằng 10 tháng phí tháng (tặng 2 tháng).
 insert into public.plan_prices(plan_code,interval_unit,amount_vnd)
 values
  ('ORDO_1962','month',39000),
- ('ORDO_1962','year',390000)
+ ('ORDO_1962','year',390000),
+ ('ORDO_PRE55','month',69000),
+ ('ORDO_PRE55','year',690000)
 on conflict (plan_code,interval_unit) do update set
  amount_vnd=excluded.amount_vnd,
  is_active=true;
