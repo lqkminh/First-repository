@@ -11,7 +11,8 @@ Free không cần subscription. Free được xem metadata ngày hiện tại v�
 Giá đã chốt:
 - ORDO 1962: 39.000 VND/tháng.
 - ORDO 1962: 390.000 VND/năm (ưu đãi 2 tháng so với trả tháng).
-- ORDO tiền 1955: chưa chốt; chưa tạo price row.
+- ORDO tiền 1955: 69.000 VND/tháng.
+- ORDO tiền 1955: 690.000 VND/năm (ưu đãi 2 tháng so với trả tháng).
 
 ## Kiến trúc
 
