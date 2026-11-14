@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
-const pages: Record<string,{title:string;description:string;status:string}> = {\n  "hoi-vien": { title:"Gói hội viên", description:"Chọn thư viện phụng vụ Rôma 1962 hoặc trước năm 1955.", status:"Thanh toán chưa được kích hoạt." },
+const pages: Record<string,{title:string;description:string;status:string}> = {
+  "hoi-vien": { title:"Gói hội viên", description:"Chọn thư viện phụng vụ Rôma 1962 hoặc trước năm 1955.", status:"Thanh toán chưa được kích hoạt." },
   "than-kinh": { title:"Thánh Kinh", description:"Đọc Thánh Kinh với bản văn Latin Vulgata và các bản dịch đã được cấp phép.", status:"Phân hệ đang chờ nhập dữ liệu và kiểm tra giấy phép bản dịch." },
   "hanh-cac-thanh": { title:"Hạnh các Thánh", description:"Tra cứu hạnh các Thánh theo ngày kính, quốc gia, dòng tu và quan thầy.", status:"Đang chuẩn bị cấu trúc biên tập và nguồn tư liệu." },
   "giao-ly": { title:"Giáo lý", description:"Thư viện giáo lý có mục lục, tìm kiếm, đánh dấu đã đọc và ghi chú cá nhân.", status:"Phân hệ nội dung sẽ được triển khai sau Lịch Phụng Vụ." },
@@ -17,10 +18,11 @@ export function generateStaticParams() {
   return Object.keys(pages).map((slug)=>({slug}));
 }
 
-export default function ModulePage({params}:{params:{slug:string}}) {
-  const page=pages[params.slug];
+export default async function ModulePage({params}:{params:Promise<{slug:string}>}) {
+  const { slug } = await params;
+  const page=pages[slug];
   if (!page) notFound();
-  if(params.slug==="hoi-vien") return <MembershipPage />;
+  if(slug==="hoi-vien") return <MembershipPage />;
   return <main className="container module-page"><p className="eyebrow">THÁNH LỄ MISSA · THƯ VIỆN</p><h1>{page.title}</h1><p className="module-page-description">{page.description}</p><div className="module-status"><strong>Trạng thái phát triển</strong><p>{page.status}</p></div><a className="button button-wine" href="/vi">Trở về lịch phụng vụ</a></main>;
 }
 
