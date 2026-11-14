@@ -73,3 +73,18 @@ Chưa có kho dữ liệu phụng vụ chính thức được nạp. Không đư
 4. Giáo lý và Quiz: Catechism tree, quiz, attempts, scores.
 5. Bình ca: Hymn, MusicXML/PDF/audio, playlist.
 6. Thư viện: Document, Category, private storage, editorial workflow.
+
+
+## Production deploy on Vercel
+
+This application requires a Node.js runtime. GitHub Pages cannot host App Router API routes, NextAuth callbacks or Prisma database access.
+
+1. Import this repository into Vercel and choose branch `feature/thanh-le-missa-next-platform` for a preview deployment.
+2. Add a managed PostgreSQL database (Vercel Postgres/Neon/Supabase) and set `DATABASE_URL`.
+3. Set `NEXTAUTH_URL` to the Vercel URL and generate a strong `NEXTAUTH_SECRET`.
+4. Configure Google OAuth redirect URL `https://<deployment-host>/api/auth/callback/google` and SMTP settings if email sign-in is enabled.
+5. Apply the reviewed Prisma migrations and seed only the calendar metadata and plans. No liturgical day data is fabricated by seed.
+6. Test Guest, User, Editor and Admin access; confirm private sections are not returned to Guest; verify logs and backups.
+7. Only after acceptance, add the production domain and switch it to the production deployment.
+
+Do not expose `NEXTAUTH_SECRET`, OAuth secrets, database credentials, storage service-role keys or payment secrets in client-side variables. The current repository has no production database credentials and no payment gateway configuration; membership payments must remain disabled.
