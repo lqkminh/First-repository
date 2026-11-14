@@ -2,13 +2,11 @@
 
 import { signIn } from "next-auth/react";
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
 
 export default function SignInPage() {
   const [email,setEmail]=useState("");
   const [message,setMessage]=useState("");
-  const params=useSearchParams();
-  const callbackUrl=params.get("callbackUrl")||"/vi";
+  const callbackUrl="/vi";
   return (
     <main className="container auth-shell">
       <section className="auth-card">
