@@ -35,6 +35,8 @@ export async function POST(request: NextRequest) {
   const calendar = await prisma.liturgicalCalendar.findUnique({ where: { code: calendarCode } });
   if (!calendar) return NextResponse.json({ error: "Calendar not seeded." }, { status: 409 });
   const date = new Date(civilDate + "T00:00:00.000Z");
+  const existing = await prisma.liturgicalDay.findUnique({ where: { calendarId_civilDate: { calendarId: calendar.id, civilDate: date } }, select: { id: true, status: true } });
+  if (existing?.status === "PUBLISHED" && session.user.role !== "ADMIN") return NextResponse.json({ error: "Chỉ Admin được chỉnh sửa ngày đã xuất bản." }, { status: 403 });
   const day = await prisma.liturgicalDay.upsert({
     where: { calendarId_civilDate: { calendarId: calendar.id, civilDate: date } },
     update: { ...fields, createdById: session.user.id },
