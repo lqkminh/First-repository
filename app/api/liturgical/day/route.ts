@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
   );
   return NextResponse.json({ day: {
     id: day.id, civilDate: day.civilDate.toISOString().slice(0, 10), titleVi: day.titleVi, titleLa: day.titleLa,
-    rankVi: day.rankVi, liturgicalColor: day.liturgicalColor, seasonVi: day.seasonVi, isSunday: day.isSunday, isSolemnity: day.isSolemnity,
+    rankVi: day.rankVi, liturgicalColor: day.liturgicalColor, seasonVi: day.seasonVi, lectionaryCycle: day.lectionaryCycle, isSunday: day.isSunday, isSolemnity: day.isSolemnity,
     accessLimited: !fullAccess && visibleSections.length < day.sections.length,
     sections: visibleSections.map(({ id, labelLa, labelVi, referenceLa, referenceVi, textLa, textVi }) => ({ id, labelLa, labelVi, referenceLa, referenceVi, textLa, textVi })),
     saints: day.saints.map((item) => ({ saint: item.saint }))
