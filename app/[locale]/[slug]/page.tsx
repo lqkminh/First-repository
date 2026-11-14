@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-const pages: Record<string,{title:string;description:string;status:string}> = {
+const pages: Record<string,{title:string;description:string;status:string}> = {\n  "hoi-vien": { title:"Gói hội viên", description:"Chọn thư viện phụng vụ Rôma 1962 hoặc trước năm 1955.", status:"Thanh toán chưa được kích hoạt." },
   "than-kinh": { title:"Thánh Kinh", description:"Đọc Thánh Kinh với bản văn Latin Vulgata và các bản dịch đã được cấp phép.", status:"Phân hệ đang chờ nhập dữ liệu và kiểm tra giấy phép bản dịch." },
   "hanh-cac-thanh": { title:"Hạnh các Thánh", description:"Tra cứu hạnh các Thánh theo ngày kính, quốc gia, dòng tu và quan thầy.", status:"Đang chuẩn bị cấu trúc biên tập và nguồn tư liệu." },
   "giao-ly": { title:"Giáo lý", description:"Thư viện giáo lý có mục lục, tìm kiếm, đánh dấu đã đọc và ghi chú cá nhân.", status:"Phân hệ nội dung sẽ được triển khai sau Lịch Phụng Vụ." },
