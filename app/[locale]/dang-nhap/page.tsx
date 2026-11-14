@@ -1,12 +1,14 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useState } from "react";\nimport { useLocale } from "next-intl";
+import { useState } from "react";
+import { useLocale } from "next-intl";
 
 export default function SignInPage() {
   const [email,setEmail]=useState("");
   const [message,setMessage]=useState("");
-  const locale=useLocale();\n  const callbackUrl=locale==="en"?"/en":"/vi";
+  const locale=useLocale();
+  const callbackUrl=locale==="en"?"/en":"/vi";
   return (
     <main className="container auth-shell">
       <section className="auth-card">
