@@ -21,8 +21,9 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: { locale: string } }) {
-  if (!routing.locales.includes(params.locale as "vi" | "en")) notFound();
+export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  if (!routing.locales.includes(locale as "vi" | "en")) notFound();
   const messages = await getMessages();
-  return <html lang={params.locale} suppressHydrationWarning><body><NextIntlClientProvider messages={messages}><SiteHeader />{children}<SiteFooter /><ServiceWorkerRegister /></NextIntlClientProvider></body></html>;
+  return <html lang={locale} suppressHydrationWarning><body><NextIntlClientProvider messages={messages}><SiteHeader />{children}<SiteFooter /><ServiceWorkerRegister /></NextIntlClientProvider></body></html>;
 }
