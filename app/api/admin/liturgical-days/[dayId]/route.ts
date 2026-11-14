@@ -26,7 +26,7 @@ export async function DELETE(_request: NextRequest, context: { params: Promise<{
   const { dayId } = await context.params;
   const session = await editor();
   if (!session || session.user.role !== "ADMIN") return NextResponse.json({ error: "Admin only" }, { status: 403 });
-  await prisma.liturgicalDay.delete({ where: { id: context.params.dayId } });
-  await prisma.auditLog.create({ data: { actorId: session.user.id, action: "DELETE_LITURGICAL_DAY", entity: "LiturgicalDay", entityId: context.params.dayId } });
+  await prisma.liturgicalDay.delete({ where: { id: dayId } });
+  await prisma.auditLog.create({ data: { actorId: session.user.id, action: "DELETE_LITURGICAL_DAY", entity: "LiturgicalDay", entityId: dayId } });
   return NextResponse.json({ ok: true });
 }
