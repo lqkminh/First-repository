@@ -110,6 +110,8 @@ model User {
   comments        Comment[]
   ratings         Rating[]
   auditLogs       AuditLog[]
+  payments        Payment[]
+  notifications   UserNotification[]
 }
 
 model Account {
@@ -408,6 +410,7 @@ model Hymn {
   musicXmlUrl      String?
   scorePdfUrl      String?
   audioUrl         String?
+  playlistItems    PlaylistItem[]
   sourceUrl        String?
   license          String?
   status           ContentStatus @default(DRAFT)
@@ -432,6 +435,7 @@ model PlaylistItem {
   hymnId     String
   position   Int
   playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  hymn       Hymn     @relation(fields: [hymnId], references: [id], onDelete: Cascade)
 
   @@id([playlistId, hymnId])
   @@unique([playlistId, position])
@@ -621,6 +625,7 @@ model Payment {
   provider              String
   providerTransactionId String?
   amountVnd             Int
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   currency              String        @default("VND")
   status                PaymentStatus @default(INITIATED)
   paidAt                DateTime?
@@ -630,6 +635,39 @@ model Payment {
 
   @@unique([provider, providerTransactionId])
   @@index([userId, createdAt])
+}
+
+model PaymentWebhookEvent {
+  id             String   @id @default(cuid())
+  provider       String
+  eventId        String
+  eventType      String
+  signatureValid Boolean  @default(false)
+  status         String   @default("RECEIVED")
+  payload        Json?
+  processedAt    DateTime?
+  createdAt      DateTime @default(now())
+  @@unique([provider, eventId])
+  @@index([status, createdAt])
+}
+
+model NewsletterSubscription {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  locale    String   @default("vi")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model UserNotification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  body      String   @db.Text
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, readAt])
 }
 
 model AuditLog {
