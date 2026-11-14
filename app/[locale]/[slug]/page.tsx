@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, Church, Library, Music2, GraduationCap, LockKeyhole, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Church, Library, Music2, GraduationCap, LockKeyhole, Sparkles } from "lucide-react";
 import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Link } from "@/i18n/navigation";
@@ -49,17 +49,17 @@ export default async function ModulePage({params}:{params:Promise<{slug:string}>
     const item=legal[slug];
     return <main className="container simple-info-page"><p className="eyebrow">THÁNH LỄ MISSA · {locale==="en"?"INFORMATION":"THÔNG TIN"}</p><h1>{item.title}</h1><p>{item.description}</p><Link href="/" className="back-home"><ArrowLeft size={14}/>{locale==="en"?"Back to home":"Trở về trang chủ"}</Link></main>;
   }
-  const module=moduleCopy[slug]?.[locale==="en"?"en":"vi"];
-  if(!module) notFound();
-  const Icon=module.icon;
+  const moduleData=moduleCopy[slug]?.[locale==="en"?"en":"vi"];
+  if(!moduleData) notFound();
+  const Icon=moduleData.icon;
   return (
     <main className="module-detail-page">
       <section className="module-detail-hero"><div className="container module-detail-hero-inner">
-        <div className="module-detail-copy"><p className="eyebrow">THÁNH LỄ MISSA · THƯ VIỆN</p><p className="module-detail-latin">{module.latin}</p><h1>{module.title}</h1><p>{module.description}</p><div className="module-status-inline"><span className="status-dot"/>{module.status}</div></div>
+        <div className="module-detail-copy"><p className="eyebrow">THÁNH LỄ MISSA · THƯ VIỆN</p><p className="module-detail-latin">{moduleData.latin}</p><h1>{moduleData.title}</h1><p>{moduleData.description}</p><div className="module-status-inline"><span className="status-dot"/>{moduleData.status}</div></div>
         <div className="module-detail-emblem"><Icon size={46} strokeWidth={1.1}/><span>✠</span></div>
       </div></section>
       <section className="container module-detail-body">
-        <div className="module-detail-main"><p className="eyebrow">{locale==="en"?"IN THIS SECTION":"NỘI DUNG PHÂN HỆ"}</p><h2>{locale==="en"?"What you will find":"Những nội dung chính"}</h2><div className="module-feature-list">{module.points.map((point,index)=><div className="module-feature" key={point}><span>0{index+1}</span><p>{point}</p></div>)}</div></div>
+        <div className="module-detail-main"><p className="eyebrow">{locale==="en"?"IN THIS SECTION":"NỘI DUNG PHÂN HỆ"}</p><h2>{locale==="en"?"What you will find":"Những nội dung chính"}</h2><div className="module-feature-list">{moduleData.points.map((point,index)=><div className="module-feature" key={point}><span>0{index+1}</span><p>{point}</p></div>)}</div></div>
         <aside className="module-detail-aside"><span className="aside-cross">✠</span><h3>{locale==="en"?"Carefully sourced content":"Nội dung có nguồn dẫn"}</h3><p>{locale==="en"?"Entries will be reviewed for accuracy, source attribution and appropriate usage rights before publication.":"Tư liệu sẽ được kiểm tra về nội dung, xuất xứ và quyền sử dụng trước khi công bố."}</p><Link href="/hoi-vien">{locale==="en"?"Membership information":"Thông tin hội viên"} <ArrowRight size={13}/></Link></aside>
       </section>
       <div className="container module-back-row"><Link href="/" className="back-home"><ArrowLeft size={14}/>{locale==="en"?"Back to home":"Trở về trang chủ"}</Link></div>
