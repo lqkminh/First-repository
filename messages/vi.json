@@ -1,0 +1,43 @@
+{
+  "Navigation": {
+    "calendar": "Lịch phụng vụ",
+    "bible": "Thánh Kinh",
+    "saints": "Hạnh các Thánh",
+    "catechism": "Giáo lý",
+    "quiz": "Đố vui",
+    "chant": "Bình ca",
+    "library": "Thư viện",
+    "membership": "Hội viên",
+    "admin": "Quản trị",
+    "signIn": "Đăng nhập"
+  },
+  "HomePage": {
+    "eyebrow": "LỊCH PHỤNG VỤ · THÁNH NHẠC · THƯ VIỆN",
+    "title": "Thánh Lễ Missa",
+    "subtitle": "Một không gian tra cứu phụng vụ và học hỏi đức tin Công giáo, với bản văn Latinh – Việt song song.",
+    "calendarTitle": "Lịch phụng vụ",
+    "calendarDescription": "Tra cứu theo ngày, tuần, tháng hoặc năm.",
+    "today": "Hôm nay"
+  },
+  "Calendar": {
+    "today": "Hôm nay",
+    "previous": "Trước",
+    "next": "Sau",
+    "month": "Tháng",
+    "week": "Tuần",
+    "year": "Năm",
+    "todayView": "Hôm nay",
+    "chooseCalendar": "Niên lịch",
+    "roman1962": "Rôma 1962",
+    "pre1955": "Trước 1955",
+    "loading": "Đang tải lịch...",
+    "noData": "Chưa có dữ liệu phụng vụ đã được biên tập cho ngày này.",
+    "selectDay": "Chọn một ngày để xem chi tiết.",
+    "rank": "Bậc lễ",
+    "color": "Màu phụng vụ",
+    "season": "Mùa phụng vụ",
+    "readings": "Bản văn",
+    "close": "Đóng",
+    "source": "Nguồn"
+  }
+}
