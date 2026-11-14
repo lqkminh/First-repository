@@ -1,35 +1,89 @@
+import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, Church, Library, Music2, GraduationCap, LockKeyhole, Sparkles } from "lucide-react";
+import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { Link } from "@/i18n/navigation";
 
-const pages: Record<string,{title:string;description:string;status:string}> = {
-  "hoi-vien": { title:"Gói hội viên", description:"Chọn thư viện phụng vụ Rôma 1962 hoặc trước năm 1955.", status:"Thanh toán chưa được kích hoạt." },
-  "than-kinh": { title:"Thánh Kinh", description:"Đọc Thánh Kinh với bản văn Latin Vulgata và các bản dịch đã được cấp phép.", status:"Phân hệ đang chờ nhập dữ liệu và kiểm tra giấy phép bản dịch." },
-  "hanh-cac-thanh": { title:"Hạnh các Thánh", description:"Tra cứu hạnh các Thánh theo ngày kính, quốc gia, dòng tu và quan thầy.", status:"Đang chuẩn bị cấu trúc biên tập và nguồn tư liệu." },
-  "giao-ly": { title:"Giáo lý", description:"Thư viện giáo lý có mục lục, tìm kiếm, đánh dấu đã đọc và ghi chú cá nhân.", status:"Phân hệ nội dung sẽ được triển khai sau Lịch Phụng Vụ." },
-  "do-vui": { title:"Đố vui Giáo lý", description:"Bộ câu hỏi trắc nghiệm, điền khuyết và các cấp độ học hỏi.", status:"Cấu trúc dữ liệu Quiz và Question đã có trong Prisma; giao diện sẽ phát triển tiếp." },
-  "binh-ca": { title:"Bình ca và Thánh nhạc", description:"Thư viện bình ca Gregorian, thánh ca và bản nhạc phụng vụ.", status:"Chỉ nhập âm thanh và bản nhạc có giấy phép phù hợp hoặc thuộc phạm vi công cộng." },
-  "thu-vien": { title:"Thư viện", description:"Sách, bài viết, bài giảng, tài liệu PDF và EPUB được phân loại theo chủ đề.", status:"Đã có cấu trúc Document, Category và nguồn tư liệu; trình đọc sẽ phát triển tiếp." },
-  "ve-chung-toi": { title:"Về chúng tôi", description:"Giới thiệu dự án Thánh Lễ Missa và mục tiêu phục vụ việc tra cứu phụng vụ.", status:"Nội dung giới thiệu sẽ được biên soạn." },
-  "lien-he": { title:"Liên hệ", description:"Liên hệ ban quản trị và gửi góp ý về dữ liệu phụng vụ.", status:"Biểu mẫu liên hệ sẽ được bổ sung." },
-  "chinh-sach-bao-mat": { title:"Chính sách bảo mật", description:"Thông tin về tài khoản, dữ liệu cá nhân và quyền riêng tư.", status:"Cần hoàn thiện và rà soát pháp lý trước khi vận hành." },
-  "dieu-khoan": { title:"Điều khoản sử dụng", description:"Điều khoản truy cập, quyền hội viên và sử dụng nội dung.", status:"Cần hoàn thiện và rà soát pháp lý trước khi vận hành." }
+type ModuleCopy = { title:string; latin:string; description:string; status:string; points:string[]; icon:typeof BookOpen };
+const moduleCopy:Record<string,{vi:ModuleCopy;en:ModuleCopy}> = {
+  "than-kinh": {
+    vi:{title:"Thánh Kinh",latin:"BIBLIA SACRA",description:"Đọc và suy niệm Lời Chúa với bản văn được trình bày cẩn trọng, tôn trọng nguồn và ấn bản.",status:"Đang chuẩn bị dữ liệu và kiểm tra giấy phép bản dịch.",points:["Bản văn Vulgata Latin","Bản dịch tiếng Việt có quyền sử dụng","Tra cứu theo sách, chương và câu","Đánh dấu, ghi chú và tiếp tục đọc"],icon:BookOpen},
+    en:{title:"Holy Bible",latin:"BIBLIA SACRA",description:"Read and meditate on Scripture with carefully presented texts and proper source attribution.",status:"Text sources and translation permissions are being reviewed.",points:["Latin Vulgate text","Vietnamese translations with proper rights","Browse by book, chapter and verse","Bookmarks, notes and reading progress"],icon:BookOpen}
+  },
+  "hanh-cac-thanh":{
+    vi:{title:"Hạnh các Thánh",latin:"VITAE SANCTORUM",description:"Tìm hiểu cuộc đời, nhân đức, chứng tá và ngày kính của các Thánh trong lịch sử Giáo hội.",status:"Đang chuẩn bị nguồn tư liệu và quy trình biên tập.",points:["Tra cứu theo ngày kính","Tiểu sử và quê quán","Quan thầy và các tước hiệu","Nguồn tham khảo cho từng bài"],icon:Church},
+    en:{title:"Lives of the Saints",latin:"VITAE SANCTORUM",description:"Discover the lives, virtues, witness and feast days of the saints throughout the Church's history.",status:"Sources and editorial workflow are being prepared.",points:["Browse by feast day","Biographies and places of origin","Patronages and titles","References for each entry"],icon:Church}
+  },
+  "giao-ly":{
+    vi:{title:"Giáo lý",latin:"CATECHISMUS",description:"Một thư viện học hỏi đức tin có hệ thống, từ giáo lý căn bản đến các chủ đề thần học chuyên sâu.",status:"Đang chuẩn bị mục lục và dữ liệu giáo lý.",points:["Sách Giáo lý Hội Thánh Công Giáo","Giáo lý dự tòng và thiếu nhi","Tìm kiếm theo chủ đề","Đánh dấu đã đọc và ghi chú"],icon:GraduationCap},
+    en:{title:"Catechism",latin:"CATECHISMUS",description:"A structured library for learning the Catholic faith, from foundational catechesis to deeper theological topics.",status:"The contents and learning structure are being prepared.",points:["Catechism of the Catholic Church","Catechesis for candidates and children","Topic-based search","Reading progress and notes"],icon:GraduationCap}
+  },
+  "do-vui":{
+    vi:{title:"Đố vui Giáo lý",latin:"CERTAMEN CATECHETICUM",description:"Ôn tập giáo lý qua những câu hỏi được phân cấp, có giải thích và dẫn chiếu nguồn.",status:"Cấu trúc dữ liệu đã được chuẩn bị; bộ câu hỏi đang chờ biên soạn.",points:["Nhiều cấp độ học hỏi","Trắc nghiệm và điền khuyết","Giải thích đáp án","Lịch sử kết quả"],icon:Sparkles},
+    en:{title:"Catechism Quiz",latin:"CERTAMEN CATECHETICUM",description:"Review the faith with graded questions, explanations and references to source material.",status:"The data structure is ready; the question bank is being prepared.",points:["Multiple learning levels","Multiple-choice and fill-in questions","Answer explanations","Attempt history"],icon:Sparkles}
+  },
+  "binh-ca":{
+    vi:{title:"Bình ca và Thánh nhạc",latin:"CANTUS GREGORIANUS",description:"Gìn giữ và phổ biến di sản bình ca Gregorian, thánh ca và nhạc phụng vụ qua các thời đại.",status:"Đang chuẩn bị thư viện; chỉ công bố bản nhạc và bản thu có quyền sử dụng.",points:["Bình ca Gregorian theo mùa và nghi thức","Bản nhạc PDF và MusicXML khi được phép","Bản văn Latin – Việt","Danh sách nghe và yêu thích"],icon:Music2},
+    en:{title:"Gregorian Chant & Sacred Music",latin:"CANTUS GREGORIANUS",description:"Preserve and share the heritage of Gregorian chant, sacred hymns and liturgical music across the ages.",status:"The library is being prepared; scores and recordings will be published only with appropriate rights.",points:["Gregorian chant by season and rite","PDF and MusicXML scores where licensed","Latin and Vietnamese lyrics","Listening lists and favourites"],icon:Music2}
+  },
+  "thu-vien":{
+    vi:{title:"Thư viện",latin:"BIBLIOTHECA",description:"Kho sách và tư liệu về đời sống thiêng liêng, thần học, phụng vụ, giáo luật và lịch sử Giáo hội.",status:"Đang chuẩn bị danh mục và quy trình kiểm tra bản quyền.",points:["Sách thiêng liêng và thần học","Phụng vụ và giáo luật","Bài giảng và suy niệm","Trình đọc PDF/EPUB khi có quyền"],icon:Library},
+    en:{title:"Library",latin:"BIBLIOTHECA",description:"A collection of resources on spiritual life, theology, liturgy, canon law and Church history.",status:"The catalogue and rights-review workflow are being prepared.",points:["Spiritual and theological works","Liturgy and canon law","Sermons and meditations","PDF/EPUB reader where permitted"],icon:Library}
+  }
 };
 
 export function generateStaticParams() {
-  return Object.keys(pages).map((slug)=>({slug}));
+  return [...Object.keys(moduleCopy),"hoi-vien","ve-chung-toi","lien-he","chinh-sach-bao-mat","dieu-khoan"].map((slug)=>({slug}));
 }
 
 export default async function ModulePage({params}:{params:Promise<{slug:string}>}) {
-  const { slug } = await params;
-  const page=pages[slug];
-  if (!page) notFound();
-  if(slug==="hoi-vien") return <MembershipPage />;
-  return <main className="container module-page"><p className="eyebrow">THÁNH LỄ MISSA · THƯ VIỆN</p><h1>{page.title}</h1><p className="module-page-description">{page.description}</p><div className="module-status"><strong>Trạng thái phát triển</strong><p>{page.status}</p></div><a className="button button-wine" href="/vi">Trở về lịch phụng vụ</a></main>;
+  const {slug}=await params;
+  const locale=await getLocale();
+  if(slug==="hoi-vien") return <MembershipPage english={locale==="en"}/>;
+  if(slug==="ve-chung-toi"||slug==="lien-he"||slug==="chinh-sach-bao-mat"||slug==="dieu-khoan") {
+    const legal:Record<string,{title:string;description:string}> = {
+      "ve-chung-toi":{title:locale==="en"?"About us":"Về chúng tôi",description:locale==="en"?"Thánh Lễ Missa is a project for the careful study and preservation of Catholic liturgical and devotional heritage.":"Thánh Lễ Missa là dự án phục vụ việc tra cứu, học hỏi và gìn giữ kho tàng phụng vụ, thánh nhạc và giáo huấn Công giáo."},
+      "lien-he":{title:locale==="en"?"Contact":"Liên hệ",description:locale==="en"?"Contact details and feedback channels will be published here.":"Thông tin liên hệ và kênh tiếp nhận góp ý sẽ được công bố tại đây."},
+      "chinh-sach-bao-mat":{title:locale==="en"?"Privacy policy":"Chính sách bảo mật",description:locale==="en"?"The privacy policy will be completed before account registration and membership payments are enabled.":"Chính sách bảo mật sẽ được hoàn thiện trước khi mở đăng ký tài khoản và thanh toán hội viên."},
+      "dieu-khoan":{title:locale==="en"?"Terms of use":"Điều khoản sử dụng",description:locale==="en"?"The terms of use will be completed before the platform is opened to members.":"Điều khoản sử dụng sẽ được hoàn thiện trước khi nền tảng mở cho hội viên."}
+    };
+    const item=legal[slug];
+    return <main className="container simple-info-page"><p className="eyebrow">THÁNH LỄ MISSA · {locale==="en"?"INFORMATION":"THÔNG TIN"}</p><h1>{item.title}</h1><p>{item.description}</p><Link href="/" className="back-home"><ArrowLeft size={14}/>{locale==="en"?"Back to home":"Trở về trang chủ"}</Link></main>;
+  }
+  const module=moduleCopy[slug]?.[locale==="en"?"en":"vi"];
+  if(!module) notFound();
+  const Icon=module.icon;
+  return (
+    <main className="module-detail-page">
+      <section className="module-detail-hero"><div className="container module-detail-hero-inner">
+        <div className="module-detail-copy"><p className="eyebrow">THÁNH LỄ MISSA · THƯ VIỆN</p><p className="module-detail-latin">{module.latin}</p><h1>{module.title}</h1><p>{module.description}</p><div className="module-status-inline"><span className="status-dot"/>{module.status}</div></div>
+        <div className="module-detail-emblem"><Icon size={46} strokeWidth={1.1}/><span>✠</span></div>
+      </div></section>
+      <section className="container module-detail-body">
+        <div className="module-detail-main"><p className="eyebrow">{locale==="en"?"IN THIS SECTION":"NỘI DUNG PHÂN HỆ"}</p><h2>{locale==="en"?"What you will find":"Những nội dung chính"}</h2><div className="module-feature-list">{module.points.map((point,index)=><div className="module-feature" key={point}><span>0{index+1}</span><p>{point}</p></div>)}</div></div>
+        <aside className="module-detail-aside"><span className="aside-cross">✠</span><h3>{locale==="en"?"Carefully sourced content":"Nội dung có nguồn dẫn"}</h3><p>{locale==="en"?"Entries will be reviewed for accuracy, source attribution and appropriate usage rights before publication.":"Tư liệu sẽ được kiểm tra về nội dung, xuất xứ và quyền sử dụng trước khi công bố."}</p><Link href="/hoi-vien">{locale==="en"?"Membership information":"Thông tin hội viên"} <ArrowRight size={13}/></Link></aside>
+      </section>
+      <div className="container module-back-row"><Link href="/" className="back-home"><ArrowLeft size={14}/>{locale==="en"?"Back to home":"Trở về trang chủ"}</Link></div>
+    </main>
+  );
 }
 
-function MembershipPage() {
-  return <main className="container module-page"><p className="eyebrow">SOCIETAS · HỘI VIÊN</p><h1>Gói hội viên</h1><p className="module-page-description">Chọn thư viện phụng vụ mà bạn muốn truy cập. Hai niên lịch là hai quyền hội viên độc lập.</p><div className="member-plan-grid">
-    <article><span>FREE</span><h2>Miễn phí</h2><strong>0đ</strong><p>Thông tin ngày lễ hôm nay, Bài Thơ và Phúc-âm thư được công bố miễn phí.</p></article>
-    <article className="featured"><span>ORDO 1962</span><h2>Lịch Rôma 1962</h2><strong>39.000đ / tháng</strong><p>390.000đ / năm · Tra cứu đầy đủ lịch 1962 và các phần sách lễ.</p></article>
-    <article><span>ORDO PRE-55</span><h2>Lịch trước 1955</h2><strong>69.000đ / tháng</strong><p>690.000đ / năm · Thư viện phụng vụ trước 1955 riêng biệt.</p></article>
-  </div><div className="module-status"><strong>Thanh toán chưa được kích hoạt</strong><p>Giá và cấu trúc hội viên đã được chuẩn bị. Chỉ mở đăng ký trả phí sau khi cấu hình xác thực, cổng thanh toán, webhook và quy trình gia hạn.</p></div></main>;
+function MembershipPage({english}:{english:boolean}) {
+  const copy=english?{
+    kicker:"SOCIETAS · MEMBERSHIP",title:"Membership plans",intro:"Choose the liturgical collection you wish to access. The 1962 and pre-1955 calendars are separate collections.",
+    free:"Free access",freePrice:"0 VND",freeDesc:"Today's published information and the designated free texts.",planA:"Roman Ordo 1962",planADesc:"Full access to the 1962 liturgical calendar and its published Missal sections.",planB:"Pre-1955 Ordo",planBDesc:"Access to the separate pre-1955 calendar and its reviewed liturgical collection.",month:"per month",year:"per year",note:"Online payment is not yet enabled. Membership purchase will open only after authentication, payment verification and renewal workflows have been tested.",login:"Sign in",badge:"PAYMENT NOT ACTIVE"
+  }:{
+    kicker:"SOCIETAS · HỘI VIÊN",title:"Các gói hội viên",intro:"Chọn bộ sưu tập phụng vụ muốn truy cập. Niên lịch 1962 và trước năm 1955 là hai thư viện riêng biệt.",
+    free:"Truy cập miễn phí",freePrice:"0 đồng",freeDesc:"Thông tin ngày lễ hôm nay và những bản văn được đánh dấu công khai.",planA:"Ordo Rôma 1962",planADesc:"Truy cập đầy đủ lịch phụng vụ 1962 và các phần sách lễ đã xuất bản.",planB:"Ordo trước 1955",planBDesc:"Truy cập riêng bộ niên lịch trước năm 1955 và các bản văn đã kiểm duyệt.",month:"mỗi tháng",year:"mỗi năm",note:"Thanh toán trực tuyến hiện chưa được kích hoạt. Chỉ mở đăng ký sau khi đã kiểm thử đăng nhập, xác nhận thanh toán và gia hạn hội viên.",login:"Đăng nhập",badge:"CHƯA MỞ THANH TOÁN"
+  };
+  return (
+    <main className="membership-page">
+      <section className="membership-page-hero"><div className="container"><p className="eyebrow">{copy.kicker}</p><h1>{copy.title}</h1><p>{copy.intro}</p></div></section>
+      <section className="container membership-page-body">
+        <div className="membership-plan-card free"><div className="plan-top"><span>01</span><span>FREE</span></div><h2>{copy.free}</h2><strong>{copy.freePrice}</strong><p>{copy.freeDesc}</p><ul><li>Thông tin ngày lễ hôm nay</li><li>Bài Thơ và Phúc-âm thư công khai</li></ul><Link href="/dang-nhap" className="plan-link">{copy.login} <ArrowRight size={14}/></Link></div>
+        <div className="membership-plan-card featured"><div className="plan-top"><span>02</span><span>ORDO · 1962</span></div><h2>{copy.planA}</h2><strong>39.000đ <small>/ {copy.month}</small></strong><p>{copy.planADesc}</p><ul><li>390.000đ / {copy.year}</li><li>Quyền truy cập niên lịch riêng</li></ul><span className="plan-disabled">{copy.badge}</span></div>
+        <div className="membership-plan-card"><div className="plan-top"><span>03</span><span>ORDO · PRE-55</span></div><h2>{copy.planB}</h2><strong>69.000đ <small>/ {copy.month}</small></strong><p>{copy.planBDesc}</p><ul><li>690.000đ / {copy.year}</li><li>Quyền truy cập niên lịch riêng</li></ul><span className="plan-disabled">{copy.badge}</span></div>
+      </section>
+      <div className="container membership-note"><LockKeyhole size={17}/><p>{copy.note}</p></div>
+    </main>
+  );
 }
