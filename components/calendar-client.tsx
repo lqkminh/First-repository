@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, X, LockKeyhole } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { dateKey, getMonthGrid, getWeekRange, getYearRange, type CalendarView } from "@/lib/calendar-utils";
 
 type CalendarCode = "ROMAN_1962" | "PRE_1955";
@@ -18,7 +18,7 @@ function periodFor(view:CalendarView,date:Date) {
 }
 
 export function CalendarClient() {
-  const t=useTranslations("Calendar");
+  const t=useTranslations("Calendar");\n  const locale=useLocale();
   const [calendar,setCalendar]=useState<CalendarCode>("ROMAN_1962");
   const [view,setView]=useState<CalendarView>("month");
   const [activeDate,setActiveDate]=useState(()=>new Date());
@@ -31,7 +31,7 @@ export function CalendarClient() {
   const dateMap=useMemo(()=>new Map(days.map(day=>[day.civilDate.slice(0,10),day])),[days]);
   const monthDays=useMemo(()=>getMonthGrid(activeDate.getFullYear(),activeDate.getMonth()),[activeDate]);
   const weekDays=useMemo(()=>{const w=getWeekRange(activeDate);return Array.from({length:7},(_,i)=>new Date(w.from.getFullYear(),w.from.getMonth(),w.from.getDate()+i));},[activeDate]);
-  const locale=typeof navigator!=="undefined"&&navigator.language.startsWith("en")?"en-US":"vi-VN";
+  const dateLocale=locale==="en"?"en-US":"vi-VN";
 
   useEffect(()=>{
     const controller=new AbortController();
@@ -63,7 +63,7 @@ export function CalendarClient() {
     finally {setDetailLoading(false);}
   }
 
-  const heading=view==="year"?String(activeDate.getFullYear()):new Intl.DateTimeFormat(locale,{month:"long",year:"numeric"}).format(activeDate);
+  const heading=view==="year"?String(activeDate.getFullYear()):new Intl.DateTimeFormat(dateLocale,{month:"long",year:"numeric"}).format(activeDate);
   const shownDays=view==="today"?[activeDate]:view==="week"?weekDays:monthDays;
   return (
     <div className="calendar-card">
@@ -86,7 +86,7 @@ export function CalendarClient() {
       {loading&&<p className="calendar-status">{t("loading")}</p>}
       {error&&<p className="calendar-error" role="alert">{error}</p>}
       {view==="year"?(
-        <div className="year-grid">{Array.from({length:12},(_,month)=><button key={month} className="year-month" onClick={()=>{setActiveDate(new Date(activeDate.getFullYear(),month,1));setView("month");}}><strong>{new Intl.DateTimeFormat(locale,{month:"long"}).format(new Date(activeDate.getFullYear(),month,1))}</strong><span>{days.filter(day=>Number(day.civilDate.slice(5,7))===month+1).length} ngày có dữ liệu</span></button>)}</div>
+        <div className="year-grid">{Array.from({length:12},(_,month)=><button key={month} className="year-month" onClick={()=>{setActiveDate(new Date(activeDate.getFullYear(),month,1));setView("month");}}><strong>{new Intl.DateTimeFormat(dateLocale,{month:"long"}).format(new Date(activeDate.getFullYear(),month,1))}</strong><span>{days.filter(day=>Number(day.civilDate.slice(5,7))===month+1).length} ngày có dữ liệu</span></button>)}</div>
       ):(
         <div className={view==="today"?"today-view":"calendar-grid"}>
           {view!=="today"&&weekdays.map(day=><div className="weekday" key={day}>{day}</div>)}
@@ -110,7 +110,7 @@ export function CalendarClient() {
             {selected.accessLimited&&<p className="member-notice"><LockKeyhole size={16}/> Một số phần còn lại dành cho hội viên.</p>}
             <div className="parallel-readings">{selected.sections.map(section=><article className="parallel-section" key={section.id}><div><h4>{section.labelLa??"—"}</h4>{section.referenceLa&&<small>{section.referenceLa}</small>}<p>{section.textLa??"—"}</p></div><div><h4>{section.labelVi}</h4>{section.referenceVi&&<small>{section.referenceVi}</small>}<p>{section.textVi??"—"}</p></div></article>)}</div>
             {selected.saints.length>0&&<p className="saint-line">Thánh kính nhớ: {selected.saints.map(x=>x.saint.nameVi).join(", ")}</p>}
-            {selected.sections.length===0&&<p className="calendar-hint">{t("noData")}</p>}
+            {selected.sections.length===0&&<p className="calendar-hint">{selected.accessLimited?"Vui lòng đăng nhập và đăng ký gói ORDO tương ứng để xem nội dung của ngày này.":t("noData")}</p>}
           </>:<p className="calendar-hint">{t("noData")}</p>}
         </section>
       </div>}
