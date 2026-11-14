@@ -6,9 +6,9 @@ import { useTranslations, useLocale } from "next-intl";
 import { dateKey, getMonthGrid, getWeekRange, getYearRange, type CalendarView } from "@/lib/calendar-utils";
 
 type CalendarCode = "ROMAN_1962" | "PRE_1955";
-type DaySummary = { id:string; civilDate:string; titleVi:string; titleLa:string|null; rankVi:string|null; liturgicalColor:string|null; isSunday:boolean; isSolemnity:boolean };
+type DaySummary = { id:string; civilDate:string; titleVi:string; titleLa:string|null; rankVi:string|null; liturgicalColor:string|null; isSunday:boolean; isSolemnity:boolean; lectionaryCycle?:string|null };
 type DayDetail = DaySummary & { seasonVi:string|null; sections:Array<{id:string;labelLa:string|null;labelVi:string;referenceLa:string|null;referenceVi:string|null;textLa:string|null;textVi:string|null}>; saints:Array<{saint:{nameVi:string;nameLa:string|null}}>; accessLimited?:boolean };
-const weekdays = ["Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy","Chúa Nhật"];
+const weekdaysVi = ["Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy","Chúa Nhật"];\nconst weekdaysEn = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 const colors:Record<string,string> = {GREEN:"green",PURPLE:"purple",WHITE:"white",RED:"red",ROSE:"rose",BLACK:"black",GOLD:"gold"};
 function periodFor(view:CalendarView,date:Date) {
   if(view==="today") return {from:date,to:date};
@@ -32,7 +32,7 @@ export function CalendarClient() {
   const dateMap=useMemo(()=>new Map(days.map(day=>[day.civilDate.slice(0,10),day])),[days]);
   const monthDays=useMemo(()=>getMonthGrid(activeDate.getFullYear(),activeDate.getMonth()),[activeDate]);
   const weekDays=useMemo(()=>{const w=getWeekRange(activeDate);return Array.from({length:7},(_,i)=>new Date(w.from.getFullYear(),w.from.getMonth(),w.from.getDate()+i));},[activeDate]);
-  const dateLocale=locale==="en"?"en-US":"vi-VN";
+  const dateLocale=locale==="en"?"en-US":"vi-VN";\n  const weekdayLabels=locale==="en"?weekdaysEn:weekdaysVi;
 
   useEffect(()=>{
     const controller=new AbortController();
@@ -90,7 +90,7 @@ export function CalendarClient() {
         <div className="year-grid">{Array.from({length:12},(_,month)=><button key={month} className="year-month" onClick={()=>{setActiveDate(new Date(activeDate.getFullYear(),month,1));setView("month");}}><strong>{new Intl.DateTimeFormat(dateLocale,{month:"long"}).format(new Date(activeDate.getFullYear(),month,1))}</strong><span>{days.filter(day=>Number(day.civilDate.slice(5,7))===month+1).length} ngày có dữ liệu</span></button>)}</div>
       ):(
         <div className={view==="today"?"today-view":"calendar-grid"}>
-          {view!=="today"&&weekdays.map(day=><div className="weekday" key={day}>{day}</div>)}
+          {view!=="today"&&weekdayLabels.map(day=><div className="weekday" key={day}>{day}</div>)}
           {shownDays.map(day=>{
             const key=dateKey(day);const entry=dateMap.get(key);const outside=view==="month"&&day.getMonth()!==activeDate.getMonth();const isToday=key===dateKey(new Date());
             const classes=["calendar-day",outside?"outside":"",isToday?"is-today":"",entry?.isSunday?"is-sunday":"",entry?.isSolemnity?"is-solemnity":""].filter(Boolean).join(" ");
@@ -107,7 +107,7 @@ export function CalendarClient() {
         <section className="day-modal" role="dialog" aria-modal="true" aria-labelledby="day-title" onClick={e=>e.stopPropagation()}>
           <button className="modal-close icon-button" onClick={()=>{setSelected(null);setDetailLoading(false);}} aria-label={t("close")}><X size={18}/></button>
           {detailLoading?<p className="calendar-status">{t("loading")}</p>:selected?<><p className="eyebrow">{calendar==="ROMAN_1962"?"MISSALE ROMANUM 1962":"CALENDARIUM ANTE 1955"}</p><h3 id="day-title">{selected.titleVi}</h3>{selected.titleLa&&<p className="latin-title">{selected.titleLa}</p>}
-            <div className="day-meta">{selected.rankVi&&<span>{t("rank")}: {selected.rankVi}</span>}{selected.liturgicalColor&&<span>{t("color")}: {selected.liturgicalColor}</span>}{selected.seasonVi&&<span>{t("season")}: {selected.seasonVi}</span>}</div>
+            <div className="day-meta">{selected.rankVi&&<span>{t("rank")}: {selected.rankVi}</span>}{selected.liturgicalColor&&<span>{t("color")}: {selected.liturgicalColor}</span>}{selected.seasonVi&&<span>{t("season")}: {selected.seasonVi}</span>}{selected.lectionaryCycle&&<span>{t("cycle")}: {selected.lectionaryCycle}</span>}</div>
             {selected.accessLimited&&<p className="member-notice"><LockKeyhole size={16}/> Một số phần còn lại dành cho hội viên.</p>}
             <div className="parallel-readings">{selected.sections.map(section=><article className="parallel-section" key={section.id}><div><h4>{section.labelLa??"—"}</h4>{section.referenceLa&&<small>{section.referenceLa}</small>}<p>{section.textLa??"—"}</p></div><div><h4>{section.labelVi}</h4>{section.referenceVi&&<small>{section.referenceVi}</small>}<p>{section.textVi??"—"}</p></div></article>)}</div>
             {selected.saints.length>0&&<p className="saint-line">Thánh kính nhớ: {selected.saints.map(x=>x.saint.nameVi).join(", ")}</p>}
