@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, CalendarDays, Church, Library, LogIn, Menu, Music2, Users, X, ChevronDown } from "lucide-react";
+import { LogIn, Menu, X, ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Link } from "@/i18n/navigation";
