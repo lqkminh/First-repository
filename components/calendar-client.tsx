@@ -18,7 +18,8 @@ function periodFor(view:CalendarView,date:Date) {
 }
 
 export function CalendarClient() {
-  const t=useTranslations("Calendar");\n  const locale=useLocale();
+  const t=useTranslations("Calendar");
+  const locale=useLocale();
   const [calendar,setCalendar]=useState<CalendarCode>("ROMAN_1962");
   const [view,setView]=useState<CalendarView>("month");
   const [activeDate,setActiveDate]=useState(()=>new Date());
