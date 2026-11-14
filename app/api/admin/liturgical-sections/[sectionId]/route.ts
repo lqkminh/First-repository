@@ -27,7 +27,7 @@ export async function PATCH(request: NextRequest, context: { params: { sectionId
   const session = await editor();
   if (!session) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const parsed = updateSchema.safeParse(await request.json());
-  if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+  if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });\n  if (session.user.role === "EDITOR" && parsed.data.status === "PUBLISHED") return NextResponse.json({ error: "Editor phải gửi nội dung để Admin duyệt." }, { status: 403 });
   const section = await prisma.liturgicalSection.update({ where: { id: context.params.sectionId }, data: parsed.data });
   await prisma.auditLog.create({ data: { actorId: session.user.id, action: "UPDATE_LITURGICAL_SECTION", entity: "LiturgicalSection", entityId: section.id } });
   return NextResponse.json({ section });
