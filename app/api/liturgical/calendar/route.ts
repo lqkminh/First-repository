@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
       ...(fullAccess ? {} : { isFreeToday: true })
     },
     orderBy: { civilDate: "asc" },
-    select: { id: true, civilDate: true, titleVi: true, titleLa: true, rankVi: true, liturgicalColor: true, isSunday: true, isSolemnity: true }
+    select: { id: true, civilDate: true, titleVi: true, titleLa: true, rankVi: true, liturgicalColor: true, isSunday: true, isSolemnity: true, lectionaryCycle: true }
   });
   return NextResponse.json({
     access: fullAccess ? "MEMBER" : "FREE_TODAY",
