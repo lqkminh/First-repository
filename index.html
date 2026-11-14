@@ -599,14 +599,14 @@ function makePdfDefinition(entry,date){
  return {
   pageSize:"A4",
   pageMargins:[38,48,38,48],
-  info:{title:"SachLe_"+dateKey,author:"Ordo Romanus",subject:"Proprium Missae · Latinum — Vietnamese"},
+  info:{title:"SachLe_"+dateKey,author:"Thánh Lễ Missa",subject:"Proprium Missae · Latinum — Vietnamese"},
   header:function(currentPage,pageCount){
-   return {text:"ORDO ROMANUS  ·  MISSALE ROMANUM 1962",alignment:"center",fontSize:8,color:"#667269",margin:[38,17,38,0],characterSpacing:0.5};
+   return {text:"THÁNH LỄ MISSA  ·  MISSALE ROMANUM 1962",alignment:"center",fontSize:8,color:"#667269",margin:[38,17,38,0],characterSpacing:0.5};
   },
   footer:function(currentPage,pageCount){
    return {
     columns:[
-     {text:"Ordo Romanus  ·  Xuất ngày "+new Intl.DateTimeFormat("vi-VN").format(new Date()),fontSize:8,color:"#77796f"},
+     {text:"Thánh Lễ Missa  ·  Xuất ngày "+new Intl.DateTimeFormat("vi-VN").format(new Date()),fontSize:8,color:"#77796f"},
      {text:"Trang "+currentPage+" / "+pageCount,alignment:"right",fontSize:8,color:"#77796f"}
     ],
     margin:[38,0,38,18]
