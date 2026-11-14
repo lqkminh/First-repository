@@ -32,7 +32,7 @@ export function SiteHeader() {
             <Link className="nav-member-mobile" href="/hoi-vien" onClick={()=>setOpen(false)}>{t("membership")}</Link>
           </nav>
           <div className="header-actions">
-            <Link href="/hoi-vien" className="nav-member"><span>HỘI VIÊN</span><ChevronDown size={13}/></Link>
+            <Link href="/hoi-vien" className="nav-member"><span>{t("membership").toUpperCase()}</span><ChevronDown size={13}/></Link>
             <Link href="/dang-nhap" className="sign-in-link"><LogIn size={15}/><span>{t("signIn")}</span></Link>
             <span className="header-divider"/>
             <LocaleSwitch/>
