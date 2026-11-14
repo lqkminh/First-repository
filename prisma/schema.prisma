@@ -179,6 +179,7 @@ model LiturgicalSource {
   days             LiturgicalDay[]
   sections         LiturgicalSection[]
   documents        Document[]
+  saints           Saint[]
   createdAt        DateTime         @default(now())
 }
 
