@@ -8,7 +8,8 @@ import { dateKey, getMonthGrid, getWeekRange, getYearRange, type CalendarView } 
 type CalendarCode = "ROMAN_1962" | "PRE_1955";
 type DaySummary = { id:string; civilDate:string; titleVi:string; titleLa:string|null; rankVi:string|null; liturgicalColor:string|null; isSunday:boolean; isSolemnity:boolean; lectionaryCycle?:string|null };
 type DayDetail = DaySummary & { seasonVi:string|null; sections:Array<{id:string;labelLa:string|null;labelVi:string;referenceLa:string|null;referenceVi:string|null;textLa:string|null;textVi:string|null}>; saints:Array<{saint:{nameVi:string;nameLa:string|null}}>; accessLimited?:boolean };
-const weekdaysVi = ["Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy","Chúa Nhật"];\nconst weekdaysEn = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const weekdaysVi = ["Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy","Chúa Nhật"];
+const weekdaysEn = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 const colors:Record<string,string> = {GREEN:"green",PURPLE:"purple",WHITE:"white",RED:"red",ROSE:"rose",BLACK:"black",GOLD:"gold"};
 function periodFor(view:CalendarView,date:Date) {
   if(view==="today") return {from:date,to:date};
@@ -32,7 +33,8 @@ export function CalendarClient() {
   const dateMap=useMemo(()=>new Map(days.map(day=>[day.civilDate.slice(0,10),day])),[days]);
   const monthDays=useMemo(()=>getMonthGrid(activeDate.getFullYear(),activeDate.getMonth()),[activeDate]);
   const weekDays=useMemo(()=>{const w=getWeekRange(activeDate);return Array.from({length:7},(_,i)=>new Date(w.from.getFullYear(),w.from.getMonth(),w.from.getDate()+i));},[activeDate]);
-  const dateLocale=locale==="en"?"en-US":"vi-VN";\n  const weekdayLabels=locale==="en"?weekdaysEn:weekdaysVi;
+  const dateLocale=locale==="en"?"en-US":"vi-VN";
+  const weekdayLabels=locale==="en"?weekdaysEn:weekdaysVi;
 
   useEffect(()=>{
     const controller=new AbortController();
