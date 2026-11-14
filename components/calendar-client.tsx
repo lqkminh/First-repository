@@ -34,7 +34,8 @@ export function CalendarClient() {
   const dateMap=useMemo(()=>new Map(days.map(day=>[day.civilDate.slice(0,10),day])),[days]);
   const monthDays=useMemo(()=>getMonthGrid(activeDate.getFullYear(),activeDate.getMonth()),[activeDate]);
   const weekDays=useMemo(()=>{const w=getWeekRange(activeDate);return Array.from({length:7},(_,i)=>new Date(w.from.getFullYear(),w.from.getMonth(),w.from.getDate()+i));},[activeDate]);
-  const english=locale==="en";\n  const dateLocale=english?"en-US":"vi-VN";
+  const english=locale==="en";
+  const dateLocale=english?"en-US":"vi-VN";
   const weekdayLabels=locale==="en"?weekdaysEn:weekdaysVi;
 
   useEffect(()=>{
