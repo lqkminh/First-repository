@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#263c35">
-<meta name="description" content="Lịch phụng vụ Rôma truyền thống 1962 — song ngữ Latin và Việt.">
-<title>Ordo Romanus — Calendarium Liturgicum</title>
+<meta name="theme-color" content="#541a2a">
+<meta name="description" content="Thánh Lễ Missa — tra cứu lịch phụng vụ Rôma 1962 và trước năm 1955, bản văn song ngữ Latin – Việt và thư viện Công giáo.">
+<title>Thánh Lễ Missa — Lịch Phụng Vụ Rôma</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
-:root{--green:#263c35;--green2:#3b594b;--paper:#f6f3eb;--white:#fffefa;--ink:#292b27;--muted:#77796f;--gold:#b59659;--line:#e5e0d4;--red:#813b3c}
+:root{--green:#5a1d2c;--green2:#793047;--paper:#f8f5ef;--white:#fffefa;--ink:#2b2523;--muted:#77716b;--gold:#b89a62;--line:#e7dfd2;--red:#8d2438}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Serif",Georgia,serif;-webkit-font-smoothing:antialiased}
-button{font:inherit}.header{background:linear-gradient(135deg,#243a33,#30483e);color:#f8f4e9;border-bottom:3px solid var(--gold);text-align:center}
+button{font:inherit}.header{background:linear-gradient(135deg,#421521,#622538);color:#f8f4e9;border-bottom:3px solid var(--gold);text-align:center}
 .header-inner{max-width:1120px;margin:auto;padding:22px 20px 15px}.eyebrow,.kicker{margin:0;color:var(--gold);font:600 10px/1.5 "Noto Serif",serif;letter-spacing:.22em;text-transform:uppercase}
 .brand{display:inline-block;margin:2px 0 0;color:#fbf6e9;font:500 clamp(42px,7vw,66px)/1.05 "EB Garamond",Georgia,serif;letter-spacing:.075em;text-decoration:none;text-transform:uppercase}
 .tagline{margin:7px 0 0;color:#e7e0d0;font-size:13px;font-style:italic}
@@ -80,22 +80,65 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
 @media(max-width:800px){.membership-grid{grid-template-columns:1fr}.plan-description{min-height:0}.plan-card{padding:18px}.plan-card ul{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px}.membership{padding:22px 16px}}
 @media(max-width:520px){.membership-heading h2{font-size:30px}.billing-button{padding:8px 10px;font-size:10px}.billing-button span{display:block;margin:3px 0 0}.plan-card li{font-size:10px}.comparison-table{min-width:460px}}
 
+
+/* Thánh Lễ Missa — giao diện biên tập */
+.header{border-bottom-width:4px}
+.header-inner{padding-top:25px;padding-bottom:17px}
+.brand{font-size:clamp(46px,7vw,70px);letter-spacing:.055em;text-transform:none}
+.tagline{font-family:"EB Garamond",Georgia,serif;font-size:16px;letter-spacing:.02em}
+.ornament{margin-top:15px}
+.nav{background:#35131d55;border-top-color:#ffffff24;gap:clamp(18px,4vw,42px)}
+.nav a{font-size:11px;letter-spacing:.04em}
+.nav a:hover{color:#e8ce9b}
+.page{width:min(1080px,calc(100% - 36px));margin-top:42px}
+.intro{margin-bottom:25px}
+.intro h1{font-size:42px;color:var(--green)}
+.intro-copy{font-family:"Noto Serif",Georgia,serif}
+.calendar{border-radius:5px;box-shadow:0 16px 42px #3a1d270d}
+.toolbar{background:#fbf8f1}
+.month-title{font-size:31px}
+.today,.arrow,.close,.done{border-radius:4px}
+.today{border-color:var(--green);background:var(--green);color:#fff}
+.today:hover{background:var(--green2);color:#fff}
+.version-toggle{border-radius:4px}
+.version-button{border-radius:2px}
+.version-button.active{background:var(--green);border-color:var(--green)}
+.membership{margin-top:35px;border-radius:5px}
+.plan-card{border-radius:5px}
+.featured-plan{box-shadow:0 9px 25px #8c5f2810}
+.plan-button{border-radius:3px}
+.primary-plan-button{background:var(--green);border-color:var(--green)}
+.primary-plan-button:hover{background:var(--green2)}
+.about{border-radius:5px}
+.about-mark{background:#f1e8e6;color:var(--green)}
+.reading-dropcap{color:#5a1d2c}
+.toast{background:var(--green)}
+.modal-head,.modal-foot{background:#fbf8f1}
+@media(max-width:700px){
+ .header-inner{padding-top:18px}
+ .brand{font-size:clamp(40px,10vw,55px);letter-spacing:.025em}
+ .tagline{font-size:13px}
+ .page{margin-top:27px}
+ .intro h1{font-size:35px}
+ .membership{margin-top:25px}
+}
+
 </style>
 <link rel="stylesheet" href="export.css">
 </head>
 <body>
 <header class="header" id="top">
  <div class="header-inner">
-  <p class="eyebrow">Missale Romanum · Anno Domini</p>
-  <a class="brand" href="#top">Ordo Romanus</a>
-  <p class="tagline">Lịch Phụng Vụ Rôma Truyền Thống</p>
+  <p class="eyebrow">ORDO · MISSALE · FIDES</p>
+  <a class="brand" href="#top">Thánh Lễ Missa</a>
+  <p class="tagline">Lịch phụng vụ · Thánh Kinh · Thánh nhạc · Thư viện</p>
   <div class="ornament" aria-hidden="true">✠</div>
  </div>
  <nav class="nav" aria-label="Điều hướng chính"><a href="#calendar">Lịch phụng vụ</a><a href="#membership">Gói hội viên</a><a href="#about">Giới thiệu</a></nav>
 </header>
 <main class="page">
  <section class="intro">
-  <div><p class="kicker">Calendarium liturgicum</p><h1>Lịch phụng vụ</h1><p class="intro-copy">Chọn một ngày để xem Phần Riêng Thánh lễ — <i>Proprium de tempore</i> — cùng các bản văn phụng vụ tương ứng.</p></div>
+  <div><p class="kicker">ORDO ROMANUS · CALENDARIUM LITURGICUM</p><h1>Lịch phụng vụ</h1><p class="intro-copy">Tra cứu niên lịch Rôma 1962 và trước năm 1955. Chọn một ngày để xem Phần Riêng Thánh lễ — <i>Proprium de tempore</i> — cùng các bản văn phụng vụ song ngữ Latin – Việt.</p></div>
   <div class="calendar-version">
    <span class="version-label">NIÊN LỊCH PHỤNG VỤ</span>
    <div class="version-toggle" role="group" aria-label="Chọn niên lịch phụng vụ">
@@ -104,6 +147,15 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
    </div>
   </div>
  </section>
+<section class="calendar" id="calendar" aria-label="Lịch phụng vụ theo tháng">
+  <div class="toolbar"><div><p class="kicker">Mensis et annus</p><h2 class="month-title" id="month-title" aria-live="polite"></h2></div>
+   <div class="actions"><button class="today" id="today" type="button">Hôm nay</button><div class="arrows"><button class="arrow" id="prev" type="button" aria-label="Tháng trước">‹</button><button class="arrow" id="next" type="button" aria-label="Tháng sau">›</button></div></div>
+  </div>
+  <div class="weekdays" aria-hidden="true"><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span></div>
+  <div class="days" id="days" role="grid" aria-labelledby="month-title"></div>
+  <div class="legend"><span><i class="today-dot"></i>Hôm nay</span><span><i></i>Có dữ liệu sách lễ</span><span><i class="solemnity-dot"></i>Lễ trọng / ngày nổi bật</span></div>
+ </section>
+<div class="hint"><b>✧</b><p>Chọn ngày trên lịch để mở bản văn phụng vụ. Những ngày có dấu chấm đã được nhập dữ liệu.</p></div>
 <section class="membership" id="membership">
  <div class="membership-heading"><p class="kicker">Societas · Hội viên</p><h2>Chọn gói truy cập</h2><p>Tiếp cận kho lịch phụng vụ và sách lễ song ngữ Latinh – Việt theo niên lịch bạn cần tra cứu.</p></div>
  <div class="billing-switch" role="group" aria-label="Chu kỳ thanh toán">
@@ -119,22 +171,13 @@ dialog[open]{animation:modal-in .2s ease-out both}dialog::backdrop{background:#1
  <div class="comparison-wrap"><h3>So sánh quyền truy cập</h3><div class="comparison-scroll"><table class="comparison-table"><thead><tr><th>Quyền lợi</th><th>Free</th><th>ORDO 1962</th><th>Tiền 1955</th></tr></thead><tbody><tr><td>Thông tin lễ hôm nay</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>Bài Thơ và Phúc-âm thư hôm nay</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>Lịch đầy đủ theo niên lịch</td><td>—</td><td>✓</td><td>✓</td></tr><tr><td>Ordo Chúa Nhật và lễ trọng</td><td>—</td><td>✓</td><td>✓</td></tr><tr><td>Phần Riêng và các lời nguyện</td><td>—</td><td>✓</td><td>✓</td></tr><tr><td>Xuất PDF / Word</td><td>—</td><td>✓</td><td>✓</td></tr></tbody></table></div></div>
 </section>
 <dialog id="membership-notice" class="membership-notice"><div class="notice-inner"><button class="notice-close" type="button" id="membership-notice-close" aria-label="Đóng">×</button><p class="kicker">Lịch Rôma · Hội viên</p><h2 id="membership-notice-title">Đăng ký hội viên</h2><p id="membership-notice-text">Chức năng đăng ký và thanh toán trực tuyến đang trong giai đoạn hoàn thiện.</p><div class="notice-price" id="membership-notice-price"></div><button class="plan-button primary-plan-button" type="button" id="membership-notice-ok">Đã hiểu</button></div></dialog>
- <section class="calendar" id="calendar" aria-label="Lịch phụng vụ theo tháng">
-  <div class="toolbar"><div><p class="kicker">Mensis et annus</p><h2 class="month-title" id="month-title" aria-live="polite"></h2></div>
-   <div class="actions"><button class="today" id="today" type="button">Hôm nay</button><div class="arrows"><button class="arrow" id="prev" type="button" aria-label="Tháng trước">‹</button><button class="arrow" id="next" type="button" aria-label="Tháng sau">›</button></div></div>
-  </div>
-  <div class="weekdays" aria-hidden="true"><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span></div>
-  <div class="days" id="days" role="grid" aria-labelledby="month-title"></div>
-  <div class="legend"><span><i class="today-dot"></i>Hôm nay</span><span><i></i>Có dữ liệu sách lễ</span><span><i class="solemnity-dot"></i>Lễ trọng / ngày nổi bật</span></div>
- </section>
- <div class="hint"><b>✧</b><p>Chọn ngày trên lịch để mở bản văn phụng vụ. Những ngày có dấu chấm đã được nhập dữ liệu.</p></div>
- <section class="about" id="about"><div class="about-mark">✠</div><div><p class="kicker">De hoc opere</p><h2>Về Ordo Romanus</h2><p>Ordo Romanus là dự án tra cứu lịch phụng vụ theo nghi lễ Rôma truyền thống. Nội dung hướng đến cách trình bày song ngữ Latin — Việt, trang nghiêm và thuận tiện trên máy tính lẫn thiết bị di động.</p></div></section>
+ <section class="about" id="about"><div class="about-mark">✠</div><div><p class="kicker">DE HOC OPERE · VỀ DỰ ÁN</p><h2>Về Thánh Lễ Missa</h2><p>Thánh Lễ Missa là không gian tra cứu lịch phụng vụ theo nghi lễ Rôma truyền thống, với các bộ niên lịch riêng biệt và bản văn song ngữ Latin – Việt. Dự án hướng đến việc gìn giữ, biên tập và phổ biến kho tàng phụng vụ Công giáo theo cách trình bày trang nghiêm, rõ ràng và thuận tiện trên máy tính lẫn thiết bị di động.</p></div></section>
 </main>
-<footer class="footer"><p>Ad maiorem Dei gloriam</p><small id="footer-version">Ordo Romanus · Missale Romanum 1962</small></footer>
+<footer class="footer"><p>Ad maiorem Dei gloriam</p><small id="footer-version">Thánh Lễ Missa · Missale Romanum 1962</small></footer>
 
 <dialog id="day-modal" aria-labelledby="modal-title">
  <div class="modal-shell">
-  <div class="modal-head"><div><p class="kicker">Missale Romanum</p><p class="modal-date" id="modal-date"></p></div><button class="close" id="close" type="button" aria-label="Đóng">×</button></div>
+  <div class="modal-head"><div><p class="kicker">THÁNH LỄ MISSA · MISSALE ROMANUM</p><p class="modal-date" id="modal-date"></p></div><button class="close" id="close" type="button" aria-label="Đóng">×</button></div>
   <div class="modal-body" id="modal-body"></div>
   <div class="modal-foot"><span id="modal-version">Missale Romanum · 1962</span><div class="modal-actions"><button class="export-pdf" id="export-pdf" type="button" hidden>⇩ Xuất file</button><button class="done" id="done" type="button">Đóng</button></div></div>
  </div>
@@ -661,7 +704,7 @@ function setCalendarVersion(version){
 
  const label=version==="1962"?"Missale Romanum 1962":"Calendarium ante annum 1955";
  const modalLabel=$("modal-version");if(modalLabel)modalLabel.textContent=label;
- const footerLabel=$("footer-version");if(footerLabel)footerLabel.textContent="Ordo Romanus · "+label;
+ const footerLabel=$("footer-version");if(footerLabel)footerLabel.textContent="Thánh Lễ Missa · "+label;
  const subtitle=document.querySelector(".intro-copy");
  if(subtitle)subtitle.innerHTML=version==="1962"
   ?"Chọn một ngày để xem Phần Riêng Thánh lễ — <i>Proprium de tempore</i> — theo lịch Rôma 1962."
