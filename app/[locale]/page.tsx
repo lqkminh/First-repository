@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { CalendarClient } from "@/components/calendar-client";
+import { CalendarClient } from "@/components/calendar-client";\nimport { Link } from "@/i18n/navigation";
 
 export default async function HomePage() {
   const t = await getTranslations("HomePage");
@@ -11,7 +11,7 @@ export default async function HomePage() {
             <p className="eyebrow">{t("eyebrow")}</p>
             <h1>{t("title")}</h1>
             <p className="hero-subtitle">{t("subtitle")}</p>
-            <a className="button button-wine" href="#calendar">{t("calendarTitle")}</a>
+            <Link className="button button-wine" href="/">{t("calendarTitle")}</Link>
           </div>
           <div className="hero-mark" aria-hidden="true">
             <div className="hero-cross">✠</div>
@@ -28,11 +28,11 @@ export default async function HomePage() {
       </section>
 
       <section className="container module-grid" aria-label="Các thư viện">
-        <a href="/vi/than-kinh" className="module-card"><span>01</span><h3>Thánh Kinh</h3><p>Vulgata và bản văn được cấp phép.</p></a>
-        <a href="/vi/hanh-cac-thanh" className="module-card"><span>02</span><h3>Hạnh các Thánh</h3><p>Tiểu sử và ngày kính các Thánh.</p></a>
-        <a href="/vi/giao-ly" className="module-card"><span>03</span><h3>Giáo lý & Đố vui</h3><p>Học hỏi giáo lý theo từng cấp độ.</p></a>
-        <a href="/vi/binh-ca" className="module-card"><span>04</span><h3>Bình ca</h3><p>Thư viện bình ca và thánh nhạc.</p></a>
-        <a href="/vi/thu-vien" className="module-card"><span>05</span><h3>Thư viện</h3><p>Sách, bài giảng và tài liệu.</p></a>
+        <Link href="/than-kinh" className="module-card"><span>01</span><h3>Thánh Kinh</h3><p>Vulgata và bản văn được cấp phép.</p></Link>
+        <Link href="/hanh-cac-thanh" className="module-card"><span>02</span><h3>Hạnh các Thánh</h3><p>Tiểu sử và ngày kính các Thánh.</p></a>
+        <Link href="/giao-ly" className="module-card"><span>03</span><h3>Giáo lý & Đố vui</h3><p>Học hỏi giáo lý theo từng cấp độ.</p></a>
+        <Link href="/binh-ca" className="module-card"><span>04</span><h3>Bình ca</h3><p>Thư viện bình ca và thánh nhạc.</p></a>
+        <Link href="/thu-vien" className="module-card"><span>05</span><h3>Thư viện</h3><p>Sách, bài giảng và tài liệu.</p></a>
       </section>
     </main>
   );
