@@ -33,7 +33,7 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ s
   const parsed = updateSchema.safeParse(await request.json());
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   if (session.user.role === "EDITOR" && parsed.data.status === "PUBLISHED") return NextResponse.json({ error: "Editor phải gửi nội dung để Admin duyệt." }, { status: 403 });
-  const section = await prisma.liturgicalSection.update({ where: { id: context.params.sectionId }, data: parsed.data });
+  const section = await prisma.liturgicalSection.update({ where: { id: sectionId }, data: parsed.data });
   await prisma.auditLog.create({ data: { actorId: session.user.id, action: "UPDATE_LITURGICAL_SECTION", entity: "LiturgicalSection", entityId: section.id } });
   return NextResponse.json({ section });
 }
@@ -42,10 +42,10 @@ export async function DELETE(_request: NextRequest, context: { params: Promise<{
   const { sectionId } = await context.params;
   const session = await editor();
   if (!session) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  const existing = await prisma.liturgicalSection.findUnique({ where: { id: context.params.sectionId }, select: { status: true } });
+  const existing = await prisma.liturgicalSection.findUnique({ where: { id: sectionId }, select: { status: true } });
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
   if (existing.status === "PUBLISHED" && session.user.role !== "ADMIN") return NextResponse.json({ error: "Chỉ Admin được xóa mục đã xuất bản." }, { status: 403 });
-  await prisma.liturgicalSection.delete({ where: { id: context.params.sectionId } });
-  await prisma.auditLog.create({ data: { actorId: session.user.id, action: "DELETE_LITURGICAL_SECTION", entity: "LiturgicalSection", entityId: context.params.sectionId } });
+  await prisma.liturgicalSection.delete({ where: { id: sectionId } });
+  await prisma.auditLog.create({ data: { actorId: session.user.id, action: "DELETE_LITURGICAL_SECTION", entity: "LiturgicalSection", entityId: sectionId } });
   return NextResponse.json({ ok: true });
 }
