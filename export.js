@@ -132,11 +132,11 @@ function pdfDefinition(entry,date,pageSize){
   pageSize,
   pageOrientation:"portrait",
   pageMargins:margins,
-  info:{title:title+" — "+dateInfo.dateText,author:"Ordo Romanus",subject:"Sách lễ song ngữ Latinh — Việt"},
+  info:{title:title+" — "+dateInfo.dateText,author:"Thánh Lễ Missa",subject:"Sách lễ song ngữ Latinh — Việt"},
   footer:function(pageNumber,pageCount){
    return {
     columns:[
-     {text:"Ordo Romanus · "+new Intl.DateTimeFormat("vi-VN").format(new Date()),font:"TinosEmbedded",fontSize:8,color:"#555555"},
+     {text:"Thánh Lễ Missa · "+new Intl.DateTimeFormat("vi-VN").format(new Date()),font:"TinosEmbedded",fontSize:8,color:"#555555"},
      {text:String(pageNumber)+" / "+String(pageCount),alignment:"right",font:"TinosEmbedded",fontSize:8,color:"#555555"}
     ],
     margin:[margins[0],0,margins[2],17]
@@ -342,13 +342,13 @@ async function createDocx(entry,date,page){
   new Paragraph({
    alignment:AlignmentType.CENTER,
    children:[
-    new TextRun({text:"Ordo Romanus  ·  ",font:"Times New Roman",size:14}),
+    new TextRun({text:"Thánh Lễ Missa  ·  ",font:"Times New Roman",size:14}),
     new TextRun({children:[PageNumber.CURRENT],font:"Times New Roman",size:14})
    ]
   })
  ]});
  const doc=new Document({
-  creator:"Ordo Romanus",
+  creator:"Thánh Lễ Missa",
   title:title+" — "+dateInfo.dateText,
   description:"Sách lễ song ngữ Latinh — Việt",
   sections:[{
