@@ -331,3 +331,81 @@ body{font-family:Arial,Helvetica,sans-serif;letter-spacing:.005em}
   .calendar-day{min-height:58px}
   .weekday{font-size:6px}
 }
+
+
+
+/* Module detail and membership screens */
+.module-detail-hero{position:relative;overflow:hidden;background:linear-gradient(115deg,#421522,#632538 57%,#3c1721);color:#f6eddf}
+.module-detail-hero:after{position:absolute;right:7%;top:-95px;width:330px;height:330px;border:1px solid rgba(205,177,125,.35);border-radius:50%;box-shadow:0 0 0 16px rgba(205,177,125,.035),0 0 0 34px rgba(205,177,125,.025);content:""}
+.module-detail-hero-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:35px;min-height:300px;padding-block:50px}
+.module-detail-copy{max-width:670px}
+.module-detail-copy .eyebrow{color:#d3b982}
+.module-detail-latin{margin:25px 0 8px;color:#d2b982;font-size:9px;letter-spacing:.22em}
+.module-detail-copy h1{margin:0;color:#fff5e7;font:400 clamp(38px,5vw,58px)/1.1 Georgia,serif}
+.module-detail-copy>p:not(.eyebrow):not(.module-detail-latin){max-width:590px;color:#e3d4c3;font:14px/1.8 Georgia,serif}
+.module-status-inline{display:inline-flex;align-items:center;gap:8px;margin-top:15px;padding:9px 12px;border:1px solid rgba(219,194,151,.35);color:#e4d2b7;font-size:10px}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#d1b77e}
+.module-detail-emblem{position:relative;display:flex;width:150px;height:150px;flex:0 0 150px;flex-direction:column;align-items:center;justify-content:center;gap:10px;border:1px solid rgba(211,185,130,.7);border-radius:50%;color:#d1b77e}
+.module-detail-emblem:before{position:absolute;inset:9px;border:1px dotted rgba(211,185,130,.5);border-radius:50%;content:""}
+.module-detail-emblem span{font:30px Georgia,serif}
+.module-detail-body{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(230px,.8fr);gap:55px;padding-block:60px}
+.module-detail-main .eyebrow{margin:0 0 9px}
+.module-detail-main h2{margin:0 0 25px;color:var(--wine);font:400 31px Georgia,serif}
+.module-feature-list{border-top:1px solid var(--line)}
+.module-feature{display:flex;align-items:center;gap:18px;padding:16px 5px;border-bottom:1px solid var(--line)}
+.module-feature>span{color:var(--gold);font:15px Georgia,serif}
+.module-feature p{margin:0;color:var(--ink);font:13px/1.6 Georgia,serif}
+.module-detail-aside{align-self:start;padding:26px;border:1px solid var(--line);background:var(--surface)}
+.aside-cross{color:var(--gold);font:25px Georgia,serif}
+.module-detail-aside h3{margin:15px 0 9px;color:var(--wine);font:400 22px Georgia,serif}
+.module-detail-aside p{color:var(--muted);font:12px/1.8 Georgia,serif}
+.module-detail-aside a{display:inline-flex;align-items:center;gap:8px;margin-top:12px;color:var(--wine);font-size:10px;font-weight:700}
+.module-back-row{padding-bottom:45px}
+.back-home{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:10px}
+.back-home:hover{color:var(--wine)}
+.simple-info-page{min-height:50vh;padding-block:75px}
+.simple-info-page h1{margin:10px 0 14px;color:var(--wine);font:400 44px Georgia,serif}
+.simple-info-page>p:not(.eyebrow){max-width:680px;color:var(--muted);font:15px/1.8 Georgia,serif;margin-bottom:30px}
+.membership-page-hero{padding-block:58px 50px;background:linear-gradient(115deg,#421522,#632538 60%,#3c1721);color:#fff4e4}
+.membership-page-hero .eyebrow{color:#d3b982}
+.membership-page-hero h1{margin:12px 0;color:#fff5e7;font:400 clamp(39px,5vw,57px) Georgia,serif}
+.membership-page-hero p:not(.eyebrow){max-width:710px;color:#e3d4c3;font:14px/1.8 Georgia,serif}
+.membership-page-body{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;padding-block:42px 20px}
+.membership-plan-card{display:flex;min-height:365px;flex-direction:column;padding:22px;border:1px solid var(--line);background:var(--surface)}
+.membership-plan-card.featured{border-color:var(--gold);box-shadow:0 12px 30px rgba(80,52,32,.08)}
+.plan-top{display:flex;align-items:center;justify-content:space-between;color:var(--gold);font-size:9px;letter-spacing:.15em}
+.membership-plan-card h2{min-height:52px;margin:25px 0 12px;color:var(--wine);font:400 25px/1.25 Georgia,serif}
+.membership-plan-card>strong{color:var(--sage);font:400 27px Georgia,serif}
+.membership-plan-card>strong small{color:var(--muted);font:10px Arial,sans-serif}
+.membership-plan-card>p{min-height:58px;color:var(--muted);font:12px/1.7 Georgia,serif}
+.membership-plan-card ul{margin:10px 0 20px;padding-left:17px;color:var(--ink);font-size:10px;line-height:2}
+.plan-link{display:flex;align-items:center;gap:8px;margin-top:auto;color:var(--wine);font-size:10px;font-weight:700}
+.plan-disabled{margin-top:auto;padding:10px;border:1px solid var(--line);color:var(--muted);font-size:8px;font-weight:700;letter-spacing:.12em;text-align:center}
+.membership-note{display:flex;align-items:flex-start;gap:12px;max-width:850px;margin-bottom:60px;padding:15px 17px;background:color-mix(in srgb,var(--gold) 10%,var(--surface));color:var(--muted)}
+.membership-note svg{flex:0 0 auto;color:var(--gold)}
+.membership-note p{margin:0;font-size:11px;line-height:1.7}
+.modal-date{margin:0 0 7px;color:var(--muted);font-size:10px;letter-spacing:.05em}
+.member-notice{display:flex;align-items:center;flex-wrap:wrap;gap:9px}
+.member-notice>svg{flex:0 0 auto}
+.member-notice>span{flex:1}
+.member-notice a{display:inline-flex;align-items:center;gap:5px;color:#6e4e19;font-size:10px;font-weight:700;text-decoration:underline}
+@media(max-width:720px){
+  .module-detail-hero-inner{min-height:250px;padding-block:40px}
+  .module-detail-copy h1{font-size:39px}
+  .module-detail-copy>p:not(.eyebrow):not(.module-detail-latin){font-size:12px}
+  .module-detail-emblem{width:88px;height:88px;flex-basis:88px;opacity:.8}
+  .module-detail-emblem svg{width:28px}
+  .module-detail-emblem span{font-size:19px}
+  .module-detail-body{grid-template-columns:1fr;gap:25px;padding-block:38px}
+  .module-detail-main h2{font-size:27px}
+  .module-detail-aside{padding:20px}
+  .membership-page-hero{padding-block:42px 34px}
+  .membership-page-body{grid-template-columns:1fr;gap:12px;padding-block:25px 15px}
+  .membership-plan-card{min-height:0}
+  .membership-plan-card h2{min-height:0;margin:17px 0 10px}
+  .membership-plan-card>p{min-height:0}
+  .plan-disabled{margin-top:12px}
+  .membership-note{margin-bottom:38px}
+  .simple-info-page{padding-block:48px}
+  .simple-info-page h1{font-size:36px}
+}
