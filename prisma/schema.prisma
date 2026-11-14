@@ -1,0 +1,646 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  EDITOR
+  ADMIN
+}
+
+enum CalendarCode {
+  ROMAN_1962
+  PRE_1955
+}
+
+enum ContentStatus {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum LiturgicalColor {
+  GREEN
+  PURPLE
+  WHITE
+  RED
+  ROSE
+  BLACK
+  GOLD
+}
+
+enum AccessScope {
+  PUBLIC_TODAY
+  MEMBER
+}
+
+enum BillingInterval {
+  MONTH
+  YEAR
+}
+
+enum SubscriptionStatus {
+  PENDING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  EXPIRED
+}
+
+enum PaymentStatus {
+  INITIATED
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum DocumentStatus {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum DocumentType {
+  BOOK
+  ARTICLE
+  SERMON
+  PDF
+  EPUB
+  IMAGE
+  AUDIO
+  VIDEO
+  OTHER
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id              String              @id @default(cuid())
+  name            String?
+  email           String?             @unique
+  emailVerified   DateTime?
+  image           String?
+  passwordHash    String?
+  role            UserRole            @default(USER)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  accounts        Account[]
+  sessions        Session[]
+  subscriptions   Subscription[]
+  entitlements    Entitlement[]
+  createdDays     LiturgicalDay[]     @relation("DayCreator")
+  createdSections LiturgicalSection[] @relation("SectionCreator")
+  notes           UserNote[]
+  bookmarks       Bookmark[]
+  readingProgress ReadingProgress[]
+  playlists       Playlist[]
+  quizAttempts    QuizAttempt[]
+  comments        Comment[]
+  ratings         Rating[]
+  auditLogs       AuditLog[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model LiturgicalCalendar {
+  id           String       @id @default(cuid())
+  code         CalendarCode @unique
+  nameVi       String
+  nameLa       String?
+  description  String?
+  isActive     Boolean      @default(true)
+  days         LiturgicalDay[]
+  plans        Plan[]
+  entitlements Entitlement[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model LiturgicalSource {
+  id               String           @id @default(cuid())
+  title            String
+  authorOrEditor   String?
+  edition          String?
+  publicationYear  Int?
+  pageReference    String?
+  url              String?
+  license          String?
+  attribution      String?
+  notes            String?          @db.Text
+  days             LiturgicalDay[]
+  sections         LiturgicalSection[]
+  documents        Document[]
+  createdAt        DateTime         @default(now())
+}
+
+model LiturgicalDay {
+  id               String           @id @default(cuid())
+  calendarId       String
+  civilDate        DateTime         @db.Date
+  titleLa          String?
+  titleVi          String
+  rankLa           String?
+  rankVi           String?
+  liturgicalColor  LiturgicalColor?
+  seasonLa         String?
+  seasonVi         String?
+  dayType          String?
+  isSunday         Boolean          @default(false)
+  isSolemnity      Boolean          @default(false)
+  isFreeToday      Boolean          @default(false)
+  lectionaryCycle  String?
+  status           ContentStatus    @default(DRAFT)
+  sourceId         String?
+  editorialNote    String?          @db.Text
+  createdById      String?
+  calendar         LiturgicalCalendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  source           LiturgicalSource? @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+  createdBy        User?             @relation("DayCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  sections         LiturgicalSection[]
+  saints           DaySaint[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@unique([calendarId, civilDate])
+  @@index([calendarId, civilDate, status])
+}
+
+model LiturgicalSection {
+  id            String        @id @default(cuid())
+  dayId         String
+  position      Int
+  sectionKey    String
+  labelLa       String?
+  labelVi       String
+  referenceLa   String?
+  referenceVi   String?
+  textLa        String?       @db.Text
+  textVi        String?       @db.Text
+  accessScope   AccessScope   @default(MEMBER)
+  status        ContentStatus @default(DRAFT)
+  sourceId      String?
+  createdById   String?
+  day           LiturgicalDay @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  source        LiturgicalSource? @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+  createdBy     User?         @relation("SectionCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([dayId, position])
+  @@index([dayId, status, position])
+}
+
+model Saint {
+  id             String     @id @default(cuid())
+  slug           String     @unique
+  nameLa         String?
+  nameVi         String
+  feastMonth     Int?
+  feastDay       Int?
+  birthDate      DateTime?  @db.Date
+  deathDate      DateTime?  @db.Date
+  birthplace     String?
+  biographyVi    String?    @db.Text
+  biographyEn    String?    @db.Text
+  patronages     String[]
+  religiousOrder String?
+  country        String?
+  quote          String?    @db.Text
+  imageUrl       String?
+  sourceId       String?
+  source         LiturgicalSource? @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+  calendarDays   DaySaint[]
+  documents      Document[]
+  status         ContentStatus @default(DRAFT)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model DaySaint {
+  dayId   String
+  saintId String
+  note    String?
+  day     LiturgicalDay @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  saint   Saint         @relation(fields: [saintId], references: [id], onDelete: Cascade)
+
+  @@id([dayId, saintId])
+}
+
+model BibleBook {
+  id           String       @id @default(cuid())
+  testament    String
+  canonicalNo  Int
+  abbreviation String
+  nameVi       String
+  nameLa       String?
+  nameEn       String?
+  chapters     Int
+  verses       BibleVerse[]
+  createdAt    DateTime     @default(now())
+
+  @@unique([testament, canonicalNo])
+}
+
+model BibleVerse {
+  id              String    @id @default(cuid())
+  bookId          String
+  chapter         Int
+  verse           Int
+  translationCode String
+  text            String    @db.Text
+  license         String?
+  sourceUrl       String?
+  book            BibleBook @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@unique([bookId, chapter, verse, translationCode])
+  @@index([translationCode, bookId, chapter])
+}
+
+model Catechism {
+  id          String        @id @default(cuid())
+  parentId    String?
+  number      Int?
+  part        Int?
+  section     String?
+  title       String
+  contentVi   String        @db.Text
+  contentLa   String?       @db.Text
+  contentEn   String?       @db.Text
+  sourceUrl   String?
+  license     String?
+  status      ContentStatus @default(DRAFT)
+  parent      Catechism?    @relation("CatechismTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Catechism[]   @relation("CatechismTree")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([part, number])
+}
+
+model Quiz {
+  id             String        @id @default(cuid())
+  slug           String        @unique
+  title          String
+  description    String?       @db.Text
+  difficulty     String
+  audience       String
+  timeLimitSec   Int?
+  isPublished    Boolean       @default(false)
+  questions      Question[]
+  attempts       QuizAttempt[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Question {
+  id          String    @id @default(cuid())
+  quizId      String
+  position    Int
+  type        String
+  prompt      String    @db.Text
+  explanation String?   @db.Text
+  points      Int       @default(1)
+  quiz        Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers     Answer[]
+  userAnswers UserAnswer[]
+
+  @@unique([quizId, position])
+}
+
+model Answer {
+  id          String   @id @default(cuid())
+  questionId  String
+  position    Int
+  text        String   @db.Text
+  isCorrect   Boolean  @default(false)
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([questionId, position])
+}
+
+model QuizAttempt {
+  id          String       @id @default(cuid())
+  quizId      String
+  userId      String
+  score       Int?
+  startedAt   DateTime     @default(now())
+  completedAt DateTime?
+  quiz        Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers     UserAnswer[]
+
+  @@index([userId, startedAt])
+}
+
+model UserAnswer {
+  id          String      @id @default(cuid())
+  attemptId   String
+  questionId  String
+  answerId    String?
+  freeText    String?     @db.Text
+  isCorrect   Boolean?
+  attempt     QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question    Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([attemptId])
+}
+
+model Hymn {
+  id              String        @id @default(cuid())
+  slug            String        @unique
+  titleVi         String
+  titleLa         String?
+  titleEn         String?
+  composer        String?
+  mode            String?
+  liturgicalSeason String?
+  ritual           String?
+  language         String
+  lyricsVi         String?       @db.Text
+  lyricsLa         String?       @db.Text
+  musicXmlUrl      String?
+  scorePdfUrl      String?
+  audioUrl         String?
+  sourceUrl        String?
+  license          String?
+  status           ContentStatus @default(DRAFT)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+}
+
+model Playlist {
+  id        String         @id @default(cuid())
+  userId    String
+  name      String
+  isPublic  Boolean        @default(false)
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     PlaylistItem[]
+  createdAt DateTime       @default(now())
+
+  @@index([userId])
+}
+
+model PlaylistItem {
+  playlistId String
+  hymnId     String
+  position   Int
+  playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+
+  @@id([playlistId, hymnId])
+  @@unique([playlistId, position])
+}
+
+model Category {
+  id          String             @id @default(cuid())
+  nameVi      String
+  nameEn      String?
+  slug        String             @unique
+  description String?
+  parentId    String?
+  parent      Category?          @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Category[]         @relation("CategoryTree")
+  documents   DocumentCategory[]
+  createdAt   DateTime           @default(now())
+}
+
+model Document {
+  id          String         @id @default(cuid())
+  slug        String         @unique
+  title       String
+  summary     String?        @db.Text
+  body        String?        @db.Text
+  type        DocumentType
+  storageKey  String?
+  externalUrl String?
+  language    String?
+  author      String?
+  publisher   String?
+  license     String?
+  sourceId    String?
+  saintId     String?
+  status      DocumentStatus @default(DRAFT)
+  accessScope AccessScope    @default(MEMBER)
+  source      LiturgicalSource? @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+  saint       Saint?         @relation(fields: [saintId], references: [id], onDelete: SetNull)
+  categories  DocumentCategory[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model DocumentCategory {
+  documentId String
+  categoryId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([documentId, categoryId])
+}
+
+model Comment {
+  id        String        @id @default(cuid())
+  userId    String
+  targetType String
+  targetId  String
+  parentId  String?
+  body      String        @db.Text
+  status    CommentStatus @default(PENDING)
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent    Comment?      @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[]     @relation("CommentReplies")
+  createdAt DateTime      @default(now())
+
+  @@index([targetType, targetId, status])
+}
+
+model Rating {
+  id         String   @id @default(cuid())
+  userId     String
+  targetType String
+  targetId   String
+  score      Int
+  review     String?  @db.Text
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, targetType, targetId])
+}
+
+model Bookmark {
+  id         String   @id @default(cuid())
+  userId     String
+  targetType String
+  targetId   String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, targetType, targetId])
+}
+
+model ReadingProgress {
+  id         String   @id @default(cuid())
+  userId     String
+  targetType String
+  targetId   String
+  progress   Int      @default(0)
+  lastReadAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, targetType, targetId])
+}
+
+model UserNote {
+  id         String   @id @default(cuid())
+  userId     String
+  targetType String
+  targetId   String
+  body       String   @db.Text
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId, targetType, targetId])
+}
+
+model Plan {
+  id          String       @id @default(cuid())
+  code        String       @unique
+  nameVi      String
+  description String?
+  calendarId  String?
+  calendar    LiturgicalCalendar? @relation(fields: [calendarId], references: [id], onDelete: SetNull)
+  prices      PlanPrice[]
+  subscriptions Subscription[]
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+}
+
+model PlanPrice {
+  id             String          @id @default(cuid())
+  planId         String
+  interval       BillingInterval
+  amountVnd      Int
+  currency       String          @default("VND")
+  provider       String?
+  providerPriceId String?
+  isActive       Boolean         @default(true)
+  plan           Plan            @relation(fields: [planId], references: [id], onDelete: Cascade)
+  subscriptions  Subscription[]
+
+  @@unique([planId, interval])
+}
+
+model Subscription {
+  id                       String             @id @default(cuid())
+  userId                   String
+  planId                   String
+  priceId                  String
+  provider                 String
+  providerSubscriptionId   String?
+  status                   SubscriptionStatus @default(PENDING)
+  currentPeriodStart       DateTime?
+  currentPeriodEnd         DateTime?
+  cancelAtPeriodEnd        Boolean            @default(false)
+  user                     User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan                     Plan               @relation(fields: [planId], references: [id])
+  price                    PlanPrice          @relation(fields: [priceId], references: [id])
+  payments                 Payment[]
+  entitlements             Entitlement[]
+  createdAt                DateTime           @default(now())
+  updatedAt                DateTime           @updatedAt
+
+  @@unique([provider, providerSubscriptionId])
+  @@index([userId, status])
+}
+
+model Entitlement {
+  id             String             @id @default(cuid())
+  userId         String
+  calendarId     String
+  subscriptionId String?
+  validFrom      DateTime           @default(now())
+  validUntil     DateTime?
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  calendar       LiturgicalCalendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  subscription   Subscription?      @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  createdAt      DateTime           @default(now())
+
+  @@index([userId, calendarId, validFrom, validUntil])
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  userId                String
+  subscriptionId        String?
+  provider              String
+  providerTransactionId String?
+  amountVnd             Int
+  currency              String        @default("VND")
+  status                PaymentStatus @default(INITIATED)
+  paidAt                DateTime?
+  rawReference          String?
+  subscription          Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  createdAt             DateTime      @default(now())
+
+  @@unique([provider, providerTransactionId])
+  @@index([userId, createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  action    String
+  entity    String
+  entityId  String?
+  details   Json?
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
