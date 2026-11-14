@@ -11,6 +11,11 @@ function parseDate(value: string | null) {
   const date = new Date(value + "T00:00:00.000Z");
   return Number.isNaN(date.valueOf()) ? null : date;
 }
+function vietnamTodayUtc() {
+  const parts = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date());
+  const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "01";
+  return new Date(Date.UTC(Number(get("year")), Number(get("month")) - 1, Number(get("day"))));
+}
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
@@ -18,27 +23,20 @@ export async function GET(request: NextRequest) {
   const from = parseDate(params.get("from"));
   const to = parseDate(params.get("to"));
   if (!calendar || !from || !to || from > to) return NextResponse.json({ error: "Invalid calendar or date range." }, { status: 400 });
-  const maxRange = 367 * 24 * 60 * 60 * 1000;
-  if (to.getTime() - from.getTime() > maxRange) return NextResponse.json({ error: "Date range is too large." }, { status: 400 });
+  if (to.getTime() - from.getTime() > 367 * 24 * 60 * 60 * 1000) return NextResponse.json({ error: "Date range is too large." }, { status: 400 });
 
   const session = await getServerSession(authOptions);
-  const userId = session?.user?.id ?? null;
-  const role = session?.user?.role;
-  const fullAccess = await canReadFullCalendar(userId, role, calendar);
-  const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" }));
-  const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
-  const where: Record<string, unknown> = {
-    calendar: { code: calendar },
-    status: ContentStatus.PUBLISHED,
-    civilDate: fullAccess ? { gte: from, lte: to } : { equals: todayUTC },
-  };
-  if (!fullAccess) {
-    if (todayUTC < from || todayUTC > to) return NextResponse.json({ days: [], access: "FREE_TODAY" });
-    where.isFreeToday = true;
-  }
+  const fullAccess = await canReadFullCalendar(session?.user?.id ?? null, session?.user?.role, calendar);
+  const today = vietnamTodayUtc();
+  if (!fullAccess && (today < from || today > to)) return NextResponse.json({ days: [], access: "FREE_TODAY" });
 
   const days = await prisma.liturgicalDay.findMany({
-    where,
+    where: {
+      calendar: { code: calendar },
+      status: ContentStatus.PUBLISHED,
+      civilDate: fullAccess ? { gte: from, lte: to } : today,
+      ...(fullAccess ? {} : { isFreeToday: true })
+    },
     orderBy: { civilDate: "asc" },
     select: { id: true, civilDate: true, titleVi: true, titleLa: true, rankVi: true, liturgicalColor: true, isSunday: true, isSolemnity: true }
   });
