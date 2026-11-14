@@ -6,7 +6,7 @@ Nền tảng tra cứu phụng vụ, Thánh Kinh, Hạnh các Thánh, giáo lý,
 
 ## Kiến trúc
 
-- Next.js 14 App Router + TypeScript.
+- Next.js 15.5.28 App Router + TypeScript.
 - Tailwind CSS và Lucide icons.
 - PostgreSQL + Prisma ORM.
 - NextAuth v4 với Email magic link và Google OAuth (cần cấu hình).
