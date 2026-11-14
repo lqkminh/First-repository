@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, X, LockKeyhole } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, LockKeyhole, ArrowRight } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { dateKey, getMonthGrid, getWeekRange, getYearRange, type CalendarView } from "@/lib/calendar-utils";
 
 type CalendarCode = "ROMAN_1962" | "PRE_1955";
@@ -60,6 +61,10 @@ export function CalendarClient() {
       const params=new URLSearchParams({calendar,date:dateKey(date)});
       const response=await fetch("/api/liturgical/day?"+params.toString());
       const data=await response.json();
+      if(response.status===403){
+        setSelected({id:"locked",civilDate:dateKey(date),titleVi:"Nội dung dành cho hội viên",titleLa:null,rankVi:null,liturgicalColor:null,isSunday:false,isSolemnity:false,seasonVi:null,sections:[],saints:[],accessLimited:true});
+        return;
+      }
       if(!response.ok&&response.status!==404)throw new Error(data.error||"Không thể tải bản văn.");
       setSelected(data.day??null);
     } catch(err) {setError(err instanceof Error?err.message:"Có lỗi xảy ra.");}
@@ -108,12 +113,12 @@ export function CalendarClient() {
       {(selected||detailLoading)&&<div className="modal-backdrop" role="presentation" onClick={()=>{setSelected(null);setDetailLoading(false);}}>
         <section className="day-modal" role="dialog" aria-modal="true" aria-labelledby="day-title" onClick={e=>e.stopPropagation()}>
           <button className="modal-close icon-button" onClick={()=>{setSelected(null);setDetailLoading(false);}} aria-label={t("close")}><X size={18}/></button>
-          {detailLoading?<p className="calendar-status">{t("loading")}</p>:selected?<><p className="eyebrow">{calendar==="ROMAN_1962"?"MISSALE ROMANUM 1962":"CALENDARIUM ANTE 1955"}</p><h3 id="day-title">{selected.titleVi}</h3>{selected.titleLa&&<p className="latin-title">{selected.titleLa}</p>}
+          {detailLoading?<p className="calendar-status">{t("loading")}</p>:selected?<><p className="eyebrow">{calendar==="ROMAN_1962"?"MISSALE ROMANUM 1962":"CALENDARIUM ANTE 1955"}</p><p className="modal-date">{new Intl.DateTimeFormat(dateLocale,{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date(selected.civilDate+"T12:00:00"))}</p><h3 id="day-title">{selected.titleVi}</h3>{selected.titleLa&&<p className="latin-title">{selected.titleLa}</p>}
             <div className="day-meta">{selected.rankVi&&<span>{t("rank")}: {selected.rankVi}</span>}{selected.liturgicalColor&&<span>{t("color")}: {selected.liturgicalColor}</span>}{selected.seasonVi&&<span>{t("season")}: {selected.seasonVi}</span>}{selected.lectionaryCycle&&<span>{t("cycle")}: {selected.lectionaryCycle}</span>}</div>
-            {selected.accessLimited&&<p className="member-notice"><LockKeyhole size={16}/> Một số phần còn lại dành cho hội viên.</p>}
+            {selected.accessLimited&&<div className="member-notice"><LockKeyhole size={16}/><span>Một số phần bản văn chỉ dành cho hội viên đã đăng ký niên lịch tương ứng.</span><Link href="/hoi-vien">Xem gói hội viên <ArrowRight size={13}/></Link></div>}
             <div className="parallel-readings">{selected.sections.map(section=><article className="parallel-section" key={section.id}><div><h4>{section.labelLa??"—"}</h4>{section.referenceLa&&<small>{section.referenceLa}</small>}<p>{section.textLa??"—"}</p></div><div><h4>{section.labelVi}</h4>{section.referenceVi&&<small>{section.referenceVi}</small>}<p>{section.textVi??"—"}</p></div></article>)}</div>
             {selected.saints.length>0&&<p className="saint-line">Thánh kính nhớ: {selected.saints.map(x=>x.saint.nameVi).join(", ")}</p>}
-            {selected.sections.length===0&&<p className="calendar-hint">{selected.accessLimited?"Vui lòng đăng nhập và đăng ký gói ORDO tương ứng để xem nội dung của ngày này.":t("noData")}</p>}
+            {selected.sections.length===0&&<p className="calendar-hint">{selected.accessLimited?"Đăng nhập và đăng ký gói ORDO tương ứng để mở toàn bộ bản văn của ngày này.":t("noData")}</p>}
           </>:<p className="calendar-hint">{t("noData")}</p>}
         </section>
       </div>}
