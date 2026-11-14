@@ -3,6 +3,7 @@ import type { NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "@/lib/prisma";
+import { UserRole } from "@prisma/client";
 
 const providers: NextAuthOptions["providers"] = [];
 
@@ -40,7 +41,8 @@ export const authOptions: NextAuthOptions = {
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
-        session.user.role = user.role;
+        const databaseUser = await prisma.user.findUnique({ where: { id: user.id }, select: { role: true } });
+        session.user.role = databaseUser?.role ?? UserRole.USER;
       }
       return session;
     }
