@@ -1,0 +1,43 @@
+{
+  "Navigation": {
+    "calendar": "Liturgical Calendar",
+    "bible": "Bible",
+    "saints": "Lives of the Saints",
+    "catechism": "Catechism",
+    "quiz": "Quiz",
+    "chant": "Gregorian Chant",
+    "library": "Library",
+    "membership": "Membership",
+    "admin": "Admin",
+    "signIn": "Sign in"
+  },
+  "HomePage": {
+    "eyebrow": "LITURGY · SACRED MUSIC · LIBRARY",
+    "title": "Thánh Lễ Missa",
+    "subtitle": "A place to explore the liturgy and Catholic faith, with parallel Latin and Vietnamese texts.",
+    "calendarTitle": "Liturgical Calendar",
+    "calendarDescription": "Browse by day, week, month, or year.",
+    "today": "Today"
+  },
+  "Calendar": {
+    "today": "Today",
+    "previous": "Previous",
+    "next": "Next",
+    "month": "Month",
+    "week": "Week",
+    "year": "Year",
+    "todayView": "Today",
+    "chooseCalendar": "Calendar",
+    "roman1962": "Roman 1962",
+    "pre1955": "Before 1955",
+    "loading": "Loading calendar...",
+    "noData": "No reviewed liturgical data is available for this day.",
+    "selectDay": "Select a date to view its details.",
+    "rank": "Rank",
+    "color": "Liturgical color",
+    "season": "Liturgical season",
+    "readings": "Texts",
+    "close": "Close",
+    "source": "Source"
+  }
+}
