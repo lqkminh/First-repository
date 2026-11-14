@@ -119,7 +119,7 @@ export function CalendarClient() {
             {selected.accessLimited&&<div className="member-notice"><LockKeyhole size={16}/><span>{english?"Some texts are reserved for members of the corresponding liturgical calendar.":"Một số phần bản văn chỉ dành cho hội viên đã đăng ký niên lịch tương ứng."}</span><Link href="/hoi-vien">{english?"Membership plans":"Xem gói hội viên"} <ArrowRight size={13}/></Link></div>}
             <div className="parallel-readings">{selected.sections.map(section=><article className="parallel-section" key={section.id}><div><h4>{section.labelLa??"—"}</h4>{section.referenceLa&&<small>{section.referenceLa}</small>}<p>{section.textLa??"—"}</p></div><div><h4>{section.labelVi}</h4>{section.referenceVi&&<small>{section.referenceVi}</small>}<p>{section.textVi??"—"}</p></div></article>)}</div>
             {selected.saints.length>0&&<p className="saint-line">Thánh kính nhớ: {selected.saints.map(x=>x.saint.nameVi).join(", ")}</p>}
-            {selected.sections.length===0&&<p className="calendar-hint">{selected.accessLimited?"{english?"Sign in and subscribe to the corresponding ORDO plan to view the full texts for this date.":"Đăng nhập và đăng ký gói ORDO tương ứng để mở toàn bộ bản văn của ngày này."}":t("noData")}</p>}
+            {selected.sections.length===0&&<p className="calendar-hint">{selected.accessLimited?(english?"Sign in and subscribe to the corresponding ORDO plan to view the full texts for this date.":"Đăng nhập và đăng ký gói ORDO tương ứng để mở toàn bộ bản văn của ngày này."):t("noData")}</p>}
           </>:<p className="calendar-hint">{t("noData")}</p>}
         </section>
       </div>}
