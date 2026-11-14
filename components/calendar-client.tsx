@@ -34,7 +34,7 @@ export function CalendarClient() {
   const dateMap=useMemo(()=>new Map(days.map(day=>[day.civilDate.slice(0,10),day])),[days]);
   const monthDays=useMemo(()=>getMonthGrid(activeDate.getFullYear(),activeDate.getMonth()),[activeDate]);
   const weekDays=useMemo(()=>{const w=getWeekRange(activeDate);return Array.from({length:7},(_,i)=>new Date(w.from.getFullYear(),w.from.getMonth(),w.from.getDate()+i));},[activeDate]);
-  const dateLocale=locale==="en"?"en-US":"vi-VN";
+  const english=locale==="en";\n  const dateLocale=english?"en-US":"vi-VN";
   const weekdayLabels=locale==="en"?weekdaysEn:weekdaysVi;
 
   useEffect(()=>{
@@ -94,7 +94,7 @@ export function CalendarClient() {
       {loading&&<p className="calendar-status">{t("loading")}</p>}
       {error&&<p className="calendar-error" role="alert">{error}</p>}
       {view==="year"?(
-        <div className="year-grid">{Array.from({length:12},(_,month)=><button key={month} className="year-month" onClick={()=>{setActiveDate(new Date(activeDate.getFullYear(),month,1));setView("month");}}><strong>{new Intl.DateTimeFormat(dateLocale,{month:"long"}).format(new Date(activeDate.getFullYear(),month,1))}</strong><span>{days.filter(day=>Number(day.civilDate.slice(5,7))===month+1).length} ngày có dữ liệu</span></button>)}</div>
+        <div className="year-grid">{Array.from({length:12},(_,month)=><button key={month} className="year-month" onClick={()=>{setActiveDate(new Date(activeDate.getFullYear(),month,1));setView("month");}}><strong>{new Intl.DateTimeFormat(dateLocale,{month:"long"}).format(new Date(activeDate.getFullYear(),month,1))}</strong><span>{days.filter(day=>Number(day.civilDate.slice(5,7))===month+1).length} {english?"days with data":"ngày có dữ liệu"}</span></button>)}</div>
       ):(
         <div className={view==="today"?"today-view":"calendar-grid"}>
           {view!=="today"&&weekdayLabels.map(day=><div className="weekday" key={day}>{day}</div>)}
@@ -108,17 +108,17 @@ export function CalendarClient() {
           })}
         </div>
       )}
-      {!loading&&days.length===0&&<p className="calendar-hint">Chưa có ngày lễ đã xuất bản trong khoảng thời gian này. Dữ liệu sẽ xuất hiện sau khi biên tập viên duyệt và công bố.</p>}
-      <div className="calendar-legend"><span><i className="color-dot green"/> Xanh</span><span><i className="color-dot purple"/> Tím</span><span><i className="color-dot white"/> Trắng</span><span><i className="color-dot red"/> Đỏ</span><span><i className="color-dot rose"/> Hồng</span></div>
+      {!loading&&days.length===0&&<p className="calendar-hint">{english?"No liturgical days have been published for this period yet. Reviewed entries will appear here after editorial approval.":"Chưa có ngày lễ đã xuất bản trong khoảng thời gian này. Dữ liệu sẽ xuất hiện sau khi biên tập viên duyệt và công bố."}</p>}
+      <div className="calendar-legend"><span><i className="color-dot green"/> {english?"Green":"Xanh"}</span><span><i className="color-dot purple"/> {english?"Violet":"Tím"}</span><span><i className="color-dot white"/> {english?"White":"Trắng"}</span><span><i className="color-dot red"/> {english?"Red":"Đỏ"}</span><span><i className="color-dot rose"/> {english?"Rose":"Hồng"}</span></div>
       {(selected||detailLoading)&&<div className="modal-backdrop" role="presentation" onClick={()=>{setSelected(null);setDetailLoading(false);}}>
         <section className="day-modal" role="dialog" aria-modal="true" aria-labelledby="day-title" onClick={e=>e.stopPropagation()}>
           <button className="modal-close icon-button" onClick={()=>{setSelected(null);setDetailLoading(false);}} aria-label={t("close")}><X size={18}/></button>
           {detailLoading?<p className="calendar-status">{t("loading")}</p>:selected?<><p className="eyebrow">{calendar==="ROMAN_1962"?"MISSALE ROMANUM 1962":"CALENDARIUM ANTE 1955"}</p><p className="modal-date">{new Intl.DateTimeFormat(dateLocale,{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date(selected.civilDate+"T12:00:00"))}</p><h3 id="day-title">{selected.titleVi}</h3>{selected.titleLa&&<p className="latin-title">{selected.titleLa}</p>}
             <div className="day-meta">{selected.rankVi&&<span>{t("rank")}: {selected.rankVi}</span>}{selected.liturgicalColor&&<span>{t("color")}: {selected.liturgicalColor}</span>}{selected.seasonVi&&<span>{t("season")}: {selected.seasonVi}</span>}{selected.lectionaryCycle&&<span>{t("cycle")}: {selected.lectionaryCycle}</span>}</div>
-            {selected.accessLimited&&<div className="member-notice"><LockKeyhole size={16}/><span>Một số phần bản văn chỉ dành cho hội viên đã đăng ký niên lịch tương ứng.</span><Link href="/hoi-vien">Xem gói hội viên <ArrowRight size={13}/></Link></div>}
+            {selected.accessLimited&&<div className="member-notice"><LockKeyhole size={16}/><span>{english?"Some texts are reserved for members of the corresponding liturgical calendar.":"Một số phần bản văn chỉ dành cho hội viên đã đăng ký niên lịch tương ứng."}</span><Link href="/hoi-vien">{english?"Membership plans":"Xem gói hội viên"} <ArrowRight size={13}/></Link></div>}
             <div className="parallel-readings">{selected.sections.map(section=><article className="parallel-section" key={section.id}><div><h4>{section.labelLa??"—"}</h4>{section.referenceLa&&<small>{section.referenceLa}</small>}<p>{section.textLa??"—"}</p></div><div><h4>{section.labelVi}</h4>{section.referenceVi&&<small>{section.referenceVi}</small>}<p>{section.textVi??"—"}</p></div></article>)}</div>
             {selected.saints.length>0&&<p className="saint-line">Thánh kính nhớ: {selected.saints.map(x=>x.saint.nameVi).join(", ")}</p>}
-            {selected.sections.length===0&&<p className="calendar-hint">{selected.accessLimited?"Đăng nhập và đăng ký gói ORDO tương ứng để mở toàn bộ bản văn của ngày này.":t("noData")}</p>}
+            {selected.sections.length===0&&<p className="calendar-hint">{selected.accessLimited?"{english?"Sign in and subscribe to the corresponding ORDO plan to view the full texts for this date.":"Đăng nhập và đăng ký gói ORDO tương ứng để mở toàn bộ bản văn của ngày này."}":t("noData")}</p>}
           </>:<p className="calendar-hint">{t("noData")}</p>}
         </section>
       </div>}
