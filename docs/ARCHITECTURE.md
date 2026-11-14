@@ -15,7 +15,7 @@
 [Mobile / Desktop / PWA]
       |
       v
-[Next.js 14 + next-intl + Tailwind]
+[Next.js 15.5.28 + next-intl + Tailwind]
       |-- Calendar / Bible / Saints / Catechism / Quiz / Chant / Library
       |-- NextAuth Email + Google
       |-- API Routes
