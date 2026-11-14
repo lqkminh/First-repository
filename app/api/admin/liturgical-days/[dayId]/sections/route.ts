@@ -18,12 +18,14 @@ const sectionSchema = z.object({
   status: z.nativeEnum(ContentStatus).optional()
 });
 
-export async function POST(request: NextRequest, context: { params: { dayId: string } }) {
+export async function POST(request: NextRequest, context: { params: Promise<{ dayId: string }> }) {
+  const { dayId } = await context.params;
   const session = await getServerSession(authOptions);
   if (!session?.user?.id || !["ADMIN", "EDITOR"].includes(session.user.role)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const parsed = sectionSchema.safeParse(await request.json());
-  if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });\n  if (session.user.role === "EDITOR" && parsed.data.status === "PUBLISHED") return NextResponse.json({ error: "Editor phải gửi nội dung để Admin duyệt." }, { status: 403 });
-  const day = await prisma.liturgicalDay.findUnique({ where: { id: context.params.dayId }, select: { id: true } });
+  if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+  if (session.user.role === "EDITOR" && parsed.data.status === "PUBLISHED") return NextResponse.json({ error: "Editor phải gửi nội dung để Admin duyệt." }, { status: 403 });
+  const day = await prisma.liturgicalDay.findUnique({ where: { id: dayId }, select: { id: true } });
   if (!day) return NextResponse.json({ error: "Liturgical day not found." }, { status: 404 });
   const section = await prisma.liturgicalSection.create({
     data: { ...parsed.data, dayId: day.id, createdById: session.user.id }
