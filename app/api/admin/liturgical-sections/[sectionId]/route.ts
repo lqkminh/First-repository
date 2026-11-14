@@ -23,10 +23,11 @@ async function editor() {
   return session?.user?.id && ["ADMIN", "EDITOR"].includes(session.user.role) ? session : null;
 }
 
-export async function PATCH(request: NextRequest, context: { params: { sectionId: string } }) {
+export async function PATCH(request: NextRequest, context: { params: Promise<{ sectionId: string }> }) {
+  const { sectionId } = await context.params;
   const session = await editor();
   if (!session) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  const existing = await prisma.liturgicalSection.findUnique({ where: { id: context.params.sectionId }, select: { status: true } });
+  const existing = await prisma.liturgicalSection.findUnique({ where: { id: sectionId }, select: { status: true } });
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
   if (existing.status === "PUBLISHED" && session.user.role !== "ADMIN") return NextResponse.json({ error: "Chỉ Admin được sửa mục đã xuất bản." }, { status: 403 });
   const parsed = updateSchema.safeParse(await request.json());
@@ -37,7 +38,8 @@ export async function PATCH(request: NextRequest, context: { params: { sectionId
   return NextResponse.json({ section });
 }
 
-export async function DELETE(_request: NextRequest, context: { params: { sectionId: string } }) {
+export async function DELETE(_request: NextRequest, context: { params: Promise<{ sectionId: string }> }) {
+  const { sectionId } = await context.params;
   const session = await editor();
   if (!session) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const existing = await prisma.liturgicalSection.findUnique({ where: { id: context.params.sectionId }, select: { status: true } });
