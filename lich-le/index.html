@@ -24,25 +24,39 @@ dialog{color:var(--ink);border:1px solid var(--border);background:var(--surface)
 @media(max-width:950px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-inner{padding:56px 0 72px}}@media(max-width:650px){.container{width:min(100% - 28px,1220px)}.headinner{height:66px}.brand{font-size:14px}.brandmark{width:32px;height:32px;font-size:19px}.toplink{display:none}.hero-inner{padding:46px 0 65px}.heritage{line-height:1.8;flex-wrap:wrap}.nextbox{padding:21px 18px;grid-template-columns:1fr auto;gap:9px}.nextname{font-size:17px}.countdown{min-width:84px;padding:11px 7px}.countnum{font-size:27px}.content{padding-top:40px}.secttop{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr;gap:12px}.festcard{min-height:195px;padding:19px}.controls{width:100%}.controls select{flex:1}.sectiontitle{font-size:25px}.source{padding:20px 17px;gap:12px}.modalbody{padding:4px 21px 25px}.modalhead{padding:20px 21px 10px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 
-/* Khu vực đọc nguyên văn Phần riêng Sách lễ 1936 */
-dialog{max-width:1030px}
-.proper-section{border-top:1px solid var(--border);margin-top:25px;padding-top:24px}
+
+/* Phần riêng được tách từ đúng các ô bảng Word: Latin bên trái, Việt bên phải. */
+dialog{width:min(1120px,calc(100% - 28px));max-width:1120px}
+.proper-section{border-top:1px solid var(--border);margin-top:25px;padding-top:25px}
 .proper-header{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
-.proper-title{font-family:"Noto Serif",Georgia,serif;font-size:22px;font-weight:600;margin:0}
-.proper-meta{font-size:11px;color:var(--muted);line-height:1.7;margin-top:8px}
+.proper-title{font-family:"Noto Serif",Georgia,serif;font-size:23px;font-weight:600;margin:0}
+.proper-meta{font-size:11px;color:var(--muted);line-height:1.9;margin:8px 0 0}
 .proper-status{border:1px solid var(--border);background:var(--bg);border-radius:12px;padding:15px;margin:18px 0;font-size:12px;line-height:1.8;color:var(--muted)}
-.proper-pages{display:flex;flex-direction:column;gap:17px;margin-top:18px}
-.proper-page{border:1px solid var(--border);background:var(--bg);border-radius:14px;overflow:hidden}
-.proper-page summary{padding:13px 17px;list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;color:var(--red);border-bottom:1px solid transparent}
-.proper-page[open] summary{border-bottom-color:var(--border)}
-.proper-page summary:after{content:"⌄";font-size:17px;color:var(--muted)}
-.proper-page[open] summary:after{content:"⌃"}
-.proper-page summary::-webkit-details-marker{display:none}
-.proper-text{margin:0;padding:19px 20px;font-family:"Noto Serif",Georgia,serif;font-size:12px;line-height:1.75;white-space:pre;overflow-x:auto;max-width:100%;color:var(--ink);tab-size:4}
-.proper-tip{margin:14px 0 0;font-size:11px;line-height:1.8;color:var(--muted)}
-.proper-action{font-size:11px;border:1px solid var(--border);border-radius:10px;padding:9px 12px;background:var(--surface);color:var(--ink)}
+.proper-pages{display:flex;flex-direction:column;gap:18px;margin-top:20px}
+.proper-unit{border:1px solid var(--border);border-radius:15px;background:var(--surface);overflow:hidden;box-shadow:0 2px 13px rgba(0,0,0,.025)}
+.proper-unit>summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px 18px;cursor:pointer;background:var(--bg);border-bottom:1px solid transparent}
+.proper-unit[open]>summary{border-bottom-color:var(--border)}
+.proper-unit>summary::-webkit-details-marker{display:none}
+.proper-unit>summary::after{content:"⌄";font-size:20px;flex-shrink:0;color:var(--muted)}
+.proper-unit[open]>summary::after{content:"⌃"}
+.proper-unit-title{font:600 16px "Noto Serif",Georgia,serif;color:var(--ink)}
+.proper-unit-small{font-size:10px;color:var(--muted)}
+.proper-scroll{overflow-x:auto;scrollbar-color:var(--border) transparent}
+.proper-columns{min-width:600px}
+.proper-languages{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);background:var(--hero);color:white}
+.proper-language{padding:12px 21px;font-size:11px;letter-spacing:.1em;font-weight:700;text-transform:uppercase}
+.proper-language+ .proper-language{border-left:1px solid rgba(255,255,255,.2)}
+.proper-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-bottom:1px solid var(--border);position:relative}
+.proper-row:last-child{border-bottom:0}
+.proper-cell{padding:16px 21px 19px;min-width:0}
+.proper-cell+.proper-cell{border-left:1px solid var(--border);background:rgba(127,114,115,.025)}
+.proper-text{white-space:pre-wrap;word-break:normal;overflow-wrap:break-word;font:400 14px/1.95 "Noto Serif",Georgia,serif;margin:0;color:var(--ink)}
+.proper-cell-note{margin:0 0 12px;font:600 10px "Be Vietnam Pro",sans-serif;color:var(--muted);letter-spacing:.02em}
+.proper-note{padding:14px 20px;color:var(--muted);background:var(--gold-soft);border-top:1px solid var(--border);font-size:12px;line-height:1.8;white-space:pre-wrap}
+.proper-tip{margin:16px 0 0;font-size:11px;line-height:1.85;color:var(--muted)}
+.proper-action{font-size:11px;border:1px solid var(--border);border-radius:10px;padding:9px 12px;background:var(--surface);color:var(--ink);font-weight:600}
 .proper-action:hover{border-color:var(--red)}
-@media(max-width:650px){dialog{width:calc(100% - 16px);max-height:calc(100% - 16px);border-radius:15px}.proper-text{font-size:11px;padding:14px;line-height:1.7}.proper-title{font-size:19px}.proper-page summary{padding:12px 13px}}
+@media(max-width:700px){dialog{width:calc(100% - 12px);max-height:calc(100% - 12px);border-radius:15px}.proper-title{font-size:20px}.proper-cell{padding:13px 16px 16px}.proper-text{font-size:13px;line-height:1.85}.proper-language{padding:10px 15px}.proper-unit>summary{padding:13px 14px}}
 
 </style>
 </head>
@@ -59,11 +73,11 @@ dialog{max-width:1030px}
 </main>
 <footer class="footer"><div class="container footerinner"><span>© <span id="copyrightYear"></span> Thánh Lễ Missa · Danh mục từ Sách Lễ 1936</span><span>Thiết kế tĩnh · HTML / CSS / JavaScript · Không cần máy chủ</span></div></footer>
 <dialog id="details" aria-labelledby="modalTitle"><div class="modalhead"><span class="eyebrow" style="color:var(--red)">Chi tiết ngày lễ</span><button id="closeModal" class="modal-close" type="button" aria-label="Đóng">×</button></div><div class="modalbody"><div id="modalBadge"></div><h2 class="modaltitle" id="modalTitle"></h2><p class="modaldate" id="modalDate"></p><div class="modalsection"><div class="modallabel">Giới thiệu</div><p class="modaltext" id="modalDesc"></p></div><div class="modalsection"><div class="modallabel">Ghi chú và nguồn</div><p class="modaltext" id="modalNote"></p></div><button type="button" id="copyInfo" class="sourcebtn">Sao chép thông tin ngày lễ</button><section class="proper-section" id="properPanel" aria-label="Phần riêng Sách lễ 1936">
-<div class="proper-header"><h3 class="proper-title">✥ Phần riêng Sách lễ</h3><button id="togglePages" class="proper-action" type="button">Thu gọn các trang</button></div>
+<div class="proper-header"><h3 class="proper-title">✥ Phần riêng Sách lễ</h3><button id="togglePages" class="proper-action" type="button">Thu gọn các kinh</button></div>
 <p class="proper-meta" id="properMeta">Nguyên văn song ngữ Latin – Việt trong <i>Sách Lễ Cho Bổn Đạo</i>, ấn bản 1936.</p>
 <div class="proper-status" id="properStatus">Đang chuẩn bị bản văn...</div>
 <div class="proper-pages" id="properPages"></div>
-<p class="proper-tip">Bản văn được trích từ file Word và giữ bố cục chữ theo từng trang in. Trên điện thoại, vuốt ngang trong khung trang để đọc đủ hai cột. Bản nhận dạng ký tự vẫn còn một số lỗi chính tả; các lời dẫn chiếu «xem trang…» chưa được tự động ghép vào bản văn. Không dùng trực tiếp làm Ordo hoặc sách lễ chính thức khi chưa hiệu đính.</p>
+<p class="proper-tip">Bản Latin và Việt được tách từ các ô riêng trong bảng Word gốc, giữ nguyên trật tự các kinh. Trên điện thoại, có thể vuốt ngang trong từng mục để xem đủ hai cột. Vì bản Word còn lỗi nhận dạng và một số lễ có dẫn chiếu hoặc phần văn bản nằm chung trang với lễ khác, đây là bản đọc thử, cần đối chiếu bản in trước khi dùng làm Sách lễ chính thức.</p>
 </section></div></dialog>
 <script>
 "use strict";
@@ -189,17 +203,18 @@ $("copyrightYear").textContent=currentYear;
 document.querySelectorAll(".filter").forEach(b=>b.setAttribute("aria-pressed",String(b.classList.contains("active"))));
 render();updateUpcoming();
 
-// BẢN VĂN PHẦN RIÊNG 1936: dữ liệu từ sách Word được chia theo các trang in.
-// Mỗi mục trỏ đến trang đầu trong sách; những trường hợp "xem trang khác" cần tự đối chiếu.
+
+// Phần riêng Sách lễ 1936 — 2 cột song ngữ đúng dữ liệu Word.
+// Mỗi đối tượng 'items' là một cặp ô Latin – Việt (kind="parallel") hoặc chú thích.
 const missalFiles=[
- {start:51,end:150,file:"proprium/p051-150.json"},
- {start:151,end:250,file:"proprium/p151-250.json"},
- {start:251,end:350,file:"proprium/p251-350.json"},
- {start:351,end:450,file:"proprium/p351-450.json"},
- {start:451,end:550,file:"proprium/p451-550.json"},
- {start:551,end:622,file:"proprium/p551-622.json"}
+ {start:51,end:150,file:"proprium/bilingual-p051-150.json"},
+ {start:151,end:250,file:"proprium/bilingual-p151-250.json"},
+ {start:251,end:350,file:"proprium/bilingual-p251-350.json"},
+ {start:351,end:450,file:"proprium/bilingual-p351-450.json"},
+ {start:451,end:550,file:"proprium/bilingual-p451-550.json"},
+ {start:551,end:622,file:"proprium/bilingual-p551-622.json"}
 ];
-// Mốc mở đầu các lễ / đoạn riêng theo thứ tự trang in (không phải ngày trong năm).
+// Các mốc bắt đầu Phần riêng theo mục lục: chưa xử lý triệt để 2 lễ chung một trang in.
 const properStarts=[
 51,56,60,65,69,73,88,92,97,101,106,110,114,116,121,128,133,138,140,144,
 147,153,160,166,176,183,188,193,199,205,241,249,254,260,265,268,273,277,
@@ -208,6 +223,20 @@ const properStarts=[
 430,433,438,442,454,459,464,468,474,478,482,487,492,497,501,506,511,515,519,
 525,529,533,537,542,546,551,555,562,566,571,575,580,585,590,595,600,613,617,623
 ];
+const sectionNames={
+ Introitus:["Introitus","Câu hát đầu lễ"],
+ Collecta:["Collecta","Lời tổng nguyện"],
+ Epistola:["Epistola","Thư"],
+ Graduale:["Graduale","Kinh lên bậc"],
+ Alleluia:["Alleluia","Alleluia"],
+ Tractus:["Tractus","Ca vịnh trước Phúc Âm"],
+ Sequentia:["Sequentia","Ca tiếp liên"],
+ Evangelium:["Evangelium","Phúc Âm"],
+ Offertorium:["Offertorium","Kinh khi dâng lễ vật"],
+ Secreta:["Secreta","Kinh nguyện thầm"],
+ Communio:["Communio","Câu hát Hiệp lễ"],
+ Postcommunio:["Postcommunio","Kinh nguyện sau Hiệp lễ"]
+};
 const missalCache=new Map();
 let missalViewToken=0;
 function getMissalChunk(record){
@@ -221,55 +250,118 @@ function getMissalChunk(record){
 }
 function rangeForFeast(e){
   if(!Number.isInteger(e.page)||e.page<51||e.page>622)return null;
-  const start=e.page;
-  const next=properStarts.find(v=>v>start)??623;
-  const end=Math.min(622,next-1);
-  return {start,end:Math.max(start,end)};
+  const start=e.page,next=properStarts.find(v=>v>start)??623;
+  return {start,end:Math.max(start,Math.min(622,next-1))};
 }
 function setProperStatus(message,hidden){
   $("properStatus").textContent=message;
   $("properStatus").hidden=!!hidden;
 }
+function makeText(tag,className,value){
+ const el=document.createElement(tag);
+ if(className)el.className=className;
+ el.textContent=value||"";
+ return el;
+}
+// Gom liền các cặp Latin – Việt cùng tên phần phụng vụ, kể cả khi qua trang mới.
+function groupMissalItems(pages,startPage){
+ let entries=pages.flatMap(p=>(p.items||[]).map(x=>({...x,page:p.p})));
+ // Một số trang là chỗ kết thúc lễ trước rồi mới bắt đầu lễ mới.
+ // Nếu trang mở đầu có "Postcommunio" trước "Introitus", cắt phần của lễ trước.
+ const initial=entries.filter(x=>x.page===startPage);
+ const firstIntroit=initial.findIndex(x=>x.section==="Introitus");
+ if(firstIntroit>0&&initial.slice(0,firstIntroit).some(x=>x.section==="Postcommunio")){
+   const toSkip=firstIntroit;
+   let dropped=0;
+   entries=entries.filter(x=>x.page!==startPage||dropped++>=toSkip);
+ }
+ const groups=[];
+ for(const entry of entries){
+   const title=entry.section||"Phần khác";
+   if(!groups.length||groups[groups.length-1].section!==title){
+     groups.push({section:title,items:[]});
+   }
+   groups[groups.length-1].items.push(entry);
+ }
+ return groups;
+}
+function renderProperGroup(group){
+ const section=document.createElement("details");
+ section.className="proper-unit";
+ section.open=true;
+ const title=sectionNames[group.section]||[group.section,group.section];
+ const firstPage=group.items[0].page;
+ const lastPage=group.items[group.items.length-1].page;
+ const summary=document.createElement("summary");
+ const head=document.createElement("span");
+ head.append(makeText("span","proper-unit-title",title[0]+" · "+title[1]));
+ const pageLabel=firstPage===lastPage?"tr. "+firstPage:"tr. "+firstPage+"–"+lastPage;
+ head.append(makeText("span","proper-unit-small","  ·  "+pageLabel));
+ summary.append(head);
+ section.append(summary);
+ const scroll=document.createElement("div");
+ scroll.className="proper-scroll";
+ const columns=document.createElement("div");
+ columns.className="proper-columns";
+ const langs=document.createElement("div");
+ langs.className="proper-languages";
+ langs.append(makeText("div","proper-language","LATIN"),makeText("div","proper-language","TIẾNG VIỆT"));
+ columns.append(langs);
+ for(const entry of group.items){
+   if(entry.kind==="note"&&!entry.la){
+     columns.append(makeText("div","proper-note","Ghi chú bản in · tr. "+entry.page+"\n"+(entry.vi||"")));
+     continue;
+   }
+   const line=document.createElement("div");
+   line.className="proper-row";
+   for(const [lang,body] of [["Latin",entry.la],["Tiếng Việt",entry.vi]]){
+     const cell=document.createElement("div");
+     cell.className="proper-cell";
+     cell.append(makeText("div","proper-cell-note",lang+" · trang "+entry.page));
+     cell.append(makeText("p","proper-text",body||""));
+     line.append(cell);
+   }
+   columns.append(line);
+ }
+ scroll.append(columns);
+ section.append(scroll);
+ return section;
+}
 async function showProper(e){
-  const token=++missalViewToken;
-  const range=rangeForFeast(e),root=$("properPages");
-  root.replaceChildren();
-  $("togglePages").textContent="Thu gọn các trang";
-  if(!range){
-    $("properMeta").textContent="Chưa xác định được trang Phần riêng trong bản sách 1936.";
-    setProperStatus("Mục này chưa có bản văn Phần riêng được gắn trang nguồn.",false);
-    return;
-  }
-  $("properMeta").textContent="Sách Lễ Cho Bổn Đạo (1936) · trang in "+range.start+(range.end>range.start?"–"+range.end:"")+" · nguyên bản Latin – Việt.";
-  setProperStatus("Đang tải bản văn từ thư viện...",false);
-  const list=missalFiles.filter(c=>c.end>=range.start&&c.start<=range.end);
-  try{
-    const chunks=await Promise.all(list.map(getMissalChunk));
-    if(token!==missalViewToken||!dialog.open)return;
-    const pages=chunks.flatMap(c=>c.pages).filter(p=>p.p>=range.start&&p.p<=range.end).sort((a,b)=>a.p-b.p);
-    if(!pages.length){setProperStatus("Không tìm thấy nội dung văn bản trong số trang này.",false);return;}
-    const frag=document.createDocumentFragment();
-    for(const page of pages){
-      const item=document.createElement("details");
-      item.className="proper-page";item.open=true;
-      const summary=document.createElement("summary");summary.textContent="Trang "+page.p+" · Sách Lễ 1936";
-      const text=document.createElement("pre");text.className="proper-text";text.textContent=page.t||"";
-      item.append(summary,text);frag.appendChild(item);
-    }
-    root.appendChild(frag);
-    setProperStatus("Đã tải "+pages.length+" trang bản văn.",true);
-  }catch(err){
-    if(token!==missalViewToken)return;
-    setProperStatus("Không tải được bản văn. Hãy kiểm tra kết nối Internet hoặc thử tải lại trang. ("+String(err.message||err)+")",false);
-  }
+ const token=++missalViewToken;
+ const range=rangeForFeast(e),root=$("properPages");
+ root.replaceChildren();
+ $("togglePages").textContent="Thu gọn các kinh";
+ if(!range){
+   $("properMeta").textContent="Chưa có chỉ mục phần riêng của lễ này.";
+   setProperStatus("Mục lễ này chưa có trang bản văn xác định.",false);
+   return;
+ }
+ $("properMeta").textContent="Sách Lễ Cho Bổn Đạo (1936) · trang in "+range.start+(range.end>range.start?"–"+range.end:"")+" · Latin trái – Việt phải.";
+ setProperStatus("Đang tải bản văn song ngữ...",false);
+ try{
+   const list=missalFiles.filter(c=>c.end>=range.start&&c.start<=range.end);
+   const chunks=await Promise.all(list.map(getMissalChunk));
+   if(token!==missalViewToken||!dialog.open)return;
+   const pages=chunks.flatMap(x=>x.pages).filter(p=>p.p>=range.start&&p.p<=range.end).sort((a,b)=>a.p-b.p);
+   if(!pages.length){setProperStatus("Chưa tìm thấy bản văn trong trang đã chỉ mục.",false);return;}
+   const groups=groupMissalItems(pages,range.start);
+   const fragment=document.createDocumentFragment();
+   groups.forEach(x=>fragment.append(renderProperGroup(x)));
+   root.replaceChildren(fragment);
+   setProperStatus("Đã tải "+groups.length+" mục kinh song ngữ từ "+pages.length+" trang sách.",true);
+ }catch(err){
+   if(token!==missalViewToken)return;
+   setProperStatus("Không tải được bản văn. Vui lòng tải lại trang hoặc kiểm tra kết nối. ("+String(err.message||err)+")",false);
+ }
 }
 const previousOpenDetails=openDetails;
 openDetails=function(e){previousOpenDetails(e);showProper(e);};
 $("togglePages").addEventListener("click",()=>{
-  const cards=[...document.querySelectorAll("#properPages details")];
-  const anyOpen=cards.some(x=>x.open);
-  cards.forEach(x=>{x.open=!anyOpen;});
-  $("togglePages").textContent=anyOpen?"Mở tất cả các trang":"Thu gọn các trang";
+ const cards=[...document.querySelectorAll("#properPages details")];
+ const anyOpen=cards.some(x=>x.open);
+ cards.forEach(x=>x.open=!anyOpen);
+ $("togglePages").textContent=anyOpen?"Mở tất cả các kinh":"Thu gọn các kinh";
 });
 
 </script>
