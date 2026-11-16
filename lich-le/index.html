@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#3b243b">
 <meta name="description" content="Tra cứu các lễ, Chúa Nhật và ngày kính được trích mục lục Sách Lễ Cho Bổn Đạo (1936).">
-<title>Danh mục Lễ kính | Thánh Lễ Missa</title>
+<title>Lịch lễ theo tháng | Thánh Lễ Missa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Noto+Serif:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -80,20 +80,121 @@ dialog{width:min(1120px,calc(100% - 28px));max-width:1120px}
  .proper-text{font-size:13px;line-height:1.86}
 }
 
+
+/* Lịch tháng: bảy cột, điều hướng tháng/năm và ghi lễ trực tiếp trong ô ngày. */
+.calendar-content{padding-top:47px}
+.calendar-intro{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:21px}
+.calendar-kicker{font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--red);font-size:10px;margin:0 0 9px}
+.month-rail{display:flex;align-items:center;gap:7px;overflow-x:auto;padding:3px 1px 17px;margin:0 0 5px;scrollbar-width:thin}
+.month-rail .month-tab{background:var(--surface);border:1px solid var(--border);border-radius:10px;min-width:75px;flex:1 0 auto;padding:12px 11px;color:var(--muted);font-size:11px;font-weight:650;white-space:nowrap;transition:background .17s,border-color .17s,color .17s}
+.month-rail .month-tab:hover{border-color:var(--red);color:var(--ink)}
+.month-rail .month-tab[aria-current="date"]{background:var(--hero2);border-color:var(--hero2);color:#fff;box-shadow:0 5px 18px var(--ring)}
+.calendar-shell{border-radius:18px;background:var(--surface);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow)}
+.calendar-nav{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:24px 27px;background:var(--surface)}
+.calendar-small{font-weight:700;letter-spacing:.15em;font-size:10px;color:var(--muted);margin:0 0 7px}
+.calendar-title{font-family:"Noto Serif",Georgia,serif;font-size:26px;font-weight:600;line-height:1.3;margin:0}
+.calendar-description{color:var(--muted);font-size:11px;line-height:1.7;margin:6px 0 0}
+.calendar-actions{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.calendar-control,.calendar-today{border-radius:11px;border:1px solid var(--border);background:var(--bg);color:var(--ink);height:42px;display:flex;align-items:center;justify-content:center;transition:.16s}
+.calendar-control{width:42px;font-size:27px;line-height:1}
+.calendar-today{padding:0 14px;font-size:11px;font-weight:700}
+.calendar-control:hover,.calendar-today:hover{border-color:var(--red);background:var(--gold-soft)}
+.weekday-row,.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.weekday-row{background:var(--hero);color:#fff}
+.weekday-row span{text-align:center;font-size:11px;font-weight:700;letter-spacing:.01em;padding:14px 4px}
+.weekday-row span:last-child{color:var(--gold)}
+.calendar-grid{background:var(--border);gap:1px;border-top:1px solid var(--border)}
+.calendar-cell{display:flex;flex-direction:column;position:relative;min-width:0;min-height:148px;padding:11px 9px;text-align:left;background:var(--surface);border:0;border-radius:0;color:var(--ink);transition:background .18s;cursor:default;overflow:hidden}
+.calendar-cell.has-feast{cursor:pointer}
+.calendar-cell.has-feast:hover{background:var(--gold-soft)}
+.calendar-cell.is-today{box-shadow:inset 0 0 0 2px var(--red);z-index:1}
+.calendar-cell.other-month{background:var(--bg);opacity:.5;cursor:pointer}
+.calendar-cell.other-month:hover{opacity:.85}
+.calendar-cell .calendar-day-number{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;font-size:13px;font-weight:700;color:var(--ink)}
+.calendar-cell.is-sunday .calendar-day-number{color:var(--red)}
+.calendar-cell.is-today .calendar-day-number{background:var(--hero2);color:#fff}
+.calendar-event-lines{display:flex;flex-direction:column;align-items:stretch;gap:5px;margin-top:9px}
+.calendar-event{display:block;width:100%;border-radius:6px;font-size:10px;line-height:1.5;padding:5px 6px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-clamp:2;word-break:break-word;text-overflow:ellipsis;text-align:left;font-weight:600}
+.calendar-event.primary{background:#fff1e8;color:#914d34}
+.calendar-event.secondary{background:#eaf2fd;color:#365e97}
+.calendar-event.sunday{background:#edf3ed;color:#466d51}
+body.dark .calendar-event.primary{background:#4f3333;color:#ffbd9e}
+body.dark .calendar-event.secondary{background:#2c3b54;color:#c3dcff}
+body.dark .calendar-event.sunday{background:#2b493d;color:#bee5c9}
+.calendar-more{margin:5px 0 0;font-size:10px;color:var(--muted);font-weight:700}
+.calendar-dot-row{display:none;gap:3px;margin:8px auto 0;flex-wrap:wrap;justify-content:center}
+.calendar-dot{width:6px;height:6px;border-radius:50%;background:var(--blue)}
+.calendar-dot.primary{background:var(--red)}.calendar-dot.sunday{background:var(--green)}
+.calendar-guide{font-size:11px;line-height:1.7;color:var(--muted);margin:15px 0 0}
+.day-chooser{max-width:570px}
+.chooser-list{display:flex;flex-direction:column;gap:9px;margin-top:13px}
+.chooser-option{border:1px solid var(--border);border-radius:11px;padding:15px 16px;background:var(--bg);color:var(--ink);display:flex;align-items:center;justify-content:space-between;text-align:left;gap:12px;font:600 13px/1.6 "Noto Serif",Georgia,serif}
+.chooser-option:hover{border-color:var(--red);background:var(--gold-soft)}
+.chooser-indicator{border-radius:50%;width:9px;height:9px;flex:0 0 9px;background:var(--blue)}.chooser-indicator.primary{background:var(--red)}.chooser-indicator.sunday{background:var(--green)}
+@media(max-width:900px){.calendar-cell{min-height:135px;padding:9px 7px}.calendar-event{font-size:9px;padding:5px}.weekday-row span{font-size:10px}}
+@media(max-width:650px){
+ .calendar-intro{flex-direction:column;align-items:stretch;gap:15px}
+ .calendar-nav{padding:17px 13px;gap:5px}
+ .calendar-title{font-size:21px}
+ .calendar-description{font-size:10px}
+ .calendar-small{font-size:9px}
+ .calendar-actions{gap:4px}
+ .calendar-control{width:31px;height:34px;font-size:22px}
+ .calendar-today{padding:0 8px;height:34px;font-size:10px}
+ .month-rail{margin-bottom:3px}
+ .month-rail .month-tab{flex:0 0 auto;min-width:72px}
+ .weekday-row span{font-size:0;padding:12px 0}
+ .weekday-row span:nth-child(1):after{content:"T2"}.weekday-row span:nth-child(2):after{content:"T3"}.weekday-row span:nth-child(3):after{content:"T4"}.weekday-row span:nth-child(4):after{content:"T5"}.weekday-row span:nth-child(5):after{content:"T6"}.weekday-row span:nth-child(6):after{content:"T7"}.weekday-row span:nth-child(7):after{content:"CN"}
+ .weekday-row span:after{font-size:10px}
+ .calendar-cell{min-height:69px;padding:8px 2px;align-items:center}
+ .calendar-cell .calendar-day-number{height:26px;width:26px;font-size:11px}
+ .calendar-event-lines{display:none}
+ .calendar-dot-row{display:flex}
+ .calendar-more{display:none}
+ .calendar-shell{border-radius:13px}
+ .calendar-guide{font-size:10px}
+}
 </style>
 </head>
 <body>
 <header class="sitehead"><div class="container headinner"><a class="brand" href="../" title="Về trang Thánh Lễ Missa"><span class="brandmark">✝</span><span>THÁNH LỄ <span style="color:var(--gold)">MISSA</span></span></a><div class="headright"><a class="toplink" href="../">Trang chính</a><button class="iconbutton" id="themeBtn" type="button" aria-label="Chuyển chế độ sáng tối" title="Chế độ sáng/tối">☾</button></div></div></header>
-<section class="hero"><div class="container hero-inner"><div class="eyebrow">Thư viện phụng vụ cổ truyền</div><h1>Danh mục các ngày lễ<br>trong năm phụng vụ</h1><p class="herodesc">Tra cứu lễ kính, các ngày lễ trọng và Chúa Nhật được biên mục từ <em>Sách Lễ Cho Bổn Đạo</em> (1936). Một cách khám phá kho tàng phụng vụ xưa qua lịch năm, tên lễ và nguồn bản văn.</p><div class="heritage"><span>✝</span><span>Ấn bản <b>Nazareth – Hong Kong, 1936</b></span><span class="dot"></span><span>Dữ liệu tham khảo lịch sử</span></div></div></section>
+<section class="hero"><div class="container hero-inner"><div class="eyebrow">Thư viện phụng vụ cổ truyền</div><h1>Lịch các ngày lễ<br>theo từng tháng</h1><p class="herodesc">Chọn tháng và bấm vào ngày lễ để đọc Phần riêng Sách lễ Latin – Việt, được biên mục từ <em>Sách Lễ Cho Bổn Đạo</em> (1936).</p><div class="heritage"><span>✝</span><span>Ấn bản <b>Nazareth – Hong Kong, 1936</b></span><span class="dot"></span><span>Dữ liệu tham khảo lịch sử</span></div></div></section>
 <main>
-<div class="container nextwrap"><section class="nextbox" aria-live="polite"><div><div class="nextlabel">Lễ sắp tới</div><h2 id="nextName" class="nextname">Đang xác định ngày lễ…</h2><div id="nextDate" class="nextdate"></div></div><div class="countdown"><div class="countnum" id="countNum">—</div><div class="countlabel" id="countLabel">ngày còn lại</div></div></section></div>
-<div class="container content"><div class="secttop"><div><h2 class="sectiontitle">Tra cứu lễ kính</h2><p class="sectionsub">Tìm theo tên, chọn nhóm lễ hoặc sắp xếp theo ngày.</p></div><label class="yearpicker" for="yearSelect">Năm hiển thị <select id="yearSelect" aria-label="Chọn năm"></select></label></div>
-<div class="toolbar"><div class="searchwrap"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><input id="search" type="search" autocomplete="off" placeholder="Tìm tên lễ, Thánh, mùa phụng vụ…" aria-label="Tìm tên lễ"></div><div class="controls"><select id="sortSelect" aria-label="Sắp xếp"><option value="asc">Ngày: gần đến xa</option><option value="desc">Ngày: xa đến gần</option><option value="group">Theo nhóm lễ</option></select></div></div>
-<div class="filterbar" role="group" aria-label="Lọc nhóm lễ"><button class="filter active" data-group="all" type="button">Tất cả</button><button class="filter" data-group="primary" type="button">✦ Bậc nhất</button><button class="filter" data-group="secondary" type="button">Bậc nhì</button><button class="filter" data-group="sunday" type="button">Chúa Nhật</button></div>
-<p class="resulthead" id="resultCount" aria-live="polite">Đang tải danh mục…</p><section class="grid" id="grid" aria-label="Danh sách các ngày lễ"></section>
+<div class="container content calendar-content">
+  <div class="calendar-intro">
+    <div><p class="calendar-kicker">Lịch phụng vụ năm <span id="introYear"></span></p>
+    <h2 class="sectiontitle">Lịch lễ theo tháng</h2>
+    <p class="sectionsub">Bấm vào một ngày có lễ để xem toàn bộ Phần riêng Sách lễ Latin – Việt.</p></div>
+    <label class="yearpicker" for="yearSelect">Chọn năm <select id="yearSelect" aria-label="Chọn năm hiển thị"></select></label>
+  </div>
+  <nav class="month-rail" id="monthRail" aria-label="Chuyển nhanh giữa các tháng"></nav>
+  <section class="calendar-shell" aria-label="Lịch lễ hằng tháng">
+    <div class="calendar-nav">
+      <div>
+        <p class="calendar-small">THÁNH LỄ MISSA · SÁCH LỄ 1936</p>
+        <h3 id="monthTitle" class="calendar-title" aria-live="polite"></h3>
+        <p id="monthCount" class="calendar-description"></p>
+      </div>
+      <div class="calendar-actions">
+        <button type="button" id="prevMonth" class="calendar-control" aria-label="Tháng trước" title="Tháng trước">‹</button>
+        <button type="button" id="todayMonth" class="calendar-today">Hôm nay</button>
+        <button type="button" id="nextMonth" class="calendar-control" aria-label="Tháng sau" title="Tháng sau">›</button>
+      </div>
+    </div>
+    <div class="weekday-row" aria-hidden="true">
+      <span>Thứ Hai</span><span>Thứ Ba</span><span>Thứ Tư</span><span>Thứ Năm</span><span>Thứ Sáu</span><span>Thứ Bảy</span><span>Chúa Nhật</span>
+    </div>
+    <div id="monthGrid" class="calendar-grid" role="group" aria-label="Các ngày trong tháng"></div>
+  </section>
+  <p class="calendar-guide">Chọn ngày có đánh dấu để đọc Sách lễ. Những ngày trùng nhiều lễ sẽ hiện danh sách cho bạn lựa chọn.</p>
 <section class="source" id="about"><div class="sourceicon">✥</div><div><h3>Nguồn tư liệu &amp; cách sử dụng</h3><p>Danh mục được biên soạn từ <i>Sách Lễ Cho Bổn Đạo</i>, ấn bản Nazareth–Hong Kong 1936, đặc biệt là phần <i>Proprium de tempore</i> và <i>Proprium de sanctis</i>. Ngày các lễ di động và Chúa Nhật được tính cho năm đang chọn. Những ngày trùng lễ hoặc chuyển lễ <b>chưa được giải quyết theo thứ tự ưu tiên phụng vụ</b>; đây là danh mục tra cứu, không phải Ordo hoàn chỉnh. Hai nhãn «bậc nhất» và «bậc nhì» là <b>phân nhóm biên tập sơ bộ</b>, vì sách không ghi phẩm cấp rõ ràng bên cạnh mỗi mục; cần đối chiếu luật chữ đỏ trước khi dùng chính thức. Một số tên lễ đã thống nhất cách viết để tiện tìm kiếm. Dữ liệu biên mục có thể được bổ sung và kiểm chứng tiếp.</p></div></section></div>
 </main>
 <footer class="footer"><div class="container footerinner"><span>© <span id="copyrightYear"></span> Thánh Lễ Missa · Danh mục từ Sách Lễ 1936</span><span>Thiết kế tĩnh · HTML / CSS / JavaScript · Không cần máy chủ</span></div></footer>
+<dialog id="dayChooser" class="day-chooser" aria-labelledby="chooserTitle">
+  <div class="modalhead"><span class="eyebrow" style="color:var(--red)">Các lễ trong ngày</span><button type="button" id="closeChooser" class="modal-close" aria-label="Đóng">×</button></div>
+  <div class="modalbody"><h2 class="modaltitle" id="chooserTitle"></h2>
+  <p class="modaldate">Chọn một lễ để đọc Phần riêng Latin – Việt.</p><div id="chooserList" class="chooser-list"></div></div>
+</dialog>
 <dialog id="details" aria-labelledby="modalTitle"><div class="modalhead"><span class="eyebrow" style="color:var(--red)">Chi tiết ngày lễ</span><button id="closeModal" class="modal-close" type="button" aria-label="Đóng">×</button></div><div class="modalbody"><div id="modalBadge"></div><h2 class="modaltitle" id="modalTitle"></h2><p class="modaldate" id="modalDate"></p><div class="modalsection"><div class="modallabel">Giới thiệu</div><p class="modaltext" id="modalDesc"></p></div><div class="modalsection"><div class="modallabel">Ghi chú và nguồn</div><p class="modaltext" id="modalNote"></p></div><button type="button" id="copyInfo" class="sourcebtn">Sao chép thông tin ngày lễ</button><section class="proper-section" id="properPanel" aria-label="Phần riêng Sách lễ 1936">
 <div class="proper-header"><h3 class="proper-title">✥ Phần riêng Sách lễ</h3><button id="togglePages" class="proper-action" type="button">Thu gọn các kinh</button></div>
 <p class="proper-meta" id="properMeta">Nguyên văn song ngữ Latin – Việt trong <i>Sách Lễ Cho Bổn Đạo</i>, ấn bản 1936.</p>
@@ -191,39 +292,111 @@ function openDetails(e){
   if(typeof dialog.showModal==="function")dialog.showModal();else dialog.setAttribute("open","");
 }
 closeBtn.addEventListener("click",()=>dialog.close());dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close();});
+// Lịch tháng, tuần bắt đầu từ Thứ Hai. Click một ngày có nhiều lễ để chọn lễ cần đọc.
+const dateNow=new Date();
+state.year=dateNow.getFullYear();
+state.month=dateNow.getMonth();
+const monthNames=["Tháng Một","Tháng Hai","Tháng Ba","Tháng Tư","Tháng Năm","Tháng Sáu","Tháng Bảy","Tháng Tám","Tháng Chín","Tháng Mười","Tháng Mười Một","Tháng Mười Hai"];
+const yearSelect=$("yearSelect");
+const chooser=$("dayChooser");
+const normalizeDate=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate(),12);
+const isSameDate=(a,b)=>a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
+for(let y=currentYear-20;y<=currentYear+30;y++){
+ const opt=document.createElement("option");opt.value=String(y);opt.textContent=String(y);yearSelect.appendChild(opt);
+}
+function displayFeast(e){return e.name.replace(/^Lễ\s+/iu,"Lễ ");}
+function showDayFeasts(events,date){
+ const sorted=[...events].sort((a,b)=>groupWeight[a.group]-groupWeight[b.group]||a.name.localeCompare(b.name,"vi"));
+ if(sorted.length===1){openDetails(sorted[0]);return;}
+ $("chooserTitle").textContent=fmt.format(date);
+ const root=$("chooserList");root.replaceChildren();
+ for(const e of sorted){
+  const btn=document.createElement("button");btn.type="button";btn.className="chooser-option";
+  const dot=document.createElement("span");dot.className="chooser-indicator "+e.group;
+  const label=document.createElement("span");label.textContent=e.name;label.style.flex="1";
+  const chevron=document.createElement("span");chevron.textContent="›";chevron.setAttribute("aria-hidden","true");
+  btn.append(dot,label,chevron);
+  btn.addEventListener("click",()=>{chooser.close();openDetails(e);});
+  root.append(btn);
+ }
+ chooser.showModal();
+}
+$("closeChooser").addEventListener("click",()=>chooser.close());
+chooser.addEventListener("click",event=>{if(event.target===chooser)chooser.close();});
+function changeMonth(offset){
+ const d=makeDate(state.year,state.month+1+offset,1);
+ state.year=d.getFullYear();state.month=d.getMonth();render();
+}
 function render(){
-  yearEvents=buildYear(state.year);
-  let matches=yearEvents.filter(e=>(state.group==="all"||e.group===state.group)&&normalize(e.name+" "+e.description).includes(normalize(state.search)));
-  matches.sort((a,b)=>state.sort==="group"?groupWeight[a.group]-groupWeight[b.group]||stamp(a.when)-stamp(b.when):state.sort==="desc"?stamp(b.when)-stamp(a.when)||groupWeight[a.group]-groupWeight[b.group]:stamp(a.when)-stamp(b.when)||groupWeight[a.group]-groupWeight[b.group]);
-  $("resultCount").textContent="Hiển thị "+matches.length+" / "+yearEvents.length+" ngày lễ trong năm "+state.year;
-  const root=$("grid");root.innerHTML="";
-  if(!matches.length){root.innerHTML='<div class="empty"><h3>Không tìm thấy ngày lễ</h3><p>Thử tên lễ khác hoặc chuyển lại bộ lọc «Tất cả».</p></div>';return;}
-  const frag=document.createDocumentFragment();
-  matches.forEach((e,i)=>{const card=document.createElement("button");card.type="button";card.className="festcard";card.style.animationDelay=Math.min(i*15,180)+"ms";card.setAttribute("aria-label","Xem chi tiết "+e.name+", "+dateText(e));
-    const day=("0"+e.when.getDate()).slice(-2),month=("0"+(e.when.getMonth()+1)).slice(-2);
-    card.innerHTML='<div class="cardtop">'+badgeFor(e)+'<div class="datesquare"><div class="day">'+day+'</div><div class="month">THÁNG '+month+'</div></div></div><h3 class="cardname">'+escapeHtml(e.name)+'</h3><p class="carddesc">'+escapeHtml(e.description)+'</p><div class="cardfoot"><span>✧ '+"Sách Lễ 1936"+'</span><span class="cardlink">Chi tiết ↗</span></div>';
-    card.addEventListener("click",()=>openDetails(e));frag.appendChild(card);});
-  root.appendChild(frag);
+ yearEvents=buildYear(state.year);
+ yearSelect.value=String(state.year);
+ $("introYear").textContent=String(state.year);
+ $("monthTitle").textContent=monthNames[state.month]+" "+state.year;
+ const monthEvents=yearEvents.filter(e=>e.when.getMonth()===state.month);
+ $("monthCount").textContent=monthEvents.length+" mục lễ được ghi trong tháng";
+ const rail=$("monthRail");rail.replaceChildren();
+ monthNames.forEach((name,i)=>{
+  const tab=document.createElement("button");tab.type="button";tab.className="month-tab";
+  tab.textContent="Tháng "+(i+1);tab.setAttribute("aria-current",i===state.month?"date":"false");
+  tab.addEventListener("click",()=>{state.month=i;render();});
+  rail.append(tab);
+ });
+ const byDay=new Map();
+ for(const e of monthEvents){
+  const key=e.when.getDate();if(!byDay.has(key))byDay.set(key,[]);
+  byDay.get(key).push(e);
+ }
+ const first=makeDate(state.year,state.month+1,1);
+ const offset=(first.getDay()+6)%7;
+ const numberOfDays=makeDate(state.year,state.month+2,0).getDate();
+ const cells=Math.ceil((offset+numberOfDays)/7)*7;
+ const grid=$("monthGrid");grid.replaceChildren();
+ const frag=document.createDocumentFragment();
+ const today=normalizeDate(new Date());
+ for(let i=0;i<cells;i++){
+  const dayNum=i-offset+1;
+  const date=makeDate(state.year,state.month+1,dayNum);
+  const inside=date.getMonth()===state.month;
+  const events=inside?(byDay.get(dayNum)||[]):[];
+  const cell=document.createElement("button");cell.type="button";
+  cell.className="calendar-cell"+(events.length?" has-feast":"")+(inside?"":" other-month")+(date.getDay()===0?" is-sunday":"")+(isSameDate(date,today)?" is-today":"");
+  cell.setAttribute("aria-label",fmt.format(date)+(events.length?": "+events.map(x=>x.name).join("; "):": Không có lễ trong danh mục"));
+  const num=document.createElement("span");num.className="calendar-day-number";num.textContent=date.getDate();
+  cell.append(num);
+  if(events.length){
+    const list=document.createElement("div");list.className="calendar-event-lines";
+    for(const event of events.slice(0,2)){
+      const line=document.createElement("span");line.className="calendar-event "+event.group;line.textContent=displayFeast(event);
+      list.append(line);
+    }
+    cell.append(list);
+    if(events.length>2){
+      const more=document.createElement("span");more.className="calendar-more";more.textContent="+"+(events.length-2)+" lễ khác";cell.append(more);
+    }
+    const dots=document.createElement("div");dots.className="calendar-dot-row";
+    for(const event of events.slice(0,4)){
+      const dot=document.createElement("span");dot.className="calendar-dot "+event.group;dots.append(dot);
+    }
+    cell.append(dots);
+    cell.addEventListener("click",()=>showDayFeasts(events,date));
+  }else if(!inside){
+    cell.addEventListener("click",()=>{state.year=date.getFullYear();state.month=date.getMonth();render();});
+  }else{
+    cell.disabled=true;
+  }
+  frag.append(cell);
+ }
+ grid.append(frag);
 }
-function updateUpcoming(){
-  const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate(),12);
-  const possible=[...buildYear(today.getFullYear()),...buildYear(today.getFullYear()+1)].filter(e=>stamp(e.when)>=stamp(today));
-  possible.sort((a,b)=>stamp(a.when)-stamp(b.when)||groupWeight[a.group]-groupWeight[b.group]);
-  const next=possible[0];if(!next)return;
-  $("nextName").textContent=next.name;$("nextDate").textContent=fmt.format(next.when)+" · "+groupLabel[next.group];
-  let days=daysBetween(today,next.when);$("countNum").textContent=days;$("countLabel").textContent=days===0?"diễn ra hôm nay":"ngày còn lại";
-  $("nextName").style.cursor="pointer";$("nextName").title="Xem chi tiết";$("nextName").onclick=()=>openDetails(next);
-}
-const yearSelect=$("yearSelect");for(let y=currentYear-8;y<=currentYear+12;y++){let opt=document.createElement("option");opt.value=y;opt.textContent=y;yearSelect.appendChild(opt);}yearSelect.value=currentYear;
 yearSelect.addEventListener("change",()=>{state.year=Number(yearSelect.value);render();});
-$("search").addEventListener("input",e=>{state.search=e.target.value;render();});
-$("sortSelect").addEventListener("change",e=>{state.sort=e.target.value;render();});
-document.querySelectorAll(".filter").forEach(btn=>btn.addEventListener("click",()=>{state.group=btn.dataset.group;document.querySelectorAll(".filter").forEach(b=>{b.classList.toggle("active",b===btn);b.setAttribute("aria-pressed",String(b===btn));});render();}));
+$("prevMonth").addEventListener("click",()=>changeMonth(-1));
+$("nextMonth").addEventListener("click",()=>changeMonth(1));
+$("todayMonth").addEventListener("click",()=>{const d=new Date();state.year=d.getFullYear();state.month=d.getMonth();render();});
 const themeBtn=$("themeBtn");let savedTheme;try{savedTheme=localStorage.getItem("lichle-theme");}catch(e){}if(savedTheme==="dark")document.body.classList.add("dark");themeBtn.textContent=document.body.classList.contains("dark")?"☀":"☾";
 themeBtn.addEventListener("click",()=>{document.body.classList.toggle("dark");const dark=document.body.classList.contains("dark");themeBtn.textContent=dark?"☀":"☾";try{localStorage.setItem("lichle-theme",dark?"dark":"light");}catch(e){}});
 $("copyrightYear").textContent=currentYear;
-document.querySelectorAll(".filter").forEach(b=>b.setAttribute("aria-pressed",String(b.classList.contains("active"))));
-render();updateUpcoming();
+
+render();
 
 
 // Phần riêng Sách lễ 1936 — 2 cột song ngữ đúng dữ liệu Word.
