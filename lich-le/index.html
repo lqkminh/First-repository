@@ -23,6 +23,27 @@ body.dark{--bg:#17151e;--surface:#24212c;--ink:#efecf4;--muted:#aaa4b5;--border:
 dialog{color:var(--ink);border:1px solid var(--border);background:var(--surface);border-radius:22px;max-width:570px;width:calc(100% - 30px);max-height:calc(100% - 36px);padding:0;box-shadow:0 30px 90px rgba(0,0,0,.26);animation:showmodal .2s ease-out}dialog::backdrop{background:rgba(19,11,25,.58);backdrop-filter:blur(5px)}@keyframes showmodal{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}.modalhead{display:flex;align-items:center;justify-content:space-between;padding:24px 27px 14px}.modalbody{padding:5px 28px 32px}.modal-close{color:var(--ink);background:var(--bg);border:1px solid var(--border);width:34px;height:34px;border-radius:10px;font-size:19px}.modaltitle{font-family:"Noto Serif",serif;font-size:27px;line-height:1.4;margin:15px 0}.modaldate{color:var(--muted);font-size:12px;margin-bottom:19px}.modalsection{border-top:1px solid var(--border);padding-top:18px;margin-top:18px}.modallabel{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:8px}.modaltext{font-size:12px;line-height:2;color:var(--ink);margin:0}.modalmuted{color:var(--muted)}.sourcebtn{display:inline-block;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;font-size:11px;margin-top:16px}
 @media(max-width:950px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-inner{padding:56px 0 72px}}@media(max-width:650px){.container{width:min(100% - 28px,1220px)}.headinner{height:66px}.brand{font-size:14px}.brandmark{width:32px;height:32px;font-size:19px}.toplink{display:none}.hero-inner{padding:46px 0 65px}.heritage{line-height:1.8;flex-wrap:wrap}.nextbox{padding:21px 18px;grid-template-columns:1fr auto;gap:9px}.nextname{font-size:17px}.countdown{min-width:84px;padding:11px 7px}.countnum{font-size:27px}.content{padding-top:40px}.secttop{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr;gap:12px}.festcard{min-height:195px;padding:19px}.controls{width:100%}.controls select{flex:1}.sectiontitle{font-size:25px}.source{padding:20px 17px;gap:12px}.modalbody{padding:4px 21px 25px}.modalhead{padding:20px 21px 10px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+/* Khu vực đọc nguyên văn Phần riêng Sách lễ 1936 */
+dialog{max-width:1030px}
+.proper-section{border-top:1px solid var(--border);margin-top:25px;padding-top:24px}
+.proper-header{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.proper-title{font-family:"Noto Serif",Georgia,serif;font-size:22px;font-weight:600;margin:0}
+.proper-meta{font-size:11px;color:var(--muted);line-height:1.7;margin-top:8px}
+.proper-status{border:1px solid var(--border);background:var(--bg);border-radius:12px;padding:15px;margin:18px 0;font-size:12px;line-height:1.8;color:var(--muted)}
+.proper-pages{display:flex;flex-direction:column;gap:17px;margin-top:18px}
+.proper-page{border:1px solid var(--border);background:var(--bg);border-radius:14px;overflow:hidden}
+.proper-page summary{padding:13px 17px;list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;color:var(--red);border-bottom:1px solid transparent}
+.proper-page[open] summary{border-bottom-color:var(--border)}
+.proper-page summary:after{content:"⌄";font-size:17px;color:var(--muted)}
+.proper-page[open] summary:after{content:"⌃"}
+.proper-page summary::-webkit-details-marker{display:none}
+.proper-text{margin:0;padding:19px 20px;font-family:"Noto Serif",Georgia,serif;font-size:12px;line-height:1.75;white-space:pre;overflow-x:auto;max-width:100%;color:var(--ink);tab-size:4}
+.proper-tip{margin:14px 0 0;font-size:11px;line-height:1.8;color:var(--muted)}
+.proper-action{font-size:11px;border:1px solid var(--border);border-radius:10px;padding:9px 12px;background:var(--surface);color:var(--ink)}
+.proper-action:hover{border-color:var(--red)}
+@media(max-width:650px){dialog{width:calc(100% - 16px);max-height:calc(100% - 16px);border-radius:15px}.proper-text{font-size:11px;padding:14px;line-height:1.7}.proper-title{font-size:19px}.proper-page summary{padding:12px 13px}}
+
 </style>
 </head>
 <body>
@@ -37,7 +58,13 @@ dialog{color:var(--ink);border:1px solid var(--border);background:var(--surface)
 <section class="source" id="about"><div class="sourceicon">✥</div><div><h3>Nguồn tư liệu &amp; cách sử dụng</h3><p>Danh mục được biên soạn từ <i>Sách Lễ Cho Bổn Đạo</i>, ấn bản Nazareth–Hong Kong 1936, đặc biệt là phần <i>Proprium de tempore</i> và <i>Proprium de sanctis</i>. Ngày các lễ di động và Chúa Nhật được tính cho năm đang chọn. Những ngày trùng lễ hoặc chuyển lễ <b>chưa được giải quyết theo thứ tự ưu tiên phụng vụ</b>; đây là danh mục tra cứu, không phải Ordo hoàn chỉnh. Hai nhãn «bậc nhất» và «bậc nhì» là <b>phân nhóm biên tập sơ bộ</b>, vì sách không ghi phẩm cấp rõ ràng bên cạnh mỗi mục; cần đối chiếu luật chữ đỏ trước khi dùng chính thức. Một số tên lễ đã thống nhất cách viết để tiện tìm kiếm. Dữ liệu biên mục có thể được bổ sung và kiểm chứng tiếp.</p></div></section></div>
 </main>
 <footer class="footer"><div class="container footerinner"><span>© <span id="copyrightYear"></span> Thánh Lễ Missa · Danh mục từ Sách Lễ 1936</span><span>Thiết kế tĩnh · HTML / CSS / JavaScript · Không cần máy chủ</span></div></footer>
-<dialog id="details" aria-labelledby="modalTitle"><div class="modalhead"><span class="eyebrow" style="color:var(--red)">Chi tiết ngày lễ</span><button id="closeModal" class="modal-close" type="button" aria-label="Đóng">×</button></div><div class="modalbody"><div id="modalBadge"></div><h2 class="modaltitle" id="modalTitle"></h2><p class="modaldate" id="modalDate"></p><div class="modalsection"><div class="modallabel">Giới thiệu</div><p class="modaltext" id="modalDesc"></p></div><div class="modalsection"><div class="modallabel">Ghi chú và nguồn</div><p class="modaltext" id="modalNote"></p></div><button type="button" id="copyInfo" class="sourcebtn">Sao chép thông tin ngày lễ</button></div></dialog>
+<dialog id="details" aria-labelledby="modalTitle"><div class="modalhead"><span class="eyebrow" style="color:var(--red)">Chi tiết ngày lễ</span><button id="closeModal" class="modal-close" type="button" aria-label="Đóng">×</button></div><div class="modalbody"><div id="modalBadge"></div><h2 class="modaltitle" id="modalTitle"></h2><p class="modaldate" id="modalDate"></p><div class="modalsection"><div class="modallabel">Giới thiệu</div><p class="modaltext" id="modalDesc"></p></div><div class="modalsection"><div class="modallabel">Ghi chú và nguồn</div><p class="modaltext" id="modalNote"></p></div><button type="button" id="copyInfo" class="sourcebtn">Sao chép thông tin ngày lễ</button><section class="proper-section" id="properPanel" aria-label="Phần riêng Sách lễ 1936">
+<div class="proper-header"><h3 class="proper-title">✥ Phần riêng Sách lễ</h3><button id="togglePages" class="proper-action" type="button">Thu gọn các trang</button></div>
+<p class="proper-meta" id="properMeta">Nguyên văn song ngữ Latin – Việt trong <i>Sách Lễ Cho Bổn Đạo</i>, ấn bản 1936.</p>
+<div class="proper-status" id="properStatus">Đang chuẩn bị bản văn...</div>
+<div class="proper-pages" id="properPages"></div>
+<p class="proper-tip">Bản văn được trích từ file Word và giữ bố cục chữ theo từng trang in. Trên điện thoại, vuốt ngang trong khung trang để đọc đủ hai cột. Bản nhận dạng ký tự vẫn còn một số lỗi chính tả; các lời dẫn chiếu «xem trang…» chưa được tự động ghép vào bản văn. Không dùng trực tiếp làm Ordo hoặc sách lễ chính thức khi chưa hiệu đính.</p>
+</section></div></dialog>
 <script>
 "use strict";
 // DỮ LIỆU NGÀY LỄ: Có thể thêm mục theo cấu trúc JSON:
@@ -161,6 +188,90 @@ themeBtn.addEventListener("click",()=>{document.body.classList.toggle("dark");co
 $("copyrightYear").textContent=currentYear;
 document.querySelectorAll(".filter").forEach(b=>b.setAttribute("aria-pressed",String(b.classList.contains("active"))));
 render();updateUpcoming();
+
+// BẢN VĂN PHẦN RIÊNG 1936: dữ liệu từ sách Word được chia theo các trang in.
+// Mỗi mục trỏ đến trang đầu trong sách; những trường hợp "xem trang khác" cần tự đối chiếu.
+const missalFiles=[
+ {start:51,end:150,file:"proprium/p051-150.json"},
+ {start:151,end:250,file:"proprium/p151-250.json"},
+ {start:251,end:350,file:"proprium/p251-350.json"},
+ {start:351,end:450,file:"proprium/p351-450.json"},
+ {start:451,end:550,file:"proprium/p451-550.json"},
+ {start:551,end:622,file:"proprium/p551-622.json"}
+];
+// Mốc mở đầu các lễ / đoạn riêng theo thứ tự trang in (không phải ngày trong năm).
+const properStarts=[
+51,56,60,65,69,73,88,92,97,101,106,110,114,116,121,128,133,138,140,144,
+147,153,160,166,176,183,188,193,199,205,241,249,254,260,265,269,273,278,
+282,289,291,297,301,307,314,319,326,330,335,339,344,348,352,356,361,
+365,370,375,379,384,388,393,397,401,405,409,414,419,425,
+430,433,438,442,454,459,464,468,474,478,482,487,493,497,501,506,511,515,519,
+525,529,533,538,542,546,551,555,562,566,571,575,580,585,590,595,600,613,617,623
+];
+const missalCache=new Map();
+let missalViewToken=0;
+function getMissalChunk(record){
+  if(!missalCache.has(record.file)){
+    missalCache.set(record.file,fetch(record.file,{cache:"force-cache"}).then(r=>{
+      if(!r.ok)throw new Error("HTTP "+r.status+" – "+record.file);
+      return r.json();
+    }).catch(err=>{missalCache.delete(record.file);throw err;}));
+  }
+  return missalCache.get(record.file);
+}
+function rangeForFeast(e){
+  if(!Number.isInteger(e.page)||e.page<51||e.page>622)return null;
+  const start=e.page;
+  const next=properStarts.find(v=>v>start)??623;
+  const end=Math.min(622,next-1);
+  return {start,end:Math.max(start,end)};
+}
+function setProperStatus(message,hidden){
+  $("properStatus").textContent=message;
+  $("properStatus").hidden=!!hidden;
+}
+async function showProper(e){
+  const token=++missalViewToken;
+  const range=rangeForFeast(e),root=$("properPages");
+  root.replaceChildren();
+  $("togglePages").textContent="Thu gọn các trang";
+  if(!range){
+    $("properMeta").textContent="Chưa xác định được trang Phần riêng trong bản sách 1936.";
+    setProperStatus("Mục này chưa có bản văn Phần riêng được gắn trang nguồn.",false);
+    return;
+  }
+  $("properMeta").textContent="Sách Lễ Cho Bổn Đạo (1936) · trang in "+range.start+(range.end>range.start?"–"+range.end:"")+" · nguyên bản Latin – Việt.";
+  setProperStatus("Đang tải bản văn từ thư viện...",false);
+  const list=missalFiles.filter(c=>c.end>=range.start&&c.start<=range.end);
+  try{
+    const chunks=await Promise.all(list.map(getMissalChunk));
+    if(token!==missalViewToken||!dialog.open)return;
+    const pages=chunks.flatMap(c=>c.pages).filter(p=>p.p>=range.start&&p.p<=range.end).sort((a,b)=>a.p-b.p);
+    if(!pages.length){setProperStatus("Không tìm thấy nội dung văn bản trong số trang này.",false);return;}
+    const frag=document.createDocumentFragment();
+    for(const page of pages){
+      const item=document.createElement("details");
+      item.className="proper-page";item.open=true;
+      const summary=document.createElement("summary");summary.textContent="Trang "+page.p+" · Sách Lễ 1936";
+      const text=document.createElement("pre");text.className="proper-text";text.textContent=page.t||"";
+      item.append(summary,text);frag.appendChild(item);
+    }
+    root.appendChild(frag);
+    setProperStatus("Đã tải "+pages.length+" trang bản văn.",true);
+  }catch(err){
+    if(token!==missalViewToken)return;
+    setProperStatus("Không tải được bản văn. Hãy kiểm tra kết nối Internet hoặc thử tải lại trang. ("+String(err.message||err)+")",false);
+  }
+}
+const previousOpenDetails=openDetails;
+openDetails=function(e){previousOpenDetails(e);showProper(e);};
+$("togglePages").addEventListener("click",()=>{
+  const cards=[...document.querySelectorAll("#properPages details")];
+  const anyOpen=cards.some(x=>x.open);
+  cards.forEach(x=>{x.open=!anyOpen;});
+  $("togglePages").textContent=anyOpen?"Mở tất cả các trang":"Thu gọn các trang";
+});
+
 </script>
 </body>
 </html>
